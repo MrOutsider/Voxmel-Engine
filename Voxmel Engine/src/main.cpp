@@ -61,7 +61,7 @@ int main()
 		return -1;
 	}
 
-	Shader basicShader("shaders/basic.vs", "shaders/basic.fs");
+	Shader basicShader("bin/shaders/basic.vs", "bin/shaders/basic.fs");
 
 	float vertices[] = {
 	// Verts				Colors

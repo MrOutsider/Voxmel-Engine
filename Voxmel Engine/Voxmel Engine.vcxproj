@@ -27,8 +27,8 @@
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\basic.fs" />
-    <None Include="shaders\basic.vs" />
+    <None Include="bin\shaders\basic.fs" />
+    <None Include="bin\shaders\basic.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
