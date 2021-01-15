@@ -27,6 +27,13 @@ const char* fragmentShaderSource = "#version 330 core\n"
 
 int main()
 {
+	// Timesteps
+	static double limitFPS = 1.0 / 60.0 , limitPhysicsSteps = 1.0 / 30.0;
+
+	double lastTime = glfwGetTime(), nowTime = 0, timer = lastTime;
+	double deltaTimeRender = 0, deltaTimePhysics = 0;
+	int frames = 0, physicsUpdates = 0;
+
 	// GLFW : Init and config window
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -112,8 +119,8 @@ int main()
 		1, 2, 3    // second triangle
 	};
 
+	// Gen and asaign these var IDs
 	unsigned int VAO, VBO, EBO;
-
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -144,19 +151,47 @@ int main()
 		// Input
 		processInput(window);
 
-		// Rendering commands
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		// Timestep for Rendering and Physics
+		nowTime = glfwGetTime();
+		deltaTimeRender += (nowTime - lastTime) / limitFPS;
+		deltaTimePhysics += (nowTime - lastTime) / limitPhysicsSteps;
+		lastTime = nowTime;
 
-		// Draw Here
-		glUseProgram(shaderProgram);
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		//glBindVertexArray(0); // Only one VAO used so no need to unbind after every loop
+		if (deltaTimeRender >= 1.0)
+		{
+			deltaTimeRender--;
+			frames++;
 
-		// Check/Call events and swap buffers
-		glfwSwapBuffers(window);
-		glfwPollEvents();
+			// Rendering commands
+			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			// Draw Here
+			glUseProgram(shaderProgram);
+			glBindVertexArray(VAO);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			//glBindVertexArray(0); // Only one VAO used so no need to unbind after every loop
+
+			// Check/Call events and swap buffers
+			glfwSwapBuffers(window);
+			glfwPollEvents();
+		}
+
+		if (deltaTimePhysics >= 1.0)
+		{
+			deltaTimePhysics--;
+			physicsUpdates++;
+
+			// Do physics here
+		}
+
+		// Print the fps and updates
+		if (glfwGetTime() - timer > 1.0)
+		{
+			timer++;
+			//std::cout << "FPS: " << frames << " Physics Updates:" << physicsUpdates << std::endl;
+			physicsUpdates = 0, frames = 0;
+		}
 	}
 
 	// Release resources
