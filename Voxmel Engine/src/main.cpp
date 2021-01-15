@@ -20,9 +20,10 @@ const char* vertexShaderSource = "#version 330 core\n"
 
 const char* fragmentShaderSource = "#version 330 core\n"
 	"out vec4 FragColor;\n"
+	"uniform vec4 ourColor;\n"
 	"void main()\n"
 	"{\n"
-	"	FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+	"	FragColor = ourColor;\n"
 	"}\0";
 
 int main()
@@ -102,14 +103,12 @@ int main()
 	glDeleteShader(fragmentShader);
 
 	float vertices[] = {
-	 0.5f,  0.5f, 0.0f,  // top right
-	 0.5f, -0.5f, 0.0f,  // bottom right
-	-0.5f, -0.5f, 0.0f,  // bottom left
-	-0.5f,  0.5f, 0.0f   // top left 
+	0.5f, -0.5f, 0.0f,
+	-0.5f, -0.5f, 0.0f,
+	0.0f, 0.5f, 0.0f
 	};
 	uint32_t indices[] = {  // note that we start from 0!
-		0, 1, 3,   // first triangle
-		1, 2, 3    // second triangle
+		0, 1, 2
 	};
 
 	// Gen and asaign these var IDs
@@ -176,7 +175,11 @@ int main()
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			// Draw Here
+			float timeValue = glfwGetTime();
+			float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+			int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
 			glUseProgram(shaderProgram);
+			glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 			glBindVertexArray(VAO);
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 			//glBindVertexArray(0); // Only one VAO used so no need to unbind after every loop
