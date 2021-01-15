@@ -8,8 +8,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
 // Settings
-const unsigned int WINDOW_WIDTH = 800;
-const unsigned int WINDOW_HEIGHT = 600;
+const uint32_t WINDOW_WIDTH = 800;
+const uint32_t WINDOW_HEIGHT = 600;
 
 const char* vertexShaderSource = "#version 330 core\n"
 	"layout (location = 0) in vec3 aPos;\n"
@@ -27,13 +27,6 @@ const char* fragmentShaderSource = "#version 330 core\n"
 
 int main()
 {
-	// Timesteps
-	static double limitFPS = 1.0 / 60.0 , limitPhysicsSteps = 1.0 / 30.0;
-
-	double lastTime = glfwGetTime(), nowTime = 0, timer = lastTime;
-	double deltaTimeRender = 0, deltaTimePhysics = 0;
-	int frames = 0, physicsUpdates = 0;
-
 	// GLFW : Init and config window
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -65,7 +58,7 @@ int main()
 	// Build & compile shaders
 	//-------------------------
 	// Vertex Shader
-	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);	// Assign the id of the shader to this unint
+	uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);	// Assign the id of the shader to this unint
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);		// Compile the source for shader into the id
 	glCompileShader(vertexShader);
 	// Vars for shader compile check
@@ -80,7 +73,7 @@ int main()
 	}
 
 	// Fragment Shader
-	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	uint32_t fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 	glCompileShader(fragmentShader);
 	// Check if shader compiled without error
@@ -92,7 +85,7 @@ int main()
 	}
 
 	// Shader Program
-	unsigned int shaderProgram = glCreateProgram();
+	uint32_t shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
@@ -114,13 +107,13 @@ int main()
 	-0.5f, -0.5f, 0.0f,  // bottom left
 	-0.5f,  0.5f, 0.0f   // top left 
 	};
-	unsigned int indices[] = {  // note that we start from 0!
+	uint32_t indices[] = {  // note that we start from 0!
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
 	};
 
 	// Gen and asaign these var IDs
-	unsigned int VAO, VBO, EBO;
+	uint32_t VAO, VBO, EBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -145,17 +138,23 @@ int main()
 	// DEBUG : Draw wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+	// Timesteps
+	double limitFPS = 1.0 / 60.0, limitPhysicsSteps = 1.0 / 30.0;
+	double lastTime = glfwGetTime(), nowTime = 0, timer = lastTime;
+	double deltaTimeRender = 0, deltaTimePhysics = 0;
+	int frames = 0, physicsUpdates = 0;
+
 	// Main Loop
 	while (!glfwWindowShouldClose(window))
 	{
-		// Input
-		processInput(window);
-
-		// Timestep for Rendering and Physics
+		// Timestep
 		nowTime = glfwGetTime();
 		deltaTimeRender += (nowTime - lastTime) / limitFPS;
 		deltaTimePhysics += (nowTime - lastTime) / limitPhysicsSteps;
 		lastTime = nowTime;
+
+		// Input
+		processInput(window);
 
 		if (deltaTimePhysics >= 1.0)
 		{
@@ -187,7 +186,7 @@ int main()
 			glfwPollEvents();
 		}
 
-		// Print the fps and updates
+		// Reset the updates and fps counter every second
 		if (glfwGetTime() - timer > 1.0)
 		{
 			timer++;
