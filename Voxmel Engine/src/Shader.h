@@ -11,9 +11,6 @@
 class Shader
 {
 public:
-	// The program ID
-	uint32_t ID;
-
 	// Constructor reads amd builds the shader
 	Shader(const char* vertexPath, const char* fragmentPath);
 	// Use/Activate the shader
@@ -24,7 +21,8 @@ public:
 	void setFloat(const std::string& name, float value) const;
 
 private:
-	int d = 0;
+	// The program ID
+	uint32_t ID;
 };
 
 #endif // !SHADER_H
