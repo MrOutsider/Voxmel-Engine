@@ -157,10 +157,20 @@ int main()
 		deltaTimePhysics += (nowTime - lastTime) / limitPhysicsSteps;
 		lastTime = nowTime;
 
+		if (deltaTimePhysics >= 1.0)
+		{
+			deltaTimePhysics--;
+			physicsUpdates++;
+
+			// Do physics here
+		}
+
 		if (deltaTimeRender >= 1.0)
 		{
 			deltaTimeRender--;
 			frames++;
+
+			// Do Update() stuff before rendering
 
 			// Rendering commands
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -175,14 +185,6 @@ int main()
 			// Check/Call events and swap buffers
 			glfwSwapBuffers(window);
 			glfwPollEvents();
-		}
-
-		if (deltaTimePhysics >= 1.0)
-		{
-			deltaTimePhysics--;
-			physicsUpdates++;
-
-			// Do physics here
 		}
 
 		// Print the fps and updates
