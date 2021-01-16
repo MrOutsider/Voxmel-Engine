@@ -21,9 +21,11 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\vendor\glad\glad.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
