@@ -3,8 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# Custom
-assets/
+# Game Related
+textures/
 
 # User-specific files
 *.rsuser

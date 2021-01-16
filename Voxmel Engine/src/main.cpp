@@ -43,16 +43,17 @@ int main()
 		return -1;
 	}
 
-	Shader basicShader("bin/shaders/basic.vs", "bin/shaders/basic.fs");
+	Shader basicShader("res/shaders/basic.vs", "res/shaders/basic.fs");
 
 	float vertices[] = {
-	// Verts				Colors
-	0.5f, -0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	// Bottom Right
-	-0.5f, -0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	// Bottom Left
-	0.0f, 0.5f, 0.0f,		0.0f, 0.0f, 1.0f	// Top Center
+	// Verts				UV
+	-0.5f, 0.5f, 0.0f, 0.0, 1.0,
+	0.5f, 0.5f, 0.0f, 1.0, 1.0,
+	0.5f, -0.5f, 0.0f, 1.0, 0.0,
+	-0.5f, -0.5f, 0.0f, 0.0, 0.0
 	};
 	uint32_t indices[] = {  // note that we start from 0!
-		0, 1, 2
+		0, 1, 3, 1, 2, 3
 	};
 
 	// Gen and asaign these var IDs
@@ -71,15 +72,12 @@ int main()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// Set the vertex attributes pointers
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(0 * sizeof(float)));
 	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0) // Only unbind when VAO is not in use
-	glBindVertexArray(0); // Unbind the VAO so it is not chanched further
+	glBindVertexArray(0); // Unbind the VAO so it is not changed further
 
 	// DEBUG : Draw wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -124,7 +122,7 @@ int main()
 			// Draw Here
 			basicShader.use();
 			glBindVertexArray(VAO);
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
 
 			// Check/Call events and swap buffers
@@ -132,7 +130,7 @@ int main()
 			glfwPollEvents();
 		}
 
-		// Reset the updates and fps counter every second
+		// Reset the updates and fps counter every EARTH second
 		if (glfwGetTime() - timer > 1.0)
 		{
 			timer++;
