@@ -9,10 +9,10 @@
 class WindowManager
 {
 public:
-	GLFWwindow* window;
 	int init(int width, int height, const char* windowTitle);
+	GLFWwindow* get_window();
 private:
-	void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+	GLFWwindow* window;
 };
 
 #endif // !WINDOW_MANAGER_H

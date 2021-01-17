@@ -8,6 +8,7 @@
 
 // Declarations
 void processInput(GLFWwindow* window);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 // Settings
 const uint32_t WINDOW_WIDTH = 800;
@@ -17,6 +18,9 @@ int main()
 {
 	WindowManager window;
 	window.init(WINDOW_WIDTH, WINDOW_HEIGHT, "VoxMel Engine");
+
+	//// GLFW : Init and setup the viewport change callback
+	glfwSetFramebufferSizeCallback(window.get_window(), framebuffer_size_callback);
 
 	Shader basicShader("res/shaders/basic.vs", "res/shaders/basic.fs");
 
@@ -61,7 +65,7 @@ int main()
 	int frames = 0, physicsUpdates = 0;
 
 	// Main Loop
-	while (!glfwWindowShouldClose(window.window))
+	while (!glfwWindowShouldClose(window.get_window()))
 	{
 		// Timestep
 		nowTime = glfwGetTime();
@@ -70,7 +74,7 @@ int main()
 		lastTime = nowTime;
 
 		// Input
-		processInput(window.window);
+		processInput(window.get_window());
 
 		if (deltaTimePhysics >= 1.0)
 		{
@@ -97,7 +101,7 @@ int main()
 			glBindVertexArray(0);
 
 			// Check/Call events and swap buffers
-			glfwSwapBuffers(window.window);
+			glfwSwapBuffers(window.get_window());
 			glfwPollEvents();
 		}
 
@@ -114,7 +118,7 @@ int main()
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
-	//basicShader.delete()
+	basicShader.destroy();
 
 	glfwTerminate();
 	return 0;
@@ -127,4 +131,10 @@ void processInput(GLFWwindow* window)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
+}
+
+// GLFW: whenever the window size changed (by OS or user resize) this callback function executes
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
 }
