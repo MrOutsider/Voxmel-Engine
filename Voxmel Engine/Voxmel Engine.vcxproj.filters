@@ -15,9 +15,6 @@
     <Filter Include="Source Files\vendor">
       <UniqueIdentifier>{f9eb8756-28d7-4b70-ba0d-07fd9b1ad45e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\vendor">
-      <UniqueIdentifier>{8c054b2e-755a-4266-a2fb-b30eb9d1b250}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -32,12 +29,24 @@
     <ClCompile Include="src\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\WindowManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WindowManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

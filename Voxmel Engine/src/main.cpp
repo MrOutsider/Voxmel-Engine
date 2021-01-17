@@ -1,12 +1,12 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Shader.h"
+#include "WindowManager.h"
+#include "Renderer.h"
 
 #include <iostream>
 
 // Declarations
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
 // Settings
@@ -15,35 +15,11 @@ const uint32_t WINDOW_HEIGHT = 600;
 
 int main()
 {
-	// GLFW : Init and config window
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#ifdef __APPLE__
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
+	WindowManager window;
+	window.init(WINDOW_WIDTH, WINDOW_HEIGHT, "VoxMel Engine");
 
-	// GLFW : Create window
-	GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Voxmel Engine", NULL, NULL);
-	if (window == NULL)
-	{
-		std::cout << "Failed to create GLFW window." << std::endl;
-		glfwTerminate();
-		return -1;
-	}
-	glfwMakeContextCurrent(window);
-	// GLFW : Init and setup the viewport change callback
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		std::cout << "Failed to init GLAD." << std::endl;
-		return -1;
-	}
-
-	Shader basicShader("res/shaders/basic.vs", "res/shaders/basic.fs");
+	Renderer renderer(window.window);
+	renderer.tutSetUp();
 
 	float vertices[] = {
 	// Verts				UV
@@ -76,11 +52,7 @@ int main()
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0) // Only unbind when VAO is not in use
 	glBindVertexArray(0); // Unbind the VAO so it is not changed further
-
-	// DEBUG : Draw wireframe
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// Timesteps
 	double limitFPS = 1.0 / 60.0, limitPhysicsSteps = 1.0 / 30.0;
@@ -89,7 +61,7 @@ int main()
 	int frames = 0, physicsUpdates = 0;
 
 	// Main Loop
-	while (!glfwWindowShouldClose(window))
+	while (!glfwWindowShouldClose(window.window))
 	{
 		// Timestep
 		nowTime = glfwGetTime();
@@ -98,7 +70,7 @@ int main()
 		lastTime = nowTime;
 
 		// Input
-		processInput(window);
+		processInput(window.window);
 
 		if (deltaTimePhysics >= 1.0)
 		{
@@ -115,18 +87,14 @@ int main()
 
 			// Do Update() stuff before rendering
 
-			// Rendering commands
-			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-
 			// Draw Here
-			basicShader.use();
+			renderer.render();
 			glBindVertexArray(VAO);
 			glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
 
 			// Check/Call events and swap buffers
-			glfwSwapBuffers(window);
+			glfwSwapBuffers(window.window);
 			glfwPollEvents();
 		}
 
@@ -140,19 +108,13 @@ int main()
 	}
 
 	// Release resources
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
+	//glDeleteVertexArrays(1, &VAO);
+	//glDeleteBuffers(1, &VBO);
+	//glDeleteBuffers(1, &EBO);
 	//basicShader.delete()
 
 	glfwTerminate();
 	return 0;
-}
-
-// This func is the callback to change the viewport size
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
 }
 
 // This function is looped to detect input
