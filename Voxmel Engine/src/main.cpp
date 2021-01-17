@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include "WindowManager.h"
-#include "Renderer.h"
+#include "Shader.h"
 
 #include <iostream>
 
@@ -18,18 +18,18 @@ int main()
 	WindowManager window;
 	window.init(WINDOW_WIDTH, WINDOW_HEIGHT, "VoxMel Engine");
 
-	Renderer renderer(window.window);
-	renderer.tutSetUp();
+	Shader basicShader("res/shaders/basic.vs", "res/shaders/basic.fs");
 
 	float vertices[] = {
 	// Verts				UV
-	-0.5f, 0.5f, 0.0f, 0.0, 1.0,
-	0.5f, 0.5f, 0.0f, 1.0, 1.0,
-	0.5f, -0.5f, 0.0f, 1.0, 0.0,
-	-0.5f, -0.5f, 0.0f, 0.0, 0.0
+	-0.5f,  0.5f, 0.0f,		0.0, 1.0,
+	 0.5f,  0.5f, 0.0f,		1.0, 1.0,
+	 0.5f, -0.5f, 0.0f,		1.0, 0.0,
+	-0.5f, -0.5f, 0.0f,		0.0, 0.0
 	};
 	uint32_t indices[] = {  // note that we start from 0!
-		0, 1, 3, 1, 2, 3
+		0, 1, 3,
+		1, 2, 3
 	};
 
 	// Gen and asaign these var IDs
@@ -88,7 +88,10 @@ int main()
 			// Do Update() stuff before rendering
 
 			// Draw Here
-			renderer.render();
+			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			basicShader.use();
 			glBindVertexArray(VAO);
 			glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
@@ -108,9 +111,9 @@ int main()
 	}
 
 	// Release resources
-	//glDeleteVertexArrays(1, &VAO);
-	//glDeleteBuffers(1, &VBO);
-	//glDeleteBuffers(1, &EBO);
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 	//basicShader.delete()
 
 	glfwTerminate();

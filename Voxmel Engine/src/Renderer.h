@@ -12,11 +12,10 @@ class Renderer
 {
 public:
 	Renderer(GLFWwindow* win);
-	void tutSetUp();
+	void compileShaders();
 	void render();
 private:
 	GLFWwindow* window;
-	std::vector<Shader> shaders;
 };
 
 #endif // !RENDERER_H
