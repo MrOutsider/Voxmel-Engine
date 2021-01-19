@@ -3,6 +3,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <stb/stb_image.h>
 
 #include <vector>
 
@@ -11,11 +12,17 @@
 class Renderer
 {
 public:
-	Renderer(GLFWwindow* win);
-	void compileShaders();
+	void init(GLFWwindow* win);
 	void render();
+	void destroy();
 private:
 	GLFWwindow* window;
+
+	std::vector<Shader> shaders;
+
+	void compileShaders();
+	void loadTextures();
+	void loadModels();
 };
 
 #endif // !RENDERER_H

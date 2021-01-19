@@ -3,8 +3,11 @@
 #include <stb/stb_image.h>
 
 #include "WindowManager.h"
-#include "Shader.h"
+#include "Renderer.h"
 
+#include "Entity.h"
+
+#include <vector>
 #include <iostream>
 
 // Declarations
@@ -20,10 +23,12 @@ int main()
 	WindowManager window;
 	window.init(WINDOW_WIDTH, WINDOW_HEIGHT, "VoxMel Engine");
 
+	Renderer renderer;
+	renderer.init(window.get_window());
+
 	//// GLFW : Init and setup the viewport change callback
 	glfwSetFramebufferSizeCallback(window.get_window(), framebuffer_size_callback);
 
-	Shader basicShader("res/shaders/basic.vs", "res/shaders/basic.fs");
 
 	float vertices[] = {
 		// Positions			Colors				UV
@@ -33,7 +38,7 @@ int main()
 		-0.5f,  0.5f, 0.0f,		1.0f, 1.0f, 0.0f,	0.0f, 1.0f	// Top Left
 	};
 
-	uint32_t indices[] = {  // note that we start from 0!
+	uint32_t indices[] = {  // Note that we start from 0!
 		0, 1, 2,
 		2, 3, 0
 	};
@@ -75,9 +80,15 @@ int main()
 	uint32_t texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
+	// Wraping
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//Mipmap
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	int textureWidth, textureHeight, texture_nrChannels;
-	unsigned char* textureData = stbi_load("res/textures/wall.jpg", &textureWidth, &textureHeight, &texture_nrChannels, 0);
+	unsigned char* textureData = stbi_load("res/textures/container.jpg", &textureWidth, &textureHeight, &texture_nrChannels, 0);
 
 	if (textureData)
 	{
@@ -95,6 +106,8 @@ int main()
 	double lastTime = glfwGetTime(), nowTime = 0, timer = lastTime;
 	double deltaTimeRender = 0, deltaTimePhysics = 0;
 	int frames = 0, physicsUpdates = 0;
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //For wireframe
 
 	// Main Loop
 	while (!glfwWindowShouldClose(window.get_window()))
@@ -127,7 +140,7 @@ int main()
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			basicShader.use();
+			renderer.render();
 			glBindTexture(GL_TEXTURE_2D, texture);
 			glBindVertexArray(VAO);
 			glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
@@ -151,7 +164,8 @@ int main()
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
-	basicShader.destroy();
+	glDeleteTextures(1, &texture);
+	renderer.destroy();
 
 	glfwTerminate();
 	return 0;

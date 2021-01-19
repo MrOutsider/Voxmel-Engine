@@ -11,8 +11,7 @@
 class Shader
 {
 public:
-	// Constructor reads amd builds the shader
-	Shader(const char* vertexPath, const char* fragmentPath);
+	void create(const char* vertexPath, const char* fragmentPath);
 	// Use/Activate the shader
 	void use();
 	void destroy();
