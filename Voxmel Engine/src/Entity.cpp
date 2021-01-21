@@ -2,6 +2,7 @@
 
 Entity::Entity()
 {
+	// Hard coded for learning
 	vertices = {
 		// Positions			Colors				UV
 		 0.5f,  0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	1.0f, 1.0f,	// Top Right

@@ -24,8 +24,8 @@ int main()
 	WindowManager window(WINDOW_WIDTH, WINDOW_HEIGHT, windowTitle);
 	Renderer renderer(window.get_window());
 
-	Entity ent;
-	renderer.addObj(ent);
+	Entity obj;
+	renderer.addObj(obj);
 
 	// Timesteps
 	double limitFPS = 1.0 / 60.0, limitPhysicsSteps = 1.0 / 30.0;
@@ -73,21 +73,15 @@ int main()
 
 			// Do Update() stuff before rendering
 
-			// Draw Here
-
 			renderer.render();
 
-			// Check/Call events
 			glfwPollEvents();
 		}
 	}
 
 	// Release resources
-	/*glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
-	glDeleteTextures(1, &texture);*/
 	renderer.destroy();
+	std::cout << "Resources Destroyed\n";
 
 	glfwTerminate();
 	return 0;

@@ -14,19 +14,21 @@ void Renderer::addObj(Entity& entity)
 	uint32_t VAO, VBO, EBO;
 
 	VAOs.push_back(VAO);
+	VBOs.push_back(VBO);
+	EBOs.push_back(EBO);
 
 	glGenVertexArrays(1, &VAOs.back());
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
+	glGenBuffers(1, &VBOs.back());
+	glGenBuffers(1, &EBOs.back());
 
 	glBindVertexArray(VAOs.back());
 
 	// Copy vertices array into a Vertex Buffer Object for OpenGL to use
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOs.back());
 	glBufferData(GL_ARRAY_BUFFER, entity.getVertices().size() * sizeof(float), &entity.getVertices().front(), GL_STATIC_DRAW);
 
 	// Copy indices array into an Element Array Buffer Object for OpenGL to reuse verts from the VBO
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs.back());
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, entity.getIndices().size() * sizeof(uint32_t), &entity.getIndices().front(), GL_STATIC_DRAW);
 
 	// Set the texture wrapping/filtering options (on the currently bound texture object)
@@ -114,5 +116,43 @@ void Renderer::render()
 
 void Renderer::destroy()
 {
-	shaders[0].destroy();
+	if (shaders.size() != 0)
+	{
+		for (size_t i = 0; i < shaders.size(); i++)
+		{
+			shaders[i].destroy();
+		}
+	}
+
+	if (VAOs.size() != 0)
+	{
+		for (size_t i = 0; i < VAOs.size(); i++)
+		{
+			glDeleteVertexArrays(1, &VAOs[i]);
+		}
+	}
+
+	if (VBOs.size() != 0)
+	{
+		for (size_t i = 0; i < VBOs.size(); i++)
+		{
+			glDeleteVertexArrays(1, &VBOs[i]);
+		}
+	}
+
+	if (EBOs.size() != 0)
+	{
+		for (size_t i = 0; i < EBOs.size(); i++)
+		{
+			glDeleteVertexArrays(1, &EBOs[i]);
+		}
+	}
+
+	if (textures.size() != 1)
+	{
+		for (size_t i = 0; i < textures.size(); i++)
+		{
+			glDeleteTextures(1, &textures[i]);
+		}
+	}
 }

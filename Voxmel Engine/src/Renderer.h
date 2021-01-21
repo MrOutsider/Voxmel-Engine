@@ -22,6 +22,8 @@ private:
 
 	std::vector<Shader> shaders;
 	std::vector<uint32_t> VAOs;
+	std::vector<uint32_t> VBOs;
+	std::vector<uint32_t> EBOs;
 	std::vector<uint32_t> sizeOfIndi;
 	std::vector<uint32_t> textures;
 
