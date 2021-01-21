@@ -10,9 +10,9 @@ public:
 	~Entity();
 
 	// Getters
-	std::vector<float> getVertices();
-	std::vector<uint32_t> getIndices();
-	std::vector<const char*> getTextures();
+	std::vector<float>& getVertices();
+	std::vector<uint32_t>& getIndices();
+	std::vector<const char*>& getTextures();
 
 private:
 	std::vector<float> vertices;

@@ -23,17 +23,17 @@ Entity::~Entity()
 {
 }
 
-std::vector<float> Entity::getVertices()
+std::vector<float>& Entity::getVertices()
 {
 	return vertices;
 }
 
-std::vector<uint32_t> Entity::getIndices()
+std::vector<uint32_t>& Entity::getIndices()
 {
 	return indices;
 }
 
-std::vector<const char*> Entity::getTextures()
+std::vector<const char*>& Entity::getTextures()
 {
 	return textures;
 }
