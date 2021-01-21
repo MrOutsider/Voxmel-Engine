@@ -13,14 +13,17 @@ void Renderer::addObj(Entity& entity)
 	// Gen and asaign these var IDs
 	uint32_t VAO, VBO, EBO;
 
+	// Store the vars so they dont go out of scope and can be called later
 	VAOs.push_back(VAO);
 	VBOs.push_back(VBO);
 	EBOs.push_back(EBO);
 
+	// Generate the IDs
 	glGenVertexArrays(1, &VAOs.back());
 	glGenBuffers(1, &VBOs.back());
 	glGenBuffers(1, &EBOs.back());
 
+	// Bind the VAO
 	glBindVertexArray(VAOs.back());
 
 	// Copy vertices array into a Vertex Buffer Object for OpenGL to use
@@ -37,7 +40,7 @@ void Renderer::addObj(Entity& entity)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	// Set the vertex attributes pointers
+	// Set the vertex attributes
 	// Vertices
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0 * sizeof(float)));
 	glEnableVertexAttribArray(0);
