@@ -9,10 +9,12 @@
 class WindowManager
 {
 public:
-	int init(int width, int height, const char* windowTitle);
+	WindowManager(int width, int height, const char* windowTitle);
 	GLFWwindow* get_window();
 private:
 	GLFWwindow* window;
+
+	int init(int width, int height, const char* windowTitle);
 };
 
 #endif // !WINDOW_MANAGER_H

@@ -8,18 +8,24 @@
 #include <vector>
 
 #include "Shader.h"
+#include "Entity.h"
 
 class Renderer
 {
 public:
-	void init(GLFWwindow* win);
+	Renderer(GLFWwindow* win);
+	void addObj(Entity& entity);
 	void render();
 	void destroy();
 private:
 	GLFWwindow* window;
 
 	std::vector<Shader> shaders;
+	std::vector<uint32_t> VAOs;
+	std::vector<uint32_t> sizeOfIndi;
+	std::vector<uint32_t> textures;
 
+	void init();
 	void compileShaders();
 	void loadTextures();
 	void loadModels();
