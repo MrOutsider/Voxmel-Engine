@@ -5,9 +5,10 @@ in vec2 texCoord;
 
 out vec4 FragColor;
 
-uniform sampler2D ourTexture;
+uniform sampler2D albedoTexture;
+uniform sampler2D roughnessTexture;
 
 void main()
 {
-	gl_FragColor = texture(ourTexture, texCoord) * vec4(ourColor, 1.0);
+	gl_FragColor = mix(texture(albedoTexture, texCoord), texture(roughnessTexture, texCoord), 0.2) * vec4(ourColor, 1.0);
 }

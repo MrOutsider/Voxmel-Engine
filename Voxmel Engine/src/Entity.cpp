@@ -5,10 +5,10 @@ Entity::Entity()
 	// Hard coded for learning
 	modelData.vertices = {
 		// Positions			Colors				UV
-		 0.5f,  0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	1.0f, 1.0f,	// Top Right
-		 0.5f, -0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	1.0f, 0.0f,	// Bottom Right
-		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f, 1.0f,	0.0f, 0.0f,	// Bottom Left
-		-0.5f,  0.5f, 0.0f,		1.0f, 1.0f, 0.0f,	0.0f, 1.0f	// Top Left
+		 0.5f,  0.5f, 0.0f,		1.0f, 1.0f, 1.0f,	1.0f, 1.0f,	// Top Right
+		 0.5f, -0.5f, 0.0f,		1.0f, 1.0f, 1.0f,	1.0f, 0.0f,	// Bottom Right
+		-0.5f, -0.5f, 0.0f,		1.0f, 1.0f, 1.0f,	0.0f, 0.0f,	// Bottom Left
+		-0.5f,  0.5f, 0.0f,		1.0f, 1.0f, 1.0f,	0.0f, 1.0f	// Top Left
 	};
 
 	modelData.indices = {
@@ -16,14 +16,9 @@ Entity::Entity()
 		2, 3, 0
 	};
 
-	modelData.texture = ("res/textures/container.jpg");
+	modelData.texture.albedo = ("res/textures/container.jpg");
 }
 
 Entity::~Entity()
 {
-}
-
-ModelData& Entity::getModelData()
-{
-	return modelData;
 }

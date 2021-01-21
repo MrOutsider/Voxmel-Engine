@@ -8,7 +8,7 @@ Renderer::Renderer(GLFWwindow* win)
 
 void Renderer::addEntityRenderTarget(Entity& entity)
 {
-	sizeOfIndi.push_back(sizeof(uint32_t) * entity.getModelData().indices.size());
+	sizeOfIndi.push_back(sizeof(uint32_t) * entity.modelData.indices.size());
 
 	// Gen and asaign these var IDs
 	uint32_t VAO, VBO, EBO;
@@ -28,11 +28,11 @@ void Renderer::addEntityRenderTarget(Entity& entity)
 
 	// Copy vertices array into a Vertex Buffer Object for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, VBOs.back());
-	glBufferData(GL_ARRAY_BUFFER, entity.getModelData().vertices.size() * sizeof(float), &entity.getModelData().vertices.front(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, entity.modelData.vertices.size() * sizeof(float), &entity.modelData.vertices.front(), GL_STATIC_DRAW);
 
 	// Copy indices array into an Element Array Buffer Object for OpenGL to reuse verts from the VBO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs.back());
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, entity.getModelData().indices.size() * sizeof(uint32_t), &entity.getModelData().indices.front(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, entity.modelData.indices.size() * sizeof(uint32_t), &entity.modelData.indices.front(), GL_STATIC_DRAW);
 
 	// Set the texture wrapping/filtering options (on the currently bound texture object)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -51,33 +51,16 @@ void Renderer::addEntityRenderTarget(Entity& entity)
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
-	// Texture load and binding
-	uint32_t newTexture;
-
-	textures.push_back(newTexture);
-
-	glGenTextures(1, &textures.back());
-	glBindTexture(GL_TEXTURE_2D, textures.back());
-	// Wraping
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	//Mipmap
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	int textureWidth, textureHeight, texture_nrChannels;
-	unsigned char* textureData = stbi_load(entity.getModelData().texture, &textureWidth, &textureHeight, &texture_nrChannels, 0);
-
-	if (textureData)
+	if (entity.modelData.texture.albedo != "NULL")
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
-		glGenerateMipmap(GL_TEXTURE_2D);
+		loadTexture(entity.modelData.texture.albedo, albedoTextures);
+		loadTexture("res/textures/awesomeface.png", roughnessTextures);
 	}
 	else
 	{
-		std::cout << "Failed to load texture" << std::endl;
+		loadTexture("res/textures/default.png", albedoTextures);
+		loadTexture("res/textures/default.png", roughnessTextures);
 	}
-	stbi_image_free(textureData);
 }
 
 void Renderer::init()
@@ -92,12 +75,57 @@ void Renderer::compileShaders()
 	shaders.back().create("res/shaders/basic.vs", "res/shaders/basic.fs");
 }
 
-void Renderer::loadTextures()
+void Renderer::loadModel()
 {
 }
 
-void Renderer::loadModels()
+void Renderer::loadTexture(const char* textureName, std::vector<uint32_t>& texVec)
 {
+	// Texture load and binding
+	uint32_t newTexture;
+
+	texVec.push_back(newTexture);
+
+	glGenTextures(1, &texVec.back());
+	glBindTexture(GL_TEXTURE_2D, texVec.back());
+	// Wraping
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//Mipmap
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	int textureWidth, textureHeight, texture_nrChannels;
+	stbi_set_flip_vertically_on_load(true);
+
+	if (texVec == albedoTextures)
+	{
+		unsigned char* textureData = stbi_load(textureName, &textureWidth, &textureHeight, &texture_nrChannels, 0);
+
+		if (textureData)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
+		}
+		else
+		{
+			std::cout << "Failed to load texture" << std::endl;
+		}
+		stbi_image_free(textureData);
+	}
+	else if (texVec == roughnessTextures)
+	{
+		unsigned char* textureData = stbi_load(textureName, &textureWidth, &textureHeight, &texture_nrChannels, 0);
+
+		if (textureData)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+		}
+		else
+		{
+			std::cout << "Failed to load texture" << std::endl;
+		}
+		stbi_image_free(textureData);
+	}
 }
 
 void Renderer::render()
@@ -105,12 +133,20 @@ void Renderer::render()
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	if (VAOs.size() != 0)	// Only render models when there is at least one VAO in queue
+	if (!VAOs.empty())	// Only render models when there is at least one VAO in queue
 	{
 		for (size_t i = 0; i < VAOs.size(); i++)
 		{
 			shaders[0].use();
-			glBindTexture(GL_TEXTURE_2D, textures[i]);
+			if (!albedoTextures.empty())
+			{
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, albedoTextures[i]);
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, roughnessTextures[i]);
+				shaders[0].setInt("albedoTexture", 0);
+				shaders[0].setInt("roughnessTexture", 1);
+			}
 			glBindVertexArray(VAOs[i]);
 			glDrawElements(GL_TRIANGLES, sizeOfIndi[i], GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
@@ -158,11 +194,11 @@ void Renderer::destroy()
 		std::cout << "EBOs destroyed\n";
 	}
 
-	if (textures.size() != 1)
+	if (albedoTextures.size() != 1)
 	{
-		for (size_t i = 0; i < textures.size(); i++)
+		for (size_t i = 0; i < albedoTextures.size(); i++)
 		{
-			glDeleteTextures(1, &textures[i]);
+			glDeleteTextures(1, &albedoTextures[i]);
 		}
 		std::cout << "Textures destroyed\n";
 	}

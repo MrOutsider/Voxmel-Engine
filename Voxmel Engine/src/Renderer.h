@@ -26,12 +26,13 @@ private:
 	std::vector<uint32_t> VBOs;
 	std::vector<uint32_t> EBOs;
 	std::vector<uint32_t> sizeOfIndi;
-	std::vector<uint32_t> textures;
+	std::vector<uint32_t> albedoTextures;
+	std::vector<uint32_t> roughnessTextures;
 
 	void init();
 	void compileShaders();
-	void loadTextures();
-	void loadModels();
+	void loadModel();
+	void loadTexture(const char* textureName, std::vector<uint32_t>& texVec);
 };
 
 #endif // !RENDERER_H

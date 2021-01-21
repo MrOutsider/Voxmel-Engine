@@ -3,14 +3,26 @@
 
 #include <vector>
 
+struct Texture
+{
+	const char* albedo = "NULL";
+};
+
 struct ModelData
 {
 	std::vector<float> vertices;
 	std::vector<uint32_t> indices;
-	const char* texture;
+	Texture texture;
 };
 
 struct Transform
+{
+	double x = 0;
+	double y = 0;
+	double z = 0;
+};
+
+struct LocalTransform
 {
 	double x = 0;
 	double y = 0;
@@ -30,13 +42,13 @@ public:
 	Entity();
 	~Entity();
 
-	// Getters
-	ModelData& getModelData();
-
-private:
 	ModelData modelData;
 	Transform transform;
+	LocalTransform localTransform;
 	Scale scale;
+
+private:
+	
 };
 #endif // !ENTITY_H
 
