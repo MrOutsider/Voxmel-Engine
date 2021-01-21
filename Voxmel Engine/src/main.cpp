@@ -25,7 +25,7 @@ int main()
 	Renderer renderer(window.get_window());
 
 	Entity obj;
-	renderer.addObj(obj);
+	renderer.addEntityRenderTarget(obj);
 
 	// Timesteps
 	double limitFPS = 1.0 / 60.0, limitPhysicsSteps = 1.0 / 30.0;
@@ -81,7 +81,6 @@ int main()
 
 	// Release resources
 	renderer.destroy();
-	std::cout << "Resources Destroyed\n";
 
 	glfwTerminate();
 	return 0;

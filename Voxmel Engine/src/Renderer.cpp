@@ -6,9 +6,9 @@ Renderer::Renderer(GLFWwindow* win)
 	init();
 }
 
-void Renderer::addObj(Entity& entity)
+void Renderer::addEntityRenderTarget(Entity& entity)
 {
-	sizeOfIndi.push_back(sizeof(uint32_t) * entity.getIndices().size());
+	sizeOfIndi.push_back(sizeof(uint32_t) * entity.getModelData().indices.size());
 
 	// Gen and asaign these var IDs
 	uint32_t VAO, VBO, EBO;
@@ -28,11 +28,11 @@ void Renderer::addObj(Entity& entity)
 
 	// Copy vertices array into a Vertex Buffer Object for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, VBOs.back());
-	glBufferData(GL_ARRAY_BUFFER, entity.getVertices().size() * sizeof(float), &entity.getVertices().front(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, entity.getModelData().vertices.size() * sizeof(float), &entity.getModelData().vertices.front(), GL_STATIC_DRAW);
 
 	// Copy indices array into an Element Array Buffer Object for OpenGL to reuse verts from the VBO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs.back());
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, entity.getIndices().size() * sizeof(uint32_t), &entity.getIndices().front(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, entity.getModelData().indices.size() * sizeof(uint32_t), &entity.getModelData().indices.front(), GL_STATIC_DRAW);
 
 	// Set the texture wrapping/filtering options (on the currently bound texture object)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -66,7 +66,7 @@ void Renderer::addObj(Entity& entity)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	int textureWidth, textureHeight, texture_nrChannels;
-	unsigned char* textureData = stbi_load(entity.getTextures().back(), &textureWidth, &textureHeight, &texture_nrChannels, 0);
+	unsigned char* textureData = stbi_load(entity.getModelData().texture, &textureWidth, &textureHeight, &texture_nrChannels, 0);
 
 	if (textureData)
 	{
@@ -107,11 +107,14 @@ void Renderer::render()
 
 	if (VAOs.size() != 0)	// Only render models when there is at least one VAO in queue
 	{
-		shaders[0].use();
-		glBindTexture(GL_TEXTURE_2D, textures.back());
-		glBindVertexArray(VAOs.back());
-		glDrawElements(GL_TRIANGLES, sizeOfIndi.back(), GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
+		for (size_t i = 0; i < VAOs.size(); i++)
+		{
+			shaders[0].use();
+			glBindTexture(GL_TEXTURE_2D, textures[i]);
+			glBindVertexArray(VAOs[i]);
+			glDrawElements(GL_TRIANGLES, sizeOfIndi[i], GL_UNSIGNED_INT, 0);
+			glBindVertexArray(0);
+		}
 	}
 
 	glfwSwapBuffers(window);
@@ -125,6 +128,7 @@ void Renderer::destroy()
 		{
 			shaders[i].destroy();
 		}
+		std::cout << "Shaders destroyed\n";
 	}
 
 	if (VAOs.size() != 0)
@@ -133,6 +137,7 @@ void Renderer::destroy()
 		{
 			glDeleteVertexArrays(1, &VAOs[i]);
 		}
+		std::cout << "VAOs destroyed\n";
 	}
 
 	if (VBOs.size() != 0)
@@ -141,6 +146,7 @@ void Renderer::destroy()
 		{
 			glDeleteVertexArrays(1, &VBOs[i]);
 		}
+		std::cout << "VBOs destroyed\n";
 	}
 
 	if (EBOs.size() != 0)
@@ -149,6 +155,7 @@ void Renderer::destroy()
 		{
 			glDeleteVertexArrays(1, &EBOs[i]);
 		}
+		std::cout << "EBOs destroyed\n";
 	}
 
 	if (textures.size() != 1)
@@ -157,5 +164,6 @@ void Renderer::destroy()
 		{
 			glDeleteTextures(1, &textures[i]);
 		}
+		std::cout << "Textures destroyed\n";
 	}
 }

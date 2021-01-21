@@ -10,6 +10,7 @@ class WindowManager
 {
 public:
 	WindowManager(int width, int height, const char* windowTitle);
+
 	GLFWwindow* get_window();
 private:
 	GLFWwindow* window;

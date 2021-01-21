@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
 
+#include <iostream>
 #include <vector>
 
 #include "Shader.h"
@@ -14,7 +15,7 @@ class Renderer
 {
 public:
 	Renderer(GLFWwindow* win);
-	void addObj(Entity& entity);
+	void addEntityRenderTarget(Entity& entity);
 	void render();
 	void destroy();
 private:

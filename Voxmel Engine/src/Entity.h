@@ -3,6 +3,27 @@
 
 #include <vector>
 
+struct ModelData
+{
+	std::vector<float> vertices;
+	std::vector<uint32_t> indices;
+	const char* texture;
+};
+
+struct Transform
+{
+	double x = 0;
+	double y = 0;
+	double z = 0;
+};
+
+struct Scale
+{
+	double x = 0;
+	double y = 0;
+	double z = 0;
+};
+
 class Entity
 {
 public:
@@ -10,14 +31,12 @@ public:
 	~Entity();
 
 	// Getters
-	std::vector<float>& getVertices();
-	std::vector<uint32_t>& getIndices();
-	std::vector<const char*>& getTextures();
+	ModelData& getModelData();
 
 private:
-	std::vector<float> vertices;
-	std::vector<uint32_t> indices;
-	std::vector<const char*> textures;
+	ModelData modelData;
+	Transform transform;
+	Scale scale;
 };
 #endif // !ENTITY_H
 
