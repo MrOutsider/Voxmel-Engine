@@ -92,8 +92,8 @@ void Renderer::loadTexture(const char* textureName, std::vector<uint32_t>& texVe
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	//Mipmap
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	int textureWidth, textureHeight, texture_nrChannels;
 	stbi_set_flip_vertically_on_load(true);
@@ -158,7 +158,7 @@ void Renderer::render()
 
 void Renderer::destroy()
 {
-	if (shaders.size() != 0)
+	if (!shaders.empty())
 	{
 		for (size_t i = 0; i < shaders.size(); i++)
 		{
@@ -167,7 +167,7 @@ void Renderer::destroy()
 		std::cout << "Shaders destroyed\n";
 	}
 
-	if (VAOs.size() != 0)
+	if (!VAOs.empty())
 	{
 		for (size_t i = 0; i < VAOs.size(); i++)
 		{
@@ -176,7 +176,7 @@ void Renderer::destroy()
 		std::cout << "VAOs destroyed\n";
 	}
 
-	if (VBOs.size() != 0)
+	if (!VBOs.empty())
 	{
 		for (size_t i = 0; i < VBOs.size(); i++)
 		{
@@ -185,7 +185,7 @@ void Renderer::destroy()
 		std::cout << "VBOs destroyed\n";
 	}
 
-	if (EBOs.size() != 0)
+	if (!EBOs.empty())
 	{
 		for (size_t i = 0; i < EBOs.size(); i++)
 		{
@@ -194,12 +194,22 @@ void Renderer::destroy()
 		std::cout << "EBOs destroyed\n";
 	}
 
-	if (albedoTextures.size() != 1)
+	if (!albedoTextures.empty())
 	{
 		for (size_t i = 0; i < albedoTextures.size(); i++)
 		{
 			glDeleteTextures(1, &albedoTextures[i]);
 		}
-		std::cout << "Textures destroyed\n";
+		std::cout << "Albedo textures destroyed\n";
+	}
+
+	if (!roughnessTextures.empty())
+	{
+		for (size_t i = 0; i < roughnessTextures.size(); i++)
+		{
+			glDeleteTextures(1, &roughnessTextures[i]);
+		}
+		std::cout << "Roughness textures destroyed\n";
 	}
 }
+

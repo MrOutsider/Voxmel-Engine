@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 // Declarations
 void processInput(GLFWwindow* window);
@@ -17,11 +18,12 @@ void processInput(GLFWwindow* window);
 const uint32_t WINDOW_WIDTH = 800;
 const uint32_t WINDOW_HEIGHT = 600;
 
-const char* windowTitle = "VoxMel Engine";
+std::string windowTitle = "VoxMel Engine";
+const char* winTitle = windowTitle.c_str();
 
 int main()
 {
-	WindowManager window(WINDOW_WIDTH, WINDOW_HEIGHT, windowTitle);
+	WindowManager window(WINDOW_WIDTH, WINDOW_HEIGHT, winTitle);
 	Renderer renderer(window.get_window());
 
 	Entity obj;
@@ -48,9 +50,9 @@ int main()
 		if (glfwGetTime() - timer > 1.0)
 		{
 			timer++;
-			std::string title = "VoxMel Engine | FPS : " + std::to_string(frames) + " | Physics : " + std::to_string(physicsUpdates);
-			windowTitle = title.c_str();
-			glfwSetWindowTitle(window.get_window(), windowTitle);
+			std::string newTitle = windowTitle + " | FPS : " + std::to_string(frames) + " | Physics : " + std::to_string(physicsUpdates);
+			winTitle = newTitle.c_str();
+			glfwSetWindowTitle(window.get_window(), winTitle);
 			//std::cout << "FPS: " << frames << " Physics Updates:" << physicsUpdates << std::endl;
 			physicsUpdates = 0, frames = 0;
 		}
