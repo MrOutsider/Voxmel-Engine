@@ -31,12 +31,6 @@ void Renderer::addEntityRenderTarget(Entity& e)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EntityList.back().EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, e.modelData.indices.size() * sizeof(uint32_t), &e.modelData.indices.front(), GL_STATIC_DRAW);
 
-	// Set the texture wrapping/filtering options (on the currently bound texture object)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
 	// Set the vertex attributes
 	// Vertices
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(0 * sizeof(float)));
@@ -94,6 +88,7 @@ void Renderer::loadTexture(const char* textureName, uint32_t& target, bool trans
 		if (textureData)
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
+			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 		else
 		{
@@ -106,6 +101,7 @@ void Renderer::loadTexture(const char* textureName, uint32_t& target, bool trans
 		if (textureData)
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 		else
 		{
@@ -118,21 +114,53 @@ void Renderer::loadTexture(const char* textureName, uint32_t& target, bool trans
 void Renderer::render()
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	for (size_t i = 0; i < EntityList.size(); i++)
 	{
 		shaders[EntityList[i].shader].use();
 
-		glm::mat4 localTransform = glm::mat4(1.0f);
-		localTransform = glm::translate(localTransform, EntityList[i].entity->transform);
-		localTransform = glm::scale(localTransform, EntityList[i].entity->scale);
-		localTransform = glm::rotate(localTransform, glm::radians(EntityList[i].entity->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-		localTransform = glm::rotate(localTransform, glm::radians(EntityList[i].entity->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		localTransform = glm::rotate(localTransform, glm::radians(EntityList[i].entity->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		glm::mat4 model = glm::mat4(1.0f);
+		if ((EntityList[i].entity->transform.x != 0) || (EntityList[i].entity->transform.y != 0) || (EntityList[i].entity->transform.z != 0))
+		{
+			model = glm::translate(model, EntityList[i].entity->transform);
+		}
+		if ((EntityList[i].entity->scale.x != 1) || (EntityList[i].entity->scale.y != 1) || (EntityList[i].entity->scale.z != 1))
+		{
+			model = glm::scale(model, EntityList[i].entity->scale);
+		}
+		if (EntityList[i].entity->rotation.x != 0)
+		{
+			model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.x * (float)glfwGetTime()), glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (EntityList[i].entity->rotation.y != 0)
+		{
+			model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.y * (float)glfwGetTime()), glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		if (EntityList[i].entity->rotation.z != 0)
+		{
+			model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.z * (float)glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
+		}
 
-		uint32_t transformLoc = glGetUniformLocation(shaders[EntityList[i].shader].getID(), "localTransform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(localTransform));
+		glm::mat4 view = glm::mat4(1.0f);
+		// note that we're translating the scene in the reverse direction of where we want to move
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		float window_width = mode->width;
+		float window_height = mode->height;
+
+		glm::mat4 projection = glm::mat4(1.0f);
+		projection = glm::perspective(glm::radians(45.0f), (float)window_width / (float)window_height, 0.1f, 100.0f);
+
+		uint32_t modelLoc = glGetUniformLocation(shaders[EntityList[i].shader].getID(), "model");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+		uint32_t viewLoc = glGetUniformLocation(shaders[EntityList[i].shader].getID(), "view");
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+		uint32_t projectionLoc = glGetUniformLocation(shaders[EntityList[i].shader].getID(), "projection");
+		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
 		if (!EntityList[i].albedoTexture == 0)
 		{

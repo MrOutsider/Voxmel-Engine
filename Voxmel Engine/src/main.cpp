@@ -35,6 +35,7 @@ int main()
 	float deltaTimeRender = 0, deltaTimePhysics = 0;
 	uint32_t frames = 0, physicsUpdates = 0;
 
+	glEnable(GL_DEPTH_TEST); // May be moved
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // For wireframe
 
 	// Main Loop
