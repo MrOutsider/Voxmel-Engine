@@ -5,6 +5,7 @@
 #include "WindowManager.h"
 #include "Renderer.h"
 
+#include "Camera.h"
 #include "Entity.h"
 
 #include <iostream>
@@ -26,8 +27,14 @@ int main()
 	WindowManager window(WINDOW_WIDTH, WINDOW_HEIGHT, winTitle);
 	Renderer renderer(window.get_window());
 
-	Entity obj;
-	renderer.addEntityRenderTarget(obj);
+	Camera cam(window.get_window());
+	renderer.addCamera(cam);
+
+	for (uint32_t i = 0; i < 10; i++)
+	{
+		Entity newE;
+		renderer.addEntityRenderTarget(newE);
+	}
 
 	// Timesteps
 	float limitFPS = 1.0 / 60.0, limitPhysicsSteps = 1.0 / 30.0;

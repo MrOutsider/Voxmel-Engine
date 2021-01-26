@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "Shader.h"
+#include "Camera.h"
 #include "Entity.h"
 
 struct RenderTarget
@@ -36,6 +37,7 @@ class Renderer
 {
 public:
 	Renderer(GLFWwindow* win);
+	void addCamera(Camera& cam);
 	void addEntityRenderTarget(Entity& entity);
 	void render();
 	void destroy();
@@ -43,6 +45,7 @@ private:
 	GLFWwindow* window;
 
 	std::vector<Shader> shaders;
+	std::vector<Camera> cams;
 	std::vector<RenderTarget> EntityList;
 
 	void init();

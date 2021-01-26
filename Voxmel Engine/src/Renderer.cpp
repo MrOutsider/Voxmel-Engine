@@ -50,6 +50,11 @@ void Renderer::addEntityRenderTarget(Entity& e)
 	}
 }
 
+void Renderer::addCamera(Camera& cam)
+{
+	cams.push_back(cam);
+}
+
 void Renderer::init()
 {
 	compileShaders();
@@ -120,7 +125,7 @@ void Renderer::render()
 	{
 		shaders[EntityList[i].shader].use();
 
-		glm::mat4 model = glm::mat4(1.0f);
+		/*glm::mat4 model = glm::mat4(1.0f);
 		if ((EntityList[i].entity->transform.x != 0) || (EntityList[i].entity->transform.y != 0) || (EntityList[i].entity->transform.z != 0))
 		{
 			model = glm::translate(model, EntityList[i].entity->transform);
@@ -140,11 +145,48 @@ void Renderer::render()
 		if (EntityList[i].entity->rotation.z != 0)
 		{
 			model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.z * (float)glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
-		}
+		}*/
+
+		glm::vec3 cubePositions[] = {
+			glm::vec3(0.0f,  0.0f,  0.0f),
+			glm::vec3(2.0f,  5.0f, -15.0f),
+			glm::vec3(-1.5f, -2.2f, -2.5f),
+			glm::vec3(-3.8f, -2.0f, -12.3f),
+			glm::vec3(2.4f, -0.4f, -3.5f),
+			glm::vec3(-1.7f,  3.0f, -7.5f),
+			glm::vec3(1.3f, -2.0f, -2.5f),
+			glm::vec3(1.5f,  2.0f, -2.5f),
+			glm::vec3(1.5f,  0.2f, -1.5f),
+			glm::vec3(-1.3f,  1.0f, -1.5f)
+		};
+
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, cubePositions[i]);
+		float angle = 20.0f * i * glfwGetTime();
+		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
 		glm::mat4 view = glm::mat4(1.0f);
 		// note that we're translating the scene in the reverse direction of where we want to move
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+		cams[0].move();
+
+		if ((cams[0].transform.x != 0) || (cams[0].transform.y != 0) || (cams[0].transform.z != 0))
+		{
+			view = glm::translate(view, cams[0].transform);
+		}
+		if (cams[0].rotation.x != 0)
+		{
+			view = glm::rotate(view, glm::radians(cams[0].rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (cams[0].rotation.y != 0)
+		{
+			view = glm::rotate(view, glm::radians(cams[0].rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		if (cams[0].rotation.z != 0)
+		{
+			view = glm::rotate(view, glm::radians(cams[0].rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		}
 
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		float window_width = mode->width;
@@ -153,14 +195,9 @@ void Renderer::render()
 		glm::mat4 projection = glm::mat4(1.0f);
 		projection = glm::perspective(glm::radians(45.0f), (float)window_width / (float)window_height, 0.1f, 100.0f);
 
-		uint32_t modelLoc = glGetUniformLocation(shaders[EntityList[i].shader].getID(), "model");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-		uint32_t viewLoc = glGetUniformLocation(shaders[EntityList[i].shader].getID(), "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-
-		uint32_t projectionLoc = glGetUniformLocation(shaders[EntityList[i].shader].getID(), "projection");
-		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		shaders[EntityList[i].shader].setMat4("model", model);
+		shaders[EntityList[i].shader].setMat4("view", view);
+		shaders[EntityList[i].shader].setMat4("projection", projection);
 
 		if (!EntityList[i].albedoTexture == 0)
 		{
