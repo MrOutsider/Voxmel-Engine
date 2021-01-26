@@ -1,11 +1,13 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <glm/glm.hpp>
 #include <vector>
 
 struct Texture
 {
 	const char* albedo = "NULL";
+	const char* secondTexture = "NULL";
 };
 
 struct ModelData
@@ -15,27 +17,6 @@ struct ModelData
 	Texture texture;
 };
 
-struct Transform
-{
-	double x = 0;
-	double y = 0;
-	double z = 0;
-};
-
-struct LocalTransform
-{
-	double x = 0;
-	double y = 0;
-	double z = 0;
-};
-
-struct Scale
-{
-	double x = 0;
-	double y = 0;
-	double z = 0;
-};
-
 class Entity
 {
 public:
@@ -43,12 +24,9 @@ public:
 	~Entity();
 
 	ModelData modelData;
-	Transform transform;
-	LocalTransform localTransform;
-	Scale scale;
-
-private:
-	
+	glm::vec3 transform = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 rotation = glm::vec3(-55.0f, 0.0f, 0.0f);
 };
 #endif // !ENTITY_H
 

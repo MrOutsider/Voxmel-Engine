@@ -30,9 +30,9 @@ int main()
 	renderer.addEntityRenderTarget(obj);
 
 	// Timesteps
-	double limitFPS = 1.0 / 60.0, limitPhysicsSteps = 1.0 / 30.0;
-	double lastTime = glfwGetTime(), nowTime = 0, timer = lastTime;
-	double deltaTimeRender = 0, deltaTimePhysics = 0;
+	float limitFPS = 1.0 / 60.0, limitPhysicsSteps = 1.0 / 30.0;
+	float lastTime = glfwGetTime(), nowTime = 0, timer = lastTime;
+	float deltaTimeRender = 0, deltaTimePhysics = 0;
 	uint32_t frames = 0, physicsUpdates = 0;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // For wireframe

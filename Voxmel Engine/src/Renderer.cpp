@@ -6,33 +6,30 @@ Renderer::Renderer(GLFWwindow* win)
 	init();
 }
 
-void Renderer::addEntityRenderTarget(Entity& entity)
+void Renderer::addEntityRenderTarget(Entity& e)
 {
-	sizeOfIndi.push_back(sizeof(uint32_t) * entity.modelData.indices.size());
+	RenderTarget newEntity;
+	EntityList.push_back(newEntity);
 
-	// Gen and asaign these var IDs
-	uint32_t VAO, VBO, EBO;
+	EntityList.back().entity = &e;
 
-	// Store the vars so they dont go out of scope and can be called later
-	VAOs.push_back(VAO);
-	VBOs.push_back(VBO);
-	EBOs.push_back(EBO);
+	EntityList.back().indicesSize = e.modelData.indices.size() * sizeof(uint32_t);
 
 	// Generate the IDs
-	glGenVertexArrays(1, &VAOs.back());
-	glGenBuffers(1, &VBOs.back());
-	glGenBuffers(1, &EBOs.back());
+	glGenVertexArrays(1, &EntityList.back().VAO);
+	glGenBuffers(1, &EntityList.back().VBO);
+	glGenBuffers(1, &EntityList.back().EBO);
 
 	// Bind the VAO
-	glBindVertexArray(VAOs.back());
+	glBindVertexArray(EntityList.back().VAO);
 
 	// Copy vertices array into a Vertex Buffer Object for OpenGL to use
-	glBindBuffer(GL_ARRAY_BUFFER, VBOs.back());
-	glBufferData(GL_ARRAY_BUFFER, entity.modelData.vertices.size() * sizeof(float), &entity.modelData.vertices.front(), GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, EntityList.back().VBO);
+	glBufferData(GL_ARRAY_BUFFER, e.modelData.vertices.size() * sizeof(float), &e.modelData.vertices.front(), GL_STATIC_DRAW);
 
 	// Copy indices array into an Element Array Buffer Object for OpenGL to reuse verts from the VBO
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs.back());
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, entity.modelData.indices.size() * sizeof(uint32_t), &entity.modelData.indices.front(), GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EntityList.back().EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, e.modelData.indices.size() * sizeof(uint32_t), &e.modelData.indices.front(), GL_STATIC_DRAW);
 
 	// Set the texture wrapping/filtering options (on the currently bound texture object)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -42,24 +39,20 @@ void Renderer::addEntityRenderTarget(Entity& entity)
 
 	// Set the vertex attributes
 	// Vertices
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0 * sizeof(float)));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(0 * sizeof(float)));
 	glEnableVertexAttribArray(0);
-	// Vertice Colors
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
 	// UVs
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
-	if (entity.modelData.texture.albedo != "NULL")
+	if (e.modelData.texture.albedo != "NULL")
 	{
-		loadTexture(entity.modelData.texture.albedo, albedoTextures);
-		loadTexture("res/textures/awesomeface.png", roughnessTextures);
+		loadTexture(e.modelData.texture.albedo, EntityList.back().albedoTexture, false);
 	}
-	else
+
+	if (e.modelData.texture.secondTexture != "NULL")
 	{
-		loadTexture("res/textures/default.png", albedoTextures);
-		loadTexture("res/textures/default.png", roughnessTextures);
+		loadTexture(e.modelData.texture.secondTexture, EntityList.back().secondTexture, true);
 	}
 }
 
@@ -79,15 +72,11 @@ void Renderer::loadModel()
 {
 }
 
-void Renderer::loadTexture(const char* textureName, std::vector<uint32_t>& texVec)
+void Renderer::loadTexture(const char* textureName, uint32_t& target, bool transparent)
 {
 	// Texture load and binding
-	uint32_t newTexture;
-
-	texVec.push_back(newTexture);
-
-	glGenTextures(1, &texVec.back());
-	glBindTexture(GL_TEXTURE_2D, texVec.back());
+	glGenTextures(1, &target);
+	glBindTexture(GL_TEXTURE_2D, target);
 	// Wraping
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -98,10 +87,10 @@ void Renderer::loadTexture(const char* textureName, std::vector<uint32_t>& texVe
 	int textureWidth, textureHeight, texture_nrChannels;
 	stbi_set_flip_vertically_on_load(true);
 
-	if (texVec == albedoTextures)
-	{
-		unsigned char* textureData = stbi_load(textureName, &textureWidth, &textureHeight, &texture_nrChannels, 0);
+	unsigned char* textureData = stbi_load(textureName, &textureWidth, &textureHeight, &texture_nrChannels, 0);
 
+	if (!transparent)
+	{
 		if (textureData)
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
@@ -112,10 +101,8 @@ void Renderer::loadTexture(const char* textureName, std::vector<uint32_t>& texVe
 		}
 		stbi_image_free(textureData);
 	}
-	else if (texVec == roughnessTextures)
+	else
 	{
-		unsigned char* textureData = stbi_load(textureName, &textureWidth, &textureHeight, &texture_nrChannels, 0);
-
 		if (textureData)
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
@@ -133,24 +120,37 @@ void Renderer::render()
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	if (!VAOs.empty())	// Only render models when there is at least one VAO in queue
+	for (size_t i = 0; i < EntityList.size(); i++)
 	{
-		for (size_t i = 0; i < VAOs.size(); i++)
+		shaders[EntityList[i].shader].use();
+
+		glm::mat4 localTransform = glm::mat4(1.0f);
+		localTransform = glm::translate(localTransform, EntityList[i].entity->transform);
+		localTransform = glm::scale(localTransform, EntityList[i].entity->scale);
+		localTransform = glm::rotate(localTransform, glm::radians(EntityList[i].entity->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		localTransform = glm::rotate(localTransform, glm::radians(EntityList[i].entity->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		localTransform = glm::rotate(localTransform, glm::radians(EntityList[i].entity->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		uint32_t transformLoc = glGetUniformLocation(shaders[EntityList[i].shader].getID(), "localTransform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(localTransform));
+
+		if (!EntityList[i].albedoTexture == 0)
 		{
-			shaders[0].use();
-			if (!albedoTextures.empty())
-			{
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, albedoTextures[i]);
-				glActiveTexture(GL_TEXTURE1);
-				glBindTexture(GL_TEXTURE_2D, roughnessTextures[i]);
-				shaders[0].setInt("albedoTexture", 0);
-				shaders[0].setInt("roughnessTexture", 1);
-			}
-			glBindVertexArray(VAOs[i]);
-			glDrawElements(GL_TRIANGLES, sizeOfIndi[i], GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, EntityList[i].albedoTexture);
+			shaders[EntityList[i].shader].setInt("albedoTexture", 0);
 		}
+
+		if (!EntityList[i].secondTexture == 0)
+		{
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, EntityList[i].secondTexture);
+		shaders[EntityList[i].shader].setInt("secondTexture", 1);
+		}
+
+		glBindVertexArray(EntityList[i].VAO);
+		glDrawElements(GL_TRIANGLES, EntityList[i].indicesSize, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 	}
 
 	glfwSwapBuffers(window);
@@ -158,58 +158,18 @@ void Renderer::render()
 
 void Renderer::destroy()
 {
-	if (!shaders.empty())
+	for (size_t i = 0; i < shaders.size(); i++)
 	{
-		for (size_t i = 0; i < shaders.size(); i++)
-		{
-			shaders[i].destroy();
-		}
-		std::cout << "Shaders destroyed\n";
+		shaders[i].destroy();
 	}
 
-	if (!VAOs.empty())
+	for (size_t i = 0; i < EntityList.size(); i++)
 	{
-		for (size_t i = 0; i < VAOs.size(); i++)
-		{
-			glDeleteVertexArrays(1, &VAOs[i]);
-		}
-		std::cout << "VAOs destroyed\n";
-	}
-
-	if (!VBOs.empty())
-	{
-		for (size_t i = 0; i < VBOs.size(); i++)
-		{
-			glDeleteVertexArrays(1, &VBOs[i]);
-		}
-		std::cout << "VBOs destroyed\n";
-	}
-
-	if (!EBOs.empty())
-	{
-		for (size_t i = 0; i < EBOs.size(); i++)
-		{
-			glDeleteVertexArrays(1, &EBOs[i]);
-		}
-		std::cout << "EBOs destroyed\n";
-	}
-
-	if (!albedoTextures.empty())
-	{
-		for (size_t i = 0; i < albedoTextures.size(); i++)
-		{
-			glDeleteTextures(1, &albedoTextures[i]);
-		}
-		std::cout << "Albedo textures destroyed\n";
-	}
-
-	if (!roughnessTextures.empty())
-	{
-		for (size_t i = 0; i < roughnessTextures.size(); i++)
-		{
-			glDeleteTextures(1, &roughnessTextures[i]);
-		}
-		std::cout << "Roughness textures destroyed\n";
+		glDeleteVertexArrays(1, &EntityList[i].VAO);
+		glDeleteVertexArrays(1, &EntityList[i].VBO);
+		glDeleteVertexArrays(1, &EntityList[i].EBO);
+		glDeleteTextures(1, &EntityList[i].albedoTexture);
+		glDeleteTextures(1, &EntityList[i].secondTexture);
 	}
 }
 
