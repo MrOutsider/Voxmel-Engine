@@ -52,7 +52,7 @@ void Renderer::addEntityRenderTarget(Entity& e)
 
 void Renderer::addCamera(Camera& cam)
 {
-	cams.push_back(cam);
+	camera = &cam;
 }
 
 void Renderer::init()
@@ -169,23 +169,21 @@ void Renderer::render()
 		// note that we're translating the scene in the reverse direction of where we want to move
 		//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
-		cams[0].move();
-
-		if ((cams[0].transform.x != 0) || (cams[0].transform.y != 0) || (cams[0].transform.z != 0))
+		if ((camera->transform.x != 0) || (camera->transform.y != 0) || (camera->transform.z != 0))
 		{
-			view = glm::translate(view, cams[0].transform);
+			view = glm::translate(view, camera->transform);
 		}
-		if (cams[0].rotation.x != 0)
+		if (camera->rotation.x != 0)
 		{
-			view = glm::rotate(view, glm::radians(cams[0].rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+			view = glm::rotate(view, glm::radians(camera->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 		}
-		if (cams[0].rotation.y != 0)
+		if (camera->rotation.y != 0)
 		{
-			view = glm::rotate(view, glm::radians(cams[0].rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+			view = glm::rotate(view, glm::radians(camera->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
 		}
-		if (cams[0].rotation.z != 0)
+		if (camera->rotation.z != 0)
 		{
-			view = glm::rotate(view, glm::radians(cams[0].rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+			view = glm::rotate(view, glm::radians(camera->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		}
 
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());

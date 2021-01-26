@@ -14,7 +14,7 @@ public:
 
 	Camera(GLFWwindow* win);
 
-	void move(); // TMP so I can look around
+	void move(float delta); // TMP so I can look around
 private:
 	GLFWwindow* window;
 };

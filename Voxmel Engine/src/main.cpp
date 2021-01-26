@@ -15,6 +15,8 @@
 // Declarations
 void processInput(GLFWwindow* window);
 
+float delta = 0.0f;
+
 // Settings
 const uint32_t WINDOW_WIDTH = 800;
 const uint32_t WINDOW_HEIGHT = 600;
@@ -37,7 +39,7 @@ int main()
 	}
 
 	// Timesteps
-	float limitFPS = 1.0 / 60.0, limitPhysicsSteps = 1.0 / 30.0;
+	float limitFPS = 1.0 / 144.0, limitPhysicsSteps = 1.0 / 30.0;
 	float lastTime = glfwGetTime(), nowTime = 0, timer = lastTime;
 	float deltaTimeRender = 0, deltaTimePhysics = 0;
 	uint32_t frames = 0, physicsUpdates = 0;
@@ -52,6 +54,7 @@ int main()
 		nowTime = glfwGetTime();
 		deltaTimeRender += (nowTime - lastTime) / limitFPS;
 		deltaTimePhysics += (nowTime - lastTime) / limitPhysicsSteps;
+		delta = nowTime - lastTime;
 		lastTime = nowTime;
 
 		// Reset the updates and fps counter every EARTH second
@@ -67,6 +70,8 @@ int main()
 
 		// Input
 		processInput(window.get_window());
+
+		cam.move(delta);
 
 		if (deltaTimePhysics >= 1.0)
 		{

@@ -44,8 +44,9 @@ public:
 private:
 	GLFWwindow* window;
 
+	Camera* camera;
+
 	std::vector<Shader> shaders;
-	std::vector<Camera> cams;
 	std::vector<RenderTarget> EntityList;
 
 	void init();
