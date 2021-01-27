@@ -166,25 +166,8 @@ void Renderer::render()
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
 		glm::mat4 view = glm::mat4(1.0f);
-		// note that we're translating the scene in the reverse direction of where we want to move
-		//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
-		if ((camera->transform.x != 0) || (camera->transform.y != 0) || (camera->transform.z != 0))
-		{
-			view = glm::translate(view, camera->transform);
-		}
-		if (camera->rotation.x != 0)
-		{
-			view = glm::rotate(view, glm::radians(camera->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-		}
-		if (camera->rotation.y != 0)
-		{
-			view = glm::rotate(view, glm::radians(camera->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		}
-		if (camera->rotation.z != 0)
-		{
-			view = glm::rotate(view, glm::radians(camera->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-		}
+		view = glm::lookAt(camera->transform, camera->transform + camera->cameraFront, camera->cameraUp);
 
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		float window_width = mode->width;

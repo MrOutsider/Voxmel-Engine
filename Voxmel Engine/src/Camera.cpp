@@ -13,23 +13,25 @@ void Camera::move(float delta)
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		newTransform.z += 1.0f;
+		newTransform += cameraFront;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		newTransform.z -= 1.0f;
+		newTransform -=  cameraFront;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		newTransform.x += 1.0f;
+		newTransform -= glm::normalize(glm::cross(cameraFront, cameraUp));
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		newTransform.x -= 1.0f;
+		newTransform += glm::normalize(glm::cross(cameraFront, cameraUp));
 	}
+
+	glm::normalize(newTransform);
 
 	transform += newTransform * speed * delta;
 }

@@ -9,5 +9,5 @@ uniform sampler2D secondTexture;
 
 void main()
 {
-	gl_FragColor = mix(texture(albedoTexture, texCoord), texture(secondTexture, texCoord), 0.2);
+	gl_FragColor = texture(albedoTexture, texCoord);
 }
