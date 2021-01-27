@@ -36,18 +36,21 @@ struct RenderTarget
 class Renderer
 {
 public:
-	Renderer(GLFWwindow* win);
+	Renderer(GLFWwindow* win, float* mouseScroll);
 	void addCamera(Camera& cam);
 	void addEntityRenderTarget(Entity& entity);
 	void render();
 	void destroy();
 private:
 	GLFWwindow* window;
-
 	Camera* camera;
+	float* mouseS;
 
 	std::vector<Shader> shaders;
 	std::vector<RenderTarget> EntityList;
+
+	const float FOV = 45.0f;
+	float fov = FOV;
 
 	void init();
 	void compileShaders();

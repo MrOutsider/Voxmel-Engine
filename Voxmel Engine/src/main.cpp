@@ -14,6 +14,8 @@
 
 // Declarations
 void processInput(GLFWwindow* window);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 float delta = 0.0f;
 
@@ -24,12 +26,19 @@ const uint32_t WINDOW_HEIGHT = 600;
 std::string windowTitle = "VoxMel Engine";
 const char* winTitle = windowTitle.c_str();
 
+bool firstMouse = true;
+glm::vec4 mousePos = glm::vec4(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0.0f, 0.0f);
+float mouseScroll = 0.0f;
+
 int main()
 {
 	WindowManager window(WINDOW_WIDTH, WINDOW_HEIGHT, winTitle);
-	Renderer renderer(window.get_window());
+	Renderer renderer(window.get_window(), &mouseScroll);
 
-	Camera cam(window.get_window());
+	glfwSetCursorPosCallback(window.get_window(), mouse_callback);
+	glfwSetScrollCallback(window.get_window(), scroll_callback);
+
+	Camera cam(window.get_window(), &mousePos);
 	renderer.addCamera(cam);
 
 	for (uint32_t i = 0; i < 10; i++)
@@ -108,4 +117,25 @@ void processInput(GLFWwindow* window)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (firstMouse)
+	{
+		mousePos.z = xpos;
+		mousePos.w = ypos;
+		firstMouse = false;
+	}
+	float xoffset = xpos - mousePos.x;
+	float yoffset = mousePos.y - ypos; // Reversed since y-coordinates range from bottom to top
+	mousePos.x = xpos;
+	mousePos.y = ypos;
+	mousePos.z = xoffset;
+	mousePos.w = yoffset;
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	mouseScroll = yoffset;
 }

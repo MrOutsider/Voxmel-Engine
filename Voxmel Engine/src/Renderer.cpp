@@ -1,8 +1,9 @@
 #include "Renderer.h"
 
-Renderer::Renderer(GLFWwindow* win)
+Renderer::Renderer(GLFWwindow* win, float* mouseScroll)
 {
 	window = win;
+	mouseS = mouseScroll;
 	init();
 }
 
@@ -147,6 +148,8 @@ void Renderer::render()
 			model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.z * (float)glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
 		}*/
 
+		//----------------------------------------------------------------------------
+		// This is just to move the spawned cubes around
 		glm::vec3 cubePositions[] = {
 			glm::vec3(0.0f,  0.0f,  0.0f),
 			glm::vec3(2.0f,  5.0f, -15.0f),
@@ -164,6 +167,7 @@ void Renderer::render()
 		model = glm::translate(model, cubePositions[i]);
 		float angle = 20.0f * i * glfwGetTime();
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		//----------------------------------------------------------------------------
 
 		glm::mat4 view = glm::mat4(1.0f);
 
@@ -174,7 +178,12 @@ void Renderer::render()
 		float window_height = mode->height;
 
 		glm::mat4 projection = glm::mat4(1.0f);
-		projection = glm::perspective(glm::radians(45.0f), (float)window_width / (float)window_height, 0.1f, 100.0f);
+		fov -= *mouseS;
+		if (fov < 20.0f)
+			fov = 20.0f;
+		if (fov > 45.0f)
+			fov = 45.0f;
+		projection = glm::perspective(glm::radians(fov), (float)window_width / (float)window_height, 0.1f, 100.0f);
 
 		shaders[EntityList[i].shader].setMat4("model", model);
 		shaders[EntityList[i].shader].setMat4("view", view);

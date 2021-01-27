@@ -1,13 +1,28 @@
 #include "Camera.h"
 
-Camera::Camera(GLFWwindow* win)
+Camera::Camera(GLFWwindow* win, glm::vec4* mousePos)
 {
 	window = win;
+	mPos = mousePos;
 }
 
 void Camera::move(float delta)
 {
-	float speed = 5.0f;
+	mPos->z *= sensitivity;
+	mPos->w *= sensitivity;
+
+	yaw += mPos->z;
+	pitch += mPos->w;
+
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cameraFront = glm::normalize(direction);
 
 	glm::vec3 newTransform = glm::vec3(0.0f, 0.0f, 0.0f);
 
@@ -33,5 +48,5 @@ void Camera::move(float delta)
 
 	glm::normalize(newTransform);
 
-	transform += newTransform * speed * delta;
+	transform += newTransform * moveSpeed * delta;
 }

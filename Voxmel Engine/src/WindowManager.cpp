@@ -19,6 +19,7 @@ int WindowManager::init(int width, int height, const char* windowTitle)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
@@ -39,7 +40,10 @@ int WindowManager::init(int width, int height, const char* windowTitle)
 		return -1;
 	}
 
-	//// GLFW : Callback function
+	// GLFW : Captures mouse
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	// GLFW : Callback function
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 }
 
