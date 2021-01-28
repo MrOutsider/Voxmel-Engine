@@ -14,12 +14,11 @@ void Renderer::addEntityRenderTarget(Entity& e)
 
 	EntityList.back().entity = &e;
 
-	EntityList.back().indicesSize = e.modelData.indices.size() * sizeof(uint32_t);
+	EntityList.back().vertsSize = e.modelData.vertices.size() * sizeof(float);
 
 	// Generate the IDs
 	glGenVertexArrays(1, &EntityList.back().VAO);
 	glGenBuffers(1, &EntityList.back().VBO);
-	glGenBuffers(1, &EntityList.back().EBO);
 
 	// Bind the VAO
 	glBindVertexArray(EntityList.back().VAO);
@@ -27,10 +26,6 @@ void Renderer::addEntityRenderTarget(Entity& e)
 	// Copy vertices array into a Vertex Buffer Object for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, EntityList.back().VBO);
 	glBufferData(GL_ARRAY_BUFFER, e.modelData.vertices.size() * sizeof(float), &e.modelData.vertices.front(), GL_STATIC_DRAW);
-
-	// Copy indices array into an Element Array Buffer Object for OpenGL to reuse verts from the VBO
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EntityList.back().EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, e.modelData.indices.size() * sizeof(uint32_t), &e.modelData.indices.front(), GL_STATIC_DRAW);
 
 	// Set the vertex attributes
 	// Vertices
@@ -204,7 +199,7 @@ void Renderer::render()
 		}
 
 		glBindVertexArray(EntityList[i].VAO);
-		glDrawElements(GL_TRIANGLES, EntityList[i].indicesSize, GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES, 0, EntityList[i].vertsSize);
 		glBindVertexArray(0);
 	}
 
@@ -222,7 +217,6 @@ void Renderer::destroy()
 	{
 		glDeleteVertexArrays(1, &EntityList[i].VAO);
 		glDeleteVertexArrays(1, &EntityList[i].VBO);
-		glDeleteVertexArrays(1, &EntityList[i].EBO);
 		glDeleteTextures(1, &EntityList[i].albedoTexture);
 		glDeleteTextures(1, &EntityList[i].secondTexture);
 	}

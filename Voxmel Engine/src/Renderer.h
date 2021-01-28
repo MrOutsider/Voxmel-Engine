@@ -23,11 +23,10 @@ struct RenderTarget
 	uint32_t ID; // ID assosiated with imported entity
 	uint32_t shader = 0;
 
-	uint32_t indicesSize;
+	uint32_t vertsSize;
 
 	uint32_t VAO;
 	uint32_t VBO;
-	uint32_t EBO;
 
 	uint32_t albedoTexture = 0;
 	uint32_t secondTexture = 0;

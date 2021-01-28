@@ -13,7 +13,6 @@ struct Texture
 struct ModelData
 {
 	std::vector<float> vertices;
-	std::vector<uint32_t> indices;
 	Texture texture;
 };
 
