@@ -80,7 +80,7 @@ int main()
 		// Input
 		processInput(window.get_window());
 
-		cam.move(delta);
+		cam.update(delta);
 
 		if (deltaTimePhysics >= 1.0)
 		{

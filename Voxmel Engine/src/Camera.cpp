@@ -6,7 +6,7 @@ Camera::Camera(GLFWwindow* win, glm::vec4* mousePos)
 	mPos = mousePos;
 }
 
-void Camera::move(float delta)
+void Camera::update(float delta)
 {
 	mPos->z *= sensitivity;
 	mPos->w *= sensitivity;
@@ -23,29 +23,29 @@ void Camera::move(float delta)
 	direction.y = sin(glm::radians(pitch));
 	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 	cameraFront = glm::normalize(direction);
+	cameraSide = glm::normalize(glm::cross(cameraFront, cameraUp));
+	cameraForward = -glm::normalize(glm::cross(cameraSide, cameraUp));
 
 	glm::vec3 newTransform = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		if (true)
+		if (!canFly)
 		{
-			glm::vec3 cameraX = glm::normalize(glm::cross(cameraFront, cameraUp));
-			newTransform -= glm::normalize(glm::cross(cameraX, cameraUp));
+			newTransform += cameraForward;
 		}
 		else
 		{
 			newTransform += cameraFront;
 		}
-		
+
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		if (true)
+		if (!canFly)
 		{
-			glm::vec3 cameraX = glm::normalize(glm::cross(cameraFront, cameraUp));
-			newTransform += glm::normalize(glm::cross(cameraX, cameraUp));
+			newTransform -= cameraForward;
 		}
 		else
 		{

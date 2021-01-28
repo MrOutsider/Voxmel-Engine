@@ -20,13 +20,17 @@ public:
 	glm::vec3 transform = glm::vec3(0.0f, 0.0f, 3.0f);
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 cameraForward = glm::vec3(0.0f, 0.0f, -1.0f);
+	glm::vec3 cameraSide = glm::vec3(1.0f, 0.0f, 0.0f);
 
 	Camera(GLFWwindow* win, glm::vec4* mousePos);
 
-	void move(float delta); // TMP so I can look around
+	void update(float delta);
 private:
 	GLFWwindow* window;
 	glm::vec4* mPos;
+
+	float canFly = false;
 
 	glm::vec3 direction = glm::vec3(0.0f, 0.0f, 0.0f);
 };
