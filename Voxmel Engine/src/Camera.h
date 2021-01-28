@@ -25,12 +25,12 @@ public:
 
 	Camera(GLFWwindow* win, glm::vec4* mousePos);
 
-	void update(float delta);
+	void update(float& delta);
 private:
 	GLFWwindow* window;
 	glm::vec4* mPos;
 
-	float canFly = false;
+	float canFly = true;
 
 	glm::vec3 direction = glm::vec3(0.0f, 0.0f, 0.0f);
 };

@@ -80,8 +80,6 @@ int main()
 		// Input
 		processInput(window.get_window());
 
-		cam.update(delta);
-
 		if (deltaTimePhysics >= 1.0)
 		{
 			deltaTimePhysics--;
@@ -95,7 +93,7 @@ int main()
 			deltaTimeRender--;
 			frames++;
 
-			// Do Update() stuff before rendering
+			cam.update(delta);
 
 			renderer.render();
 

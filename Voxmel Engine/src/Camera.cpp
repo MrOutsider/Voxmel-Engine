@@ -6,8 +6,10 @@ Camera::Camera(GLFWwindow* win, glm::vec4* mousePos)
 	mPos = mousePos;
 }
 
-void Camera::update(float delta)
+void Camera::update(float& delta)
 {
+	std::cout << delta << std::endl;
+
 	mPos->z *= sensitivity;
 	mPos->w *= sensitivity;
 
