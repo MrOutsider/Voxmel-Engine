@@ -49,7 +49,7 @@ int main()
 
 	// Timesteps
 	float limitFPS = 1.0 / 60.0, limitPhysicsSteps = 1.0 / 30.0;
-	float lastTime = glfwGetTime(), nowTime = 0, timer = lastTime;
+	float lastTime = 0, nowTime = 0, timer = lastTime;
 	float deltaTimeRender = 0, deltaTimePhysics = 0;
 	uint32_t frames = 0, physicsUpdates = 0;
 
@@ -62,6 +62,8 @@ int main()
 		// Timestep
 		nowTime = glfwGetTime();
 		deltaTimeRender += (nowTime - lastTime) / limitFPS;
+		float many = nowTime - lastTime;
+		std::cout << many << std::endl;
 		deltaTimePhysics += (nowTime - lastTime) / limitPhysicsSteps;
 		delta = nowTime - lastTime;
 		lastTime = nowTime;

@@ -7,8 +7,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <iostream>
-
 class Camera
 {
 public:
@@ -25,7 +23,7 @@ public:
 
 	Camera(GLFWwindow* win, glm::vec4* mousePos);
 
-	void update(float& delta);
+	void update(float delta);
 private:
 	GLFWwindow* window;
 	glm::vec4* mPos;
