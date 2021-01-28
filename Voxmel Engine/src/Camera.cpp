@@ -28,12 +28,29 @@ void Camera::move(float delta)
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		newTransform += cameraFront;
+		if (true)
+		{
+			glm::vec3 cameraX = glm::normalize(glm::cross(cameraFront, cameraUp));
+			newTransform -= glm::normalize(glm::cross(cameraX, cameraUp));
+		}
+		else
+		{
+			newTransform += cameraFront;
+		}
+		
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		newTransform -=  cameraFront;
+		if (true)
+		{
+			glm::vec3 cameraX = glm::normalize(glm::cross(cameraFront, cameraUp));
+			newTransform += glm::normalize(glm::cross(cameraX, cameraUp));
+		}
+		else
+		{
+			newTransform -= cameraFront;
+		}
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
@@ -45,8 +62,6 @@ void Camera::move(float delta)
 	{
 		newTransform += glm::normalize(glm::cross(cameraFront, cameraUp));
 	}
-
-	glm::normalize(newTransform);
 
 	transform += newTransform * moveSpeed * delta;
 }
