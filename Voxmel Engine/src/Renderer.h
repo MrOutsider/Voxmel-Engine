@@ -48,6 +48,12 @@ private:
 	std::vector<Shader> shaders;
 	std::vector<RenderTarget> EntityList;
 
+	uint32_t tempVertSize;
+	uint32_t tempVAO;
+	uint32_t tempVBO;
+
+	glm::vec3 lightPos = glm::vec3(1.2f, 1.0f, 2.0f);
+
 	const float FOV = 45.0f;
 	float fov = FOV;
 

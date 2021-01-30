@@ -35,10 +35,6 @@
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\WindowManager.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="res\shaders\basic.fs" />
-    <None Include="res\shaders\basic.vs" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

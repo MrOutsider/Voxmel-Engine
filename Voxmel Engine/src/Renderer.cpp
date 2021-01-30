@@ -5,6 +5,67 @@ Renderer::Renderer(GLFWwindow* win, float* mouseScroll)
 	window = win;
 	mouseS = mouseScroll;
 	init();
+
+	// Temp
+
+	float vertices[] = {
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+	};
+
+	tempVertSize = sizeof(vertices);
+
+	glGenVertexArrays(1, &tempVAO);
+	glGenBuffers(1, &tempVBO);
+
+	glBindVertexArray(tempVAO);
+	// we only need to bind to the VBO, the container's VBO's data already contains the data.
+	glBindBuffer(GL_ARRAY_BUFFER, tempVBO);
+	// set the vertex attribute 
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, tempVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
 }
 
 void Renderer::addEntityRenderTarget(Entity& e)
@@ -58,9 +119,17 @@ void Renderer::init()
 
 void Renderer::compileShaders()
 {
-	Shader newShader;
-	shaders.push_back(newShader);
+	Shader basicShader;
+	shaders.push_back(basicShader);
 	shaders.back().create("res/shaders/basic.vs", "res/shaders/basic.fs");
+
+	Shader tempShader;
+	shaders.push_back(tempShader);
+	shaders.back().create("res/shaders/temp.vs", "res/shaders/temp.fs");
+
+	Shader lightShader;
+	shaders.push_back(lightShader);
+	shaders.back().create("res/shaders/light.vs", "res/shaders/light.fs");
 }
 
 void Renderer::loadModel()
@@ -101,7 +170,7 @@ void Renderer::loadTexture(const char* textureName, uint32_t& target, bool trans
 	{
 		if (textureData)
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 		else
@@ -117,10 +186,24 @@ void Renderer::render()
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glm::mat4 view = glm::mat4(1.0f);
+
+	view = glm::lookAt(camera->transform, camera->transform + camera->cameraFront, camera->cameraUp);
+
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	float window_width = mode->width;
+	float window_height = mode->height;
+
+	glm::mat4 projection = glm::mat4(1.0f);
+	fov -= *mouseS;
+	if (fov < 20.0f)
+		fov = 20.0f;
+	if (fov > 45.0f)
+		fov = 45.0f;
+	projection = glm::perspective(glm::radians(fov), (float)window_width / (float)window_height, 0.1f, 100.0f);
+
 	for (size_t i = 0; i < EntityList.size(); i++)
 	{
-		shaders[EntityList[i].shader].use();
-
 		/*glm::mat4 model = glm::mat4(1.0f);
 		if ((EntityList[i].entity->transform.x != 0) || (EntityList[i].entity->transform.y != 0) || (EntityList[i].entity->transform.z != 0))
 		{
@@ -142,7 +225,7 @@ void Renderer::render()
 		{
 			model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.z * (float)glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
 		}*/
-
+		
 		//----------------------------------------------------------------------------
 		// This is just to move the spawned cubes around
 		glm::vec3 cubePositions[] = {
@@ -164,21 +247,7 @@ void Renderer::render()
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 		//----------------------------------------------------------------------------
 
-		glm::mat4 view = glm::mat4(1.0f);
-
-		view = glm::lookAt(camera->transform, camera->transform + camera->cameraFront, camera->cameraUp);
-
-		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		float window_width = mode->width;
-		float window_height = mode->height;
-
-		glm::mat4 projection = glm::mat4(1.0f);
-		fov -= *mouseS;
-		if (fov < 20.0f)
-			fov = 20.0f;
-		if (fov > 45.0f)
-			fov = 45.0f;
-		projection = glm::perspective(glm::radians(fov), (float)window_width / (float)window_height, 0.1f, 100.0f);
+		shaders[EntityList[i].shader].use();
 
 		shaders[EntityList[i].shader].setMat4("model", model);
 		shaders[EntityList[i].shader].setMat4("view", view);
@@ -202,6 +271,49 @@ void Renderer::render()
 		glDrawArrays(GL_TRIANGLES, 0, EntityList[i].vertsSize);
 		glBindVertexArray(0);
 	}
+
+	// New box for light
+	glm::mat4 model = glm::mat4(1.0f);
+
+	model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
+
+	shaders[1].use();
+
+	shaders[1].setMat4("model", model);
+	shaders[1].setMat4("view", view);
+	shaders[1].setMat4("projection", projection);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, EntityList[0].albedoTexture);
+	shaders[0].setInt("albedoTexture", 0);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, EntityList[0].albedoTexture);
+	shaders[0].setInt("secondTexture", 0);
+
+	shaders[1].setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+	shaders[1].setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+
+	glBindVertexArray(tempVAO);
+	glDrawArrays(GL_TRIANGLES, 0, tempVertSize);
+	glBindVertexArray(0);
+
+	// Light
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, lightPos);
+	model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.2f));
+
+	shaders[2].use();
+
+	shaders[2].setMat4("model", model);
+	shaders[2].setMat4("view", view);
+	shaders[2].setMat4("projection", projection);
+	shaders[2].setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+
+	glBindVertexArray(tempVAO);
+	glDrawArrays(GL_TRIANGLES, 0, tempVertSize);
+	glBindVertexArray(0);
 
 	glfwSwapBuffers(window);
 }

@@ -9,9 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Shader Files">
-      <UniqueIdentifier>{23dff05b-b5f7-4212-9f64-ea40652e0233}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\vendor">
       <UniqueIdentifier>{f9eb8756-28d7-4b70-ba0d-07fd9b1ad45e}</UniqueIdentifier>
     </Filter>
@@ -58,13 +55,5 @@
     <ClInclude Include="src\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\shaders\basic.fs">
-      <Filter>Shader Files</Filter>
-    </None>
-    <None Include="res\shaders\basic.vs">
-      <Filter>Shader Files</Filter>
-    </None>
   </ItemGroup>
 </Project>
