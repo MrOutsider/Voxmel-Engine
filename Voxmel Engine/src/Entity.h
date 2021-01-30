@@ -6,8 +6,8 @@
 
 struct Texture
 {
-	const char* albedo = "NULL";
-	const char* secondTexture = "NULL";
+	const char* albedoPath = "NULL";
+	const char* secondTexturePath = "NULL";
 };
 
 struct ModelData

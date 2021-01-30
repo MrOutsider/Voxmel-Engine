@@ -29,7 +29,7 @@ struct RenderTarget
 	uint32_t VBO;
 
 	uint32_t albedoTexture = 0;
-	uint32_t secondTexture = 0;
+	uint32_t secondTexturePath = 0;
 };
 
 class Renderer

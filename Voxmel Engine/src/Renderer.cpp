@@ -9,47 +9,48 @@ Renderer::Renderer(GLFWwindow* win, float* mouseScroll)
 	// Temp
 
 	float vertices[] = {
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		// Verts				UVs				 Normals
+		-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,		 0.0f, 0.0f, -1.0f,
+		 0.5f, -0.5f, -0.5f,	1.0f, 0.0f,		 0.0f, 0.0f, -1.0f,
+		 0.5f,  0.5f, -0.5f,	1.0f, 1.0f,		 0.0f, 0.0f, -1.0f,
+		 0.5f,  0.5f, -0.5f,	1.0f, 1.0f,		 0.0f, 0.0f, -1.0f,
+		-0.5f,  0.5f, -0.5f,	0.0f, 1.0f,		 0.0f, 0.0f, -1.0f,
+		-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,		 0.0f, 0.0f, -1.0f,
+												 
+		-0.5f, -0.5f,  0.5f,	0.0f, 0.0f,		 0.0f, 0.0f,  1.0f,
+		 0.5f, -0.5f,  0.5f,	1.0f, 0.0f,		 0.0f, 0.0f,  1.0f,
+		 0.5f,  0.5f,  0.5f,	1.0f, 1.0f,		 0.0f, 0.0f,  1.0f,
+		 0.5f,  0.5f,  0.5f,	1.0f, 1.0f,		 0.0f, 0.0f,  1.0f,
+		-0.5f,  0.5f,  0.5f,	0.0f, 1.0f,		 0.0f, 0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f,	0.0f, 0.0f,		 0.0f, 0.0f,  1.0f,
 
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,	1.0f, 0.0f,		-1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,	1.0f, 1.0f,		-1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,	0.0f, 1.0f,		-1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,	0.0f, 1.0f,		-1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f,	0.0f, 0.0f,		-1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f,	1.0f, 0.0f,		-1.0f,  0.0f,  0.0f,
 
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,	1.0f, 0.0f,		 1.0f,  0.0f,  0.0f,
+		 0.5f,  0.5f, -0.5f,	1.0f, 1.0f,		 1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f, -0.5f,	0.0f, 1.0f,		 1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f, -0.5f,	0.0f, 1.0f,		 1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f,  0.5f,	0.0f, 0.0f,		 1.0f,  0.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,	1.0f, 0.0f,		 1.0f,  0.0f,  0.0f,
 
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,	0.0f, 1.0f,		 0.0f, -1.0f,  0.0f,
+		 0.5f, -0.5f, -0.5f,	1.0f, 1.0f,		 0.0f, -1.0f,  0.0f,
+		 0.5f, -0.5f,  0.5f,	1.0f, 0.0f,		 0.0f, -1.0f,  0.0f,
+		 0.5f, -0.5f,  0.5f,	1.0f, 0.0f,		 0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f,	0.0f, 0.0f,		 0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,	0.0f, 1.0f,		 0.0f, -1.0f,  0.0f,
 
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+		-0.5f,  0.5f, -0.5f,	0.0f, 1.0f,		 0.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f, -0.5f,	1.0f, 1.0f,		 0.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,	1.0f, 0.0f,		 0.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,	1.0f, 0.0f,		 0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f,	0.0f, 0.0f,		 0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,	0.0f, 1.0f,		 0.0f,  1.0f,  0.0f
 	};
 
 	tempVertSize = sizeof(vertices);
@@ -61,8 +62,11 @@ Renderer::Renderer(GLFWwindow* win, float* mouseScroll)
 	// we only need to bind to the VBO, the container's VBO's data already contains the data.
 	glBindBuffer(GL_ARRAY_BUFFER, tempVBO);
 	// set the vertex attribute 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0 * sizeof(float)));
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, tempVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
@@ -96,14 +100,14 @@ void Renderer::addEntityRenderTarget(Entity& e)
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	if (e.modelData.texture.albedo != "NULL")
+	if (e.modelData.texture.albedoPath != "NULL")
 	{
-		loadTexture(e.modelData.texture.albedo, EntityList.back().albedoTexture, false);
+		loadTexture(e.modelData.texture.albedoPath, EntityList.back().albedoTexture, false);
 	}
 
-	if (e.modelData.texture.secondTexture != "NULL")
+	if (e.modelData.texture.secondTexturePath != "NULL")
 	{
-		loadTexture(e.modelData.texture.secondTexture, EntityList.back().secondTexture, true);
+		loadTexture(e.modelData.texture.secondTexturePath, EntityList.back().secondTexturePath, true);
 	}
 }
 
@@ -183,7 +187,7 @@ void Renderer::loadTexture(const char* textureName, uint32_t& target, bool trans
 
 void Renderer::render()
 {
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glm::mat4 view = glm::mat4(1.0f);
@@ -229,7 +233,7 @@ void Renderer::render()
 		//----------------------------------------------------------------------------
 		// This is just to move the spawned cubes around
 		glm::vec3 cubePositions[] = {
-			glm::vec3(0.0f,  0.0f,  0.0f),
+			glm::vec3(5.0f,  0.0f,  0.0f),
 			glm::vec3(2.0f,  5.0f, -15.0f),
 			glm::vec3(-1.5f, -2.2f, -2.5f),
 			glm::vec3(-3.8f, -2.0f, -12.3f),
@@ -260,10 +264,10 @@ void Renderer::render()
 			shaders[EntityList[i].shader].setInt("albedoTexture", 0);
 		}
 
-		if (!EntityList[i].secondTexture == 0)
+		if (!EntityList[i].secondTexturePath == 0)
 		{
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, EntityList[i].secondTexture);
+		glBindTexture(GL_TEXTURE_2D, EntityList[i].secondTexturePath);
 		shaders[EntityList[i].shader].setInt("secondTexture", 1);
 		}
 
@@ -275,10 +279,13 @@ void Renderer::render()
 	// New box for light
 	glm::mat4 model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
+	glm::mat4 VP = projection * view;
+	glm::mat3 normalMat = glm::transpose(glm::inverse(model));
 
 	shaders[1].use();
 
+	shaders[1].setMat4("VP", VP);
+	shaders[1].setMat3("normalMat", normalMat);
 	shaders[1].setMat4("model", model);
 	shaders[1].setMat4("view", view);
 	shaders[1].setMat4("projection", projection);
@@ -293,18 +300,28 @@ void Renderer::render()
 
 	shaders[1].setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
 	shaders[1].setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+	shaders[1].setVec3("lightPos", lightPos);
 
 	glBindVertexArray(tempVAO);
 	glDrawArrays(GL_TRIANGLES, 0, tempVertSize);
 	glBindVertexArray(0);
 
 	// Light
+	// set light position
+	float lightX = 2.0f * sin(glfwGetTime());
+	float lightY = 1.5f * sin(glfwGetTime());
+	float lightZ = 1.5f * cos(glfwGetTime());
+	lightPos = glm::vec3(lightX, lightY, lightZ);
+
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, lightPos);
-	model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.2f));
 
+	glm::mat4 MVP = projection * view * model;
+
 	shaders[2].use();
+
+	shaders[2].setMat4("MVP", MVP);
 
 	shaders[2].setMat4("model", model);
 	shaders[2].setMat4("view", view);
@@ -330,7 +347,7 @@ void Renderer::destroy()
 		glDeleteVertexArrays(1, &EntityList[i].VAO);
 		glDeleteVertexArrays(1, &EntityList[i].VBO);
 		glDeleteTextures(1, &EntityList[i].albedoTexture);
-		glDeleteTextures(1, &EntityList[i].secondTexture);
+		glDeleteTextures(1, &EntityList[i].secondTexturePath);
 	}
 }
 
