@@ -278,8 +278,8 @@ void Renderer::render()
 
 	// New box for light
 	glm::mat4 model = glm::mat4(1.0f);
-	float angle = 2.0f * glfwGetTime();
-	model = glm::rotate(model, angle, glm::vec3(0.5f, 1.0f, 0.0f));
+	float angle = 1.0f * glfwGetTime();
+	model = glm::rotate(model, angle, glm::vec3(1.0f, 0.0f, 0.0f));
 
 	glm::mat4 VP = projection * view;
 	glm::mat3 normalMat = glm::transpose(glm::inverse(model));
@@ -312,19 +312,19 @@ void Renderer::render()
 	// Light
 	// set light position
 	float lightX = 2.0f * sin(glfwGetTime());
-	float lightY = 1.5f * sin(glfwGetTime());
-	float lightZ = 1.5f * cos(glfwGetTime());
+	float lightY = 0.0f;
+	float lightZ = 2.0f * cos(glfwGetTime());
 	lightPos = glm::vec3(lightX, lightY, lightZ);
 
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, lightPos);
 	model = glm::scale(model, glm::vec3(0.2f));
 
-	glm::mat4 MVP = projection * view * model;
+	//glm::mat4 MVP = projection * view * model;
 
 	shaders[2].use();
 
-	shaders[2].setMat4("MVP", MVP);
+	//shaders[2].setMat4("MVP", MVP);
 
 	shaders[2].setMat4("model", model);
 	shaders[2].setMat4("view", view);
