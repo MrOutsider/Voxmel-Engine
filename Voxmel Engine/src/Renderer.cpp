@@ -304,11 +304,6 @@ void Renderer::render()
 
 	glm::vec3 lightPosView = glm::vec3(view * glm::vec4(lightPos, 1.0f));
 
-	glm::vec3 lightColor;
-	lightColor.x = sin(glfwGetTime() * 2.0f);
-	lightColor.y = sin(glfwGetTime() * 0.7f);
-	lightColor.z = sin(glfwGetTime() * 1.3f);
-
 	glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
 	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
 
@@ -316,8 +311,8 @@ void Renderer::render()
 	shaders[1].setVec3("light.diffuse", diffuseColor);
 
 	shaders[1].setVec3("light.position", lightPosView);
-	//shaders[1].setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-	//shaders[1].setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+	shaders[1].setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+	shaders[1].setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
 	shaders[1].setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
 	shaders[1].setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
