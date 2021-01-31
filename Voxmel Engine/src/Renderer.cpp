@@ -279,7 +279,7 @@ void Renderer::render()
 	// New box for light
 	glm::mat4 model = glm::mat4(1.0f);
 	float angle = 0.5f * glfwGetTime();
-	model = glm::rotate(model, angle, glm::vec3(1.0f, 0.0f, 0.0f));
+	//model = glm::rotate(model, angle, glm::vec3(1.0f, 0.0f, 0.0f));
 
 	glm::mat4 MVP = projection * view * model;
 	glm::mat3 normalMat = glm::transpose(glm::inverse(view * model));
@@ -301,10 +301,26 @@ void Renderer::render()
 	shaders[0].setInt("secondTexture", 0);
 
 	shaders[1].setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
-	shaders[1].setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-	shaders[1].setVec3("lightPos", lightPos);
 
-	shaders[1].setVec3("material.ambient", 0.1f, 0.1f, 0.1f);
+	glm::vec3 lightPosView = glm::vec3(view * glm::vec4(lightPos, 1.0f));
+
+	glm::vec3 lightColor;
+	lightColor.x = sin(glfwGetTime() * 2.0f);
+	lightColor.y = sin(glfwGetTime() * 0.7f);
+	lightColor.z = sin(glfwGetTime() * 1.3f);
+
+	glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+
+	shaders[1].setVec3("light.ambient", ambientColor);
+	shaders[1].setVec3("light.diffuse", diffuseColor);
+
+	shaders[1].setVec3("light.position", lightPosView);
+	//shaders[1].setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+	//shaders[1].setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+	shaders[1].setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+	shaders[1].setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
 	shaders[1].setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
 	shaders[1].setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 	shaders[1].setFloat("material.shininess", 32.0f);
@@ -334,7 +350,7 @@ void Renderer::render()
 	shaders[2].setMat4("view", view);
 	shaders[2].setMat4("projection", projection);
 	shaders[2].setMat4("MVP", MVP);
-	shaders[2].setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+	shaders[2].setVec3("lightColor", lightColor);
 
 	glBindVertexArray(tempVAO);
 	glDrawArrays(GL_TRIANGLES, 0, tempVertSize);
