@@ -278,6 +278,8 @@ void Renderer::render()
 
 	// New box for light
 	glm::mat4 model = glm::mat4(1.0f);
+	float angle = 2.0f * glfwGetTime();
+	model = glm::rotate(model, angle, glm::vec3(0.5f, 1.0f, 0.0f));
 
 	glm::mat4 VP = projection * view;
 	glm::mat3 normalMat = glm::transpose(glm::inverse(model));
@@ -286,6 +288,7 @@ void Renderer::render()
 
 	shaders[1].setMat4("VP", VP);
 	shaders[1].setMat3("normalMat", normalMat);
+	shaders[1].setVec3("viewPos", camera->transform);
 	shaders[1].setMat4("model", model);
 	shaders[1].setMat4("view", view);
 	shaders[1].setMat4("projection", projection);

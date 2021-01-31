@@ -63,5 +63,15 @@ void Camera::update(float delta)
 		newTransform += glm::normalize(glm::cross(cameraFront, cameraUp));
 	}
 
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+		newTransform += cameraUp;
+	}
+	
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+	{
+		newTransform -= cameraUp;
+	}
+
 	transform += newTransform * moveSpeed * delta;
 }
