@@ -300,8 +300,6 @@ void Renderer::render()
 	shaders[1].setMat4("view", view);
 	shaders[1].setMat4("projection", projection);
 
-	shaders[1].setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
-
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, diffuseTexture);
 	shaders[1].setInt("material.diffuse", 0);

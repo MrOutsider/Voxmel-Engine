@@ -6,8 +6,6 @@ in vec3 Normal;
 in vec3 LightPos;
 
 out vec4 FragColor;
-  
-uniform vec3 objectColor;
 
 struct Material {
     sampler2D diffuse;
