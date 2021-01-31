@@ -213,10 +213,6 @@ void Renderer::render()
 		{
 			model = glm::translate(model, EntityList[i].entity->transform);
 		}
-		if ((EntityList[i].entity->scale.x != 1) || (EntityList[i].entity->scale.y != 1) || (EntityList[i].entity->scale.z != 1))
-		{
-			model = glm::scale(model, EntityList[i].entity->scale);
-		}
 		if (EntityList[i].entity->rotation.x != 0)
 		{
 			model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.x * (float)glfwGetTime()), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -228,6 +224,10 @@ void Renderer::render()
 		if (EntityList[i].entity->rotation.z != 0)
 		{
 			model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.z * (float)glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
+		}
+		if ((EntityList[i].entity->scale.x != 1) || (EntityList[i].entity->scale.y != 1) || (EntityList[i].entity->scale.z != 1))
+		{
+			model = glm::scale(model, EntityList[i].entity->scale);
 		}*/
 		
 		//----------------------------------------------------------------------------
