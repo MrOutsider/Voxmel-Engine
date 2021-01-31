@@ -42,6 +42,7 @@ struct SpotLight
     vec3  position;
     vec3  direction;
     float cutOff;
+    float outerCutOff;
 
     vec3 ambient;
     vec3 diffuse;
@@ -61,11 +62,12 @@ void main()
     vec3 lightDir = normalize(-FragPos);                    // Spot Use light pos as cam that is vec3(0.0f, 0.0f, 0.0f)
     float theta = dot(lightDir, vec3(0.0f, 0.0f, 1.0f));
     
+    // Ambient
     vec3 ambient = vec3(0.1f, 0.1f, 0.1f) * texture(material.diffuse, TexCoords).rgb;
 
-    if (theta > light.cutOff)
+    if (theta > light.outerCutOff)
     {   
-        // Normal
+        // Diffuse
         vec3 norm = normalize(Normal);
         float diff = max(dot(norm, lightDir), 0.0f);
         vec3 diffuse = light.diffuse * diff * texture(material.diffuse, TexCoords).rgb;
@@ -76,6 +78,14 @@ void main()
         float spec = pow(max(dot(viewDir, reflectDir), 0.0f), material.shininess);
         vec3 specular = light.specular * spec * texture(material.specular, TexCoords).rgb;
 
+        // Spotlight soft edge
+        float epsilon   = light.cutOff - light.outerCutOff;
+        float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0); 
+
+        diffuse  *= intensity;
+        specular *= intensity;
+
+        // Light attenuation
         float distance    = length(light.position - FragPos);
         float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
         
@@ -87,6 +97,6 @@ void main()
     }
     else
     {
-        FragColor = vec4(ambient, 1.0f);
+        FragColor = vec4(ambient, 1.0f); // Do if not in light
     }
 }

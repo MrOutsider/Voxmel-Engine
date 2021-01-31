@@ -312,13 +312,13 @@ void Renderer::render()
 
 		shaders[1].setFloat("material.shininess", 32.0f);
 
-		glm::vec3 lightPosView = glm::vec3(view * glm::vec4(lightPos, 1.0f));
+		//glm::vec3 lightPosView = glm::vec3(view * glm::vec4(lightPos, 1.0f));
 
 		shaders[1].setVec3("light.position", glm::vec3(view * glm::vec4(camera->transform, 1.0f)));
 		shaders[1].setVec3("light.direction", glm::vec3(view * glm::vec4(camera->cameraForward, 1.0f)));
 		shaders[1].setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+		shaders[1].setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
 
-		//shaders[1].setVec3("light.position", lightPosView);
 		shaders[1].setVec3("light.ambient", glm::vec3(0.1f));
 		shaders[1].setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
 		shaders[1].setVec3("light.specular", 1.0f, 1.0f, 1.0f);
