@@ -312,25 +312,21 @@ void Renderer::render()
 
 		shaders[1].setFloat("material.shininess", 32.0f);
 
+		glm::vec3 lightPosView = glm::vec3(view * glm::vec4(lightPos, 1.0f));
+
+		shaders[1].setVec3("light.direction", -0.2f, -1.0f, -0.3f);
+		shaders[1].setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+		shaders[1].setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+		shaders[1].setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
 		glBindVertexArray(tempVAO);
 		glDrawArrays(GL_TRIANGLES, 0, tempVertSize);
 		glBindVertexArray(0);
 	}
 
-	glm::vec3 lightPosView = glm::vec3(view * glm::vec4(lightPos, 1.0f));
-
-	shaders[1].setVec3("light.position", lightPosView);
-	shaders[1].setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-	shaders[1].setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
-	shaders[1].setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-
-	glBindVertexArray(tempVAO);
-	glDrawArrays(GL_TRIANGLES, 0, tempVertSize);
-	glBindVertexArray(0);
-
 	// Light
 	// set light position
-	float lightX = 1.0f * sin(glfwGetTime());
+	/*float lightX = 1.0f * sin(glfwGetTime());
 	float lightY = 0.0f;
 	float lightZ = 1.0f * cos(glfwGetTime());
 	lightPos = glm::vec3(lightX, lightY, lightZ);
@@ -351,7 +347,7 @@ void Renderer::render()
 
 	glBindVertexArray(tempVAO);
 	glDrawArrays(GL_TRIANGLES, 0, tempVertSize);
-	glBindVertexArray(0);
+	glBindVertexArray(0);*/
 
 	glfwSwapBuffers(window);
 }

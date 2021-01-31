@@ -23,15 +23,15 @@ struct PointLight {
     vec3 specular;
 };
 
-struct DirectionalLight {
-    vec3 position;
+struct DirLight {
+    vec3 direction;
   
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
 };
 
-uniform PointLight light;
+uniform DirLight light;
 
 void main()
 {
@@ -40,7 +40,8 @@ void main()
 
     // Normal
     vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(light.position - FragPos);
+    //vec3 lightDir = normalize(light.position - FragPos);
+    vec3 lightDir = normalize(-light.direction);
     float diff = max(dot(norm, lightDir), 0.0f);
     vec3 diffuse = light.diffuse * diff * texture(material.diffuse, TexCoords).rgb;
 

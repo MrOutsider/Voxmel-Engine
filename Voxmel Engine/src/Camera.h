@@ -28,7 +28,7 @@ private:
 	GLFWwindow* window;
 	glm::vec4* mPos;
 
-	float canFly = true;
+	float canFly = false;
 
 	glm::vec3 direction = glm::vec3(0.0f, 0.0f, 0.0f);
 };
