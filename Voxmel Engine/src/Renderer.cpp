@@ -278,17 +278,16 @@ void Renderer::render()
 
 	// New box for light
 	glm::mat4 model = glm::mat4(1.0f);
-	float angle = 1.0f * glfwGetTime();
+	float angle = 0.5f * glfwGetTime();
 	model = glm::rotate(model, angle, glm::vec3(1.0f, 0.0f, 0.0f));
 
-	glm::mat4 VP = projection * view;
-	glm::mat3 normalMat = glm::transpose(glm::inverse(model));
+	glm::mat4 MVP = projection * view * model;
+	glm::mat3 normalMat = glm::transpose(glm::inverse(view * model));
 
 	shaders[1].use();
 
-	shaders[1].setMat4("VP", VP);
+	shaders[1].setMat4("MVP", MVP);
 	shaders[1].setMat3("normalMat", normalMat);
-	shaders[1].setVec3("viewPos", camera->transform);
 	shaders[1].setMat4("model", model);
 	shaders[1].setMat4("view", view);
 	shaders[1].setMat4("projection", projection);
@@ -320,7 +319,7 @@ void Renderer::render()
 	model = glm::translate(model, lightPos);
 	model = glm::scale(model, glm::vec3(0.2f));
 
-	//glm::mat4 MVP = projection * view * model;
+	MVP = projection * view * model;
 
 	shaders[2].use();
 
@@ -329,6 +328,7 @@ void Renderer::render()
 	shaders[2].setMat4("model", model);
 	shaders[2].setMat4("view", view);
 	shaders[2].setMat4("projection", projection);
+	shaders[2].setMat4("MVP", MVP);
 	shaders[2].setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
 
 	glBindVertexArray(tempVAO);
