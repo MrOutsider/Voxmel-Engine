@@ -72,7 +72,8 @@ Renderer::Renderer(GLFWwindow* win, float* mouseScroll)
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
-	loadTexture(textPath, diffuseText, true);
+	loadTexture("res/textures/container2.png", diffuseTexture, true);
+	loadTexture("res/textures/container2_specular.png", specularTexture, true);
 }
 
 void Renderer::addEntityRenderTarget(Entity& e)
@@ -294,19 +295,21 @@ void Renderer::render()
 
 	shaders[1].setMat4("MVP", MVP);
 	shaders[1].setMat3("normalMat", normalMat);
+
 	shaders[1].setMat4("model", model);
 	shaders[1].setMat4("view", view);
 	shaders[1].setMat4("projection", projection);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, diffuseText);
-	shaders[0].setInt("material.diffuse", 0);
-
 	shaders[1].setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
 
-	//shaders[1].setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-	//shaders[1].setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-	shaders[1].setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, diffuseTexture);
+	shaders[1].setInt("material.diffuse", 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, specularTexture);
+	shaders[1].setInt("material.specular", 1);
+
 	shaders[1].setFloat("material.shininess", 32.0f);
 
 	glm::vec3 lightPosView = glm::vec3(view * glm::vec4(lightPos, 1.0f));
@@ -335,12 +338,10 @@ void Renderer::render()
 
 	shaders[2].use();
 
-	//shaders[2].setMat4("MVP", MVP);
-
+	shaders[2].setMat4("MVP", MVP);
 	shaders[2].setMat4("model", model);
 	shaders[2].setMat4("view", view);
 	shaders[2].setMat4("projection", projection);
-	shaders[2].setMat4("MVP", MVP);
 	shaders[2].setVec3("lightColor", lightColor);
 
 	glBindVertexArray(tempVAO);

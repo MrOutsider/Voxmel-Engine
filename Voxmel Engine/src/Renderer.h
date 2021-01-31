@@ -51,8 +51,8 @@ private:
 	uint32_t tempVertSize;
 	uint32_t tempVAO;
 	uint32_t tempVBO;
-	const char* textPath = "res/textures/container2.png";
-	uint32_t diffuseText;
+	uint32_t diffuseTexture;
+	uint32_t specularTexture;
 
 	glm::vec3 lightPos = glm::vec3(1.2f, 1.0f, 2.0f);
 	glm::vec3 lightColor = glm::vec3(1.0f);
