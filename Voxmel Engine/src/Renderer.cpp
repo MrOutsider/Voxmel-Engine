@@ -304,11 +304,7 @@ void Renderer::render()
 
 	glm::vec3 lightPosView = glm::vec3(view * glm::vec4(lightPos, 1.0f));
 
-	glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
-	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
-
-	shaders[1].setVec3("light.ambient", ambientColor);
-	shaders[1].setVec3("light.diffuse", diffuseColor);
+	glm::vec3 lightColor = glm::vec3(1.0f);
 
 	shaders[1].setVec3("light.position", lightPosView);
 	shaders[1].setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
