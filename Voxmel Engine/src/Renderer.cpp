@@ -213,7 +213,20 @@ void Renderer::render()
 		fov = 45.0f;
 	projection = glm::perspective(glm::radians(fov), (float)window_width / (float)window_height, 0.1f, 100.0f);
 
-	for (size_t i = 0; i < EntityList.size(); i++)
+	glm::vec3 cubePositions[] = {
+			glm::vec3(0.0f,  0.0f,  0.0f),
+			glm::vec3(2.0f,  5.0f, -15.0f),
+			glm::vec3(-1.5f, -2.2f, -2.5f),
+			glm::vec3(-3.8f, -2.0f, -12.3f),
+			glm::vec3(2.4f, -0.4f, -3.5f),
+			glm::vec3(-1.7f,  3.0f, -7.5f),
+			glm::vec3(1.3f, -2.0f, -2.5f),
+			glm::vec3(1.5f,  2.0f, -2.5f),
+			glm::vec3(1.5f,  0.2f, -1.5f),
+			glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
+
+	for (uint32_t i = 0; i < EntityList.size(); i++)
 	{
 		/*glm::mat4 model = glm::mat4(1.0f);
 		if ((EntityList[i].entity->transform.x != 0) || (EntityList[i].entity->transform.y != 0) || (EntityList[i].entity->transform.z != 0))
@@ -239,21 +252,8 @@ void Renderer::render()
 		
 		//----------------------------------------------------------------------------
 		// This is just to move the spawned cubes around
-		glm::vec3 cubePositions[] = {
-			glm::vec3(0.0f,  0.0f,  0.0f),
-			glm::vec3(2.0f,  5.0f, -15.0f),
-			glm::vec3(-1.5f, -2.2f, -2.5f),
-			glm::vec3(-3.8f, -2.0f, -12.3f),
-			glm::vec3(2.4f, -0.4f, -3.5f),
-			glm::vec3(-1.7f,  3.0f, -7.5f),
-			glm::vec3(1.3f, -2.0f, -2.5f),
-			glm::vec3(1.5f,  2.0f, -2.5f),
-			glm::vec3(1.5f,  0.2f, -1.5f),
-			glm::vec3(-1.3f,  1.0f, -1.5f)
-		};
-
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, cubePositions[i] + glm::vec3(10.0f, 0.0f, -10.0f));
+		model = glm::translate(model, cubePositions[i] + glm::vec3(20.0f, 0.0f, -10.0f));
 		float angle = 20.0f * i * glfwGetTime();
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 		//----------------------------------------------------------------------------
@@ -283,32 +283,39 @@ void Renderer::render()
 		glBindVertexArray(0);
 	}
 
-	// New box for light
-	glm::mat4 model = glm::mat4(1.0f);
-	float angle = 0.5f * glfwGetTime();
-	//model = glm::rotate(model, angle, glm::vec3(1.0f, 0.0f, 0.0f));
+	for (uint32_t i = 0; i < 10; i++)
+	{
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, cubePositions[i]);
+		float angle = 20.0f * i;
+		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
-	glm::mat4 MVP = projection * view * model;
-	glm::mat3 normalMat = glm::transpose(glm::inverse(view * model));
+		glm::mat4 MVP = projection * view * model;
+		glm::mat3 normalMat = glm::transpose(glm::inverse(view * model));
 
-	shaders[1].use();
+		shaders[1].use();
 
-	shaders[1].setMat4("MVP", MVP);
-	shaders[1].setMat3("normalMat", normalMat);
+		shaders[1].setMat4("MVP", MVP);
+		shaders[1].setMat3("normalMat", normalMat);
 
-	shaders[1].setMat4("model", model);
-	shaders[1].setMat4("view", view);
-	shaders[1].setMat4("projection", projection);
+		shaders[1].setMat4("model", model);
+		shaders[1].setMat4("view", view);
+		shaders[1].setMat4("projection", projection);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, diffuseTexture);
-	shaders[1].setInt("material.diffuse", 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, diffuseTexture);
+		shaders[1].setInt("material.diffuse", 0);
 
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, specularTexture);
-	shaders[1].setInt("material.specular", 1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, specularTexture);
+		shaders[1].setInt("material.specular", 1);
 
-	shaders[1].setFloat("material.shininess", 32.0f);
+		shaders[1].setFloat("material.shininess", 32.0f);
+
+		glBindVertexArray(tempVAO);
+		glDrawArrays(GL_TRIANGLES, 0, tempVertSize);
+		glBindVertexArray(0);
+	}
 
 	glm::vec3 lightPosView = glm::vec3(view * glm::vec4(lightPos, 1.0f));
 
@@ -323,16 +330,16 @@ void Renderer::render()
 
 	// Light
 	// set light position
-	float lightX = 2.0f * sin(glfwGetTime());
+	float lightX = 1.0f * sin(glfwGetTime());
 	float lightY = 0.0f;
-	float lightZ = 2.0f * cos(glfwGetTime());
+	float lightZ = 1.0f * cos(glfwGetTime());
 	lightPos = glm::vec3(lightX, lightY, lightZ);
 
-	model = glm::mat4(1.0f);
+	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, lightPos);
 	model = glm::scale(model, glm::vec3(0.2f));
 
-	MVP = projection * view * model;
+	glm::mat4 MVP = projection * view * model;
 
 	shaders[2].use();
 

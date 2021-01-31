@@ -15,7 +15,7 @@ struct Material {
   
 uniform Material material;
 
-struct Light {
+struct PointLight {
     vec3 position;
   
     vec3 ambient;
@@ -23,7 +23,15 @@ struct Light {
     vec3 specular;
 };
 
-uniform Light light;
+struct DirectionalLight {
+    vec3 position;
+  
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
+uniform PointLight light;
 
 void main()
 {
