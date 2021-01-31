@@ -233,7 +233,7 @@ void Renderer::render()
 		//----------------------------------------------------------------------------
 		// This is just to move the spawned cubes around
 		glm::vec3 cubePositions[] = {
-			glm::vec3(5.0f,  0.0f,  0.0f),
+			glm::vec3(0.0f,  0.0f,  0.0f),
 			glm::vec3(2.0f,  5.0f, -15.0f),
 			glm::vec3(-1.5f, -2.2f, -2.5f),
 			glm::vec3(-3.8f, -2.0f, -12.3f),
@@ -246,7 +246,7 @@ void Renderer::render()
 		};
 
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, cubePositions[i]);
+		model = glm::translate(model, cubePositions[i] + glm::vec3(10.0f, 0.0f, -10.0f));
 		float angle = 20.0f * i * glfwGetTime();
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 		//----------------------------------------------------------------------------
@@ -303,6 +303,11 @@ void Renderer::render()
 	shaders[1].setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
 	shaders[1].setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
 	shaders[1].setVec3("lightPos", lightPos);
+
+	shaders[1].setVec3("material.ambient", 0.1f, 0.1f, 0.1f);
+	shaders[1].setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+	shaders[1].setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+	shaders[1].setFloat("material.shininess", 32.0f);
 
 	glBindVertexArray(tempVAO);
 	glDrawArrays(GL_TRIANGLES, 0, tempVertSize);
