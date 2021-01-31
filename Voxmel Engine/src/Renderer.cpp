@@ -314,10 +314,29 @@ void Renderer::render()
 
 		glm::vec3 lightPosView = glm::vec3(view * glm::vec4(lightPos, 1.0f));
 
-		shaders[1].setVec3("light.position", lightPosView);
-		shaders[1].setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+		shaders[1].setVec3("light.position", glm::vec3(view * glm::vec4(camera->transform, 1.0f)));
+		shaders[1].setVec3("light.direction", glm::vec3(view * glm::vec4(camera->cameraForward, 1.0f)));
+		shaders[1].setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+
+		//shaders[1].setVec3("light.position", lightPosView);
+		shaders[1].setVec3("light.ambient", glm::vec3(0.1f));
 		shaders[1].setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
 		shaders[1].setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+
+		/*Distance	Constant	Linear	Quadratic
+			7		1.0			0.7		1.8
+			13		1.0			0.35	0.44
+			20		1.0			0.22	0.20
+			32		1.0			0.14	0.07
+			50		1.0			0.09	0.032
+			65		1.0			0.07	0.017
+			100		1.0			0.045	0.0075
+			160		1.0			0.027	0.0028
+			200		1.0			0.022	0.0019
+			325		1.0			0.014	0.0007
+			600		1.0			0.007	0.0002
+			3250	1.0			0.0014	0.000007*/
 
 		shaders[1].setFloat("light.constant", 1.0f);
 		shaders[1].setFloat("light.linear", 0.09f);
@@ -330,9 +349,9 @@ void Renderer::render()
 
 	// Light
 	// set light position
-	float lightX = 1.0f * sin(glfwGetTime());
+	float lightX = 4.0f * sin(glfwGetTime() * 2.0f);
 	float lightY = 0.0f;
-	float lightZ = 1.0f * cos(glfwGetTime());
+	float lightZ = 4.0f * cos(glfwGetTime() * 2.0f);
 	lightPos = glm::vec3(lightX, lightY, lightZ);
 
 	glm::mat4 model = glm::mat4(1.0f);
@@ -350,7 +369,7 @@ void Renderer::render()
 	shaders[2].setVec3("lightColor", lightColor);
 
 	glBindVertexArray(tempVAO);
-	glDrawArrays(GL_TRIANGLES, 0, tempVertSize);
+	//glDrawArrays(GL_TRIANGLES, 0, tempVertSize);
 	glBindVertexArray(0);
 
 	glfwSwapBuffers(window);
