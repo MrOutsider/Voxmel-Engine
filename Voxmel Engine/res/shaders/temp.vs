@@ -14,7 +14,6 @@ uniform mat4 projection;
 uniform mat4 MVP;
 
 uniform mat3 normalMat;
-uniform vec3 lightPos;
 
 void main()
 {

@@ -9,7 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <iostream>
+#include <string>
 #include <vector>
 
 #include "Shader.h"
@@ -30,6 +30,12 @@ struct RenderTarget
 
 	uint32_t albedoTexture = 0;
 	uint32_t secondTexturePath = 0;
+};
+
+struct Light
+{
+	glm::vec3 position;
+	glm::vec3 color;
 };
 
 class Renderer
@@ -54,8 +60,7 @@ private:
 	uint32_t diffuseTexture;
 	uint32_t specularTexture;
 
-	glm::vec3 lightPos = glm::vec3(1.2f, 1.0f, 2.0f);
-	glm::vec3 lightColor = glm::vec3(1.0f);
+	std::vector<Light> pointLights;
 
 	const float FOV = 45.0f;
 	float fov = FOV;
