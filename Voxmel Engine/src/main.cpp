@@ -18,6 +18,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 float delta = 0.0f;
+float fps = 59.0f;
 
 // Settings
 const uint32_t WINDOW_WIDTH = 800;
@@ -48,9 +49,11 @@ int main()
 	}
 
 	// Timesteps
-	float limitFPS = 1.0 / 144.0, limitPhysicsSteps = 1.0 / 30.0;
-	float lastTime = glfwGetTime(), nowTime = 0, timer = lastTime;
-	float deltaTimeRender = 0, deltaTimePhysics = 0;
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	fps = mode->refreshRate - 1.0f;
+	float limitFPS = 1.0f / fps, limitPhysicsSteps = 1.0f / 30.0f;
+	float lastTime = glfwGetTime(), nowTime = 0.0f, timer = lastTime;
+	float deltaTimeRender = 0.0f, deltaTimePhysics = 0.0f;
 	uint32_t frames = 0, physicsUpdates = 0;
 
 	glEnable(GL_DEPTH_TEST); // May be moved
@@ -70,7 +73,7 @@ int main()
 		if (glfwGetTime() - timer > 1.0)
 		{
 			timer++;
-			std::string newTitle = windowTitle + " | FPS : " + std::to_string(frames) + " | Physics : " + std::to_string(physicsUpdates);
+			std::string newTitle = windowTitle + " | FPS : " + std::to_string(frames + 1) + " | Physics : " + std::to_string(physicsUpdates);
 			winTitle = newTitle.c_str();
 			glfwSetWindowTitle(window.get_window(), winTitle);
 			//std::cout << "FPS: " << frames << " Physics Updates:" << physicsUpdates << std::endl;
