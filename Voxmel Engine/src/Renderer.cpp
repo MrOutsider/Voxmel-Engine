@@ -249,61 +249,66 @@ void Renderer::render()
 			glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
+	bool renderB = true;
+
 	for (uint32_t i = 0; i < EntityList.size(); i++)
 	{
-		/*glm::mat4 model = glm::mat4(1.0f);
-		if ((EntityList[i].entity->transform.x != 0) || (EntityList[i].entity->transform.y != 0) || (EntityList[i].entity->transform.z != 0))
+		if (renderB)
 		{
-			model = glm::translate(model, EntityList[i].entity->transform);
-		}
-		if (EntityList[i].entity->rotation.x != 0)
-		{
-			model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.x * (float)glfwGetTime()), glm::vec3(1.0f, 0.0f, 0.0f));
-		}
-		if (EntityList[i].entity->rotation.y != 0)
-		{
-			model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.y * (float)glfwGetTime()), glm::vec3(0.0f, 1.0f, 0.0f));
-		}
-		if (EntityList[i].entity->rotation.z != 0)
-		{
-			model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.z * (float)glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
-		}
-		if ((EntityList[i].entity->scale.x != 1) || (EntityList[i].entity->scale.y != 1) || (EntityList[i].entity->scale.z != 1))
-		{
-			model = glm::scale(model, EntityList[i].entity->scale);
-		}*/
-		
-		//----------------------------------------------------------------------------
-		// This is just to move the spawned cubes around
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, cubePositions[i] + glm::vec3(20.0f, 0.0f, -10.0f));
-		float angle = 20.0f * i * glfwGetTime();
-		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-		//----------------------------------------------------------------------------
+			/*glm::mat4 model = glm::mat4(1.0f);
+			if ((EntityList[i].entity->transform.x != 0) || (EntityList[i].entity->transform.y != 0) || (EntityList[i].entity->transform.z != 0))
+			{
+				model = glm::translate(model, EntityList[i].entity->transform);
+			}
+			if (EntityList[i].entity->rotation.x != 0)
+			{
+				model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.x * (float)glfwGetTime()), glm::vec3(1.0f, 0.0f, 0.0f));
+			}
+			if (EntityList[i].entity->rotation.y != 0)
+			{
+				model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.y * (float)glfwGetTime()), glm::vec3(0.0f, 1.0f, 0.0f));
+			}
+			if (EntityList[i].entity->rotation.z != 0)
+			{
+				model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.z * (float)glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
+			}
+			if ((EntityList[i].entity->scale.x != 1) || (EntityList[i].entity->scale.y != 1) || (EntityList[i].entity->scale.z != 1))
+			{
+				model = glm::scale(model, EntityList[i].entity->scale);
+			}*/
 
-		shaders[EntityList[i].shader].use();
+			//----------------------------------------------------------------------------
+			// This is just to move the spawned cubes around
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, cubePositions[i] + glm::vec3(20.0f, 0.0f, -10.0f));
+			float angle = 20.0f * i * glfwGetTime();
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			//----------------------------------------------------------------------------
 
-		shaders[EntityList[i].shader].setMat4("model", model);
-		shaders[EntityList[i].shader].setMat4("view", view);
-		shaders[EntityList[i].shader].setMat4("projection", projection);
+			shaders[EntityList[i].shader].use();
 
-		if (!EntityList[i].albedoTexture == 0)
-		{
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, EntityList[i].albedoTexture);
-			shaders[EntityList[i].shader].setInt("albedoTexture", 0);
+			shaders[EntityList[i].shader].setMat4("model", model);
+			shaders[EntityList[i].shader].setMat4("view", view);
+			shaders[EntityList[i].shader].setMat4("projection", projection);
+
+			if (!EntityList[i].albedoTexture == 0)
+			{
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, EntityList[i].albedoTexture);
+				shaders[EntityList[i].shader].setInt("albedoTexture", 0);
+			}
+
+			if (!EntityList[i].secondTexturePath == 0)
+			{
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, EntityList[i].secondTexturePath);
+				shaders[EntityList[i].shader].setInt("secondTexture", 1);
+			}
+
+			glBindVertexArray(EntityList[i].VAO);
+			glDrawArrays(GL_TRIANGLES, 0, EntityList[i].vertsSize);
+			glBindVertexArray(0);
 		}
-
-		if (!EntityList[i].secondTexturePath == 0)
-		{
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, EntityList[i].secondTexturePath);
-		shaders[EntityList[i].shader].setInt("secondTexture", 1);
-		}
-
-		glBindVertexArray(EntityList[i].VAO);
-		glDrawArrays(GL_TRIANGLES, 0, EntityList[i].vertsSize);
-		glBindVertexArray(0);
 	}
 
 	for (uint32_t i = 0; i < 10; i++)
@@ -360,7 +365,7 @@ void Renderer::render()
 			shaders[1].setFloat("pointLights[" + std::to_string(i) + "].quadratic", 0.032f);
 		}
 
-		shaders[1].setVec3("dirLight.direction", glm::vec3(0.0f, -1.0f, 0.0f));
+		shaders[1].setVec3("dirLight.direction", glm::vec3(view * glm::vec4(-0.2f, -1.0f, -0.3f, 0.0f)));
 		shaders[1].setVec3("dirLight.ambient", glm::vec3(1.0f) * 0.01f);
 		shaders[1].setVec3("dirLight.diffuse", glm::vec3(1.0f) * 0.8f);
 		shaders[1].setVec3("dirLight.specular", glm::vec3(1.0f) * 1.0f);
