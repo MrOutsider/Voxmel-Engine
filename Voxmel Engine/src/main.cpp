@@ -14,6 +14,7 @@
 
 // Declarations
 void processInput(GLFWwindow* window);
+void framebuffer_size_callback(GLFWwindow* win, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
@@ -34,8 +35,14 @@ float mouseScroll = 0.0f;
 int main()
 {
 	WindowManager window(WINDOW_WIDTH, WINDOW_HEIGHT, winTitle);
+
+	glfwMakeContextCurrent(window.get_window());
+	window.captureMouse();
+
 	Renderer renderer(window.get_window(), &mouseScroll);
 
+	// GLFW : Callback function
+	glfwSetFramebufferSizeCallback(window.get_window(), framebuffer_size_callback);
 	glfwSetCursorPosCallback(window.get_window(), mouse_callback);
 	glfwSetScrollCallback(window.get_window(), scroll_callback);
 
@@ -55,9 +62,6 @@ int main()
 	float lastTime = glfwGetTime(), nowTime = 0.0f, timer = lastTime;
 	float deltaTimeRender = 0.0f, deltaTimePhysics = 0.0f;
 	uint32_t frames = 0, physicsUpdates = 0;
-
-	glEnable(GL_DEPTH_TEST); // May be moved
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // For wireframe
 
 	glfwMaximizeWindow(window.get_window());
 
@@ -99,6 +103,13 @@ int main()
 			deltaTimeRender--;
 			frames++;
 
+			glfwMakeContextCurrent(window.get_window());
+
+			int w, h;
+			glfwGetWindowSize(window.get_window(), &w, &h);
+
+			glViewport(0, 0, w, h);
+
 			renderer.render();
 
 			glfwPollEvents();
@@ -119,6 +130,23 @@ void processInput(GLFWwindow* window)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
+
+	// TAB
+	if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_RELEASE)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+}
+
+// GLFW: whenever the window size changed (by OS or user resize) this callback function executes
+void framebuffer_size_callback(GLFWwindow* win, int width, int height)
+{
+	glViewport(0, 0, width, height);
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)

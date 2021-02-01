@@ -1,14 +1,14 @@
 #include "WindowManager.h"
 
-// GLFW: whenever the window size changed (by OS or user resize) this callback function executes
-void framebuffer_size_callback(GLFWwindow* win, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
-
 WindowManager::WindowManager(int width, int height, const char* windowTitle)
 {
 	init(width, height, windowTitle);
+}
+
+void WindowManager::captureMouse()
+{
+	// GLFW : Captures mouse
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 int WindowManager::init(int width, int height, const char* windowTitle)
@@ -39,12 +39,6 @@ int WindowManager::init(int width, int height, const char* windowTitle)
 		std::cout << "Failed to init GLAD." << std::endl;
 		return -1;
 	}
-
-	// GLFW : Captures mouse
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-	// GLFW : Callback function
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 }
 
 GLFWwindow* WindowManager::get_window()

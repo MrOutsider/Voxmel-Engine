@@ -11,6 +11,8 @@ class WindowManager
 public:
 	WindowManager(int width, int height, const char* windowTitle);
 
+	void captureMouse();
+
 	GLFWwindow* get_window();
 private:
 	GLFWwindow* window;
