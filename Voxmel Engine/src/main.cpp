@@ -59,6 +59,8 @@ int main()
 	glEnable(GL_DEPTH_TEST); // May be moved
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // For wireframe
 
+	glfwMaximizeWindow(window.get_window());
+
 	// Main Loop
 	while (!glfwWindowShouldClose(window.get_window()))
 	{

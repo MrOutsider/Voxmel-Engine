@@ -280,7 +280,7 @@ void Renderer::render()
 			//----------------------------------------------------------------------------
 			// This is just to move the spawned cubes around
 			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, cubePositions[i] + glm::vec3(20.0f, 0.0f, -10.0f));
+			model = glm::translate(model, cubePositions[i] + glm::vec3(20.0f, 0.0f, 0.0f));
 			float angle = 20.0f * i * glfwGetTime();
 			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			//----------------------------------------------------------------------------
@@ -315,7 +315,7 @@ void Renderer::render()
 	{
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, cubePositions[i]);
-		float angle = 20.0f * i;
+		float angle = 20.0f * i * glfwGetTime();
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
 		glm::mat4 MVP = projection * view * model;

@@ -19,18 +19,13 @@ int WindowManager::init(int width, int height, const char* windowTitle)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-	glfwWindowHint(GLFW_DECORATED, NULL);
 
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
 	// GLFW : Create window
-	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	float window_width = mode->width;
-	float window_height = mode->height;
-
-	window = glfwCreateWindow(window_width, window_height, windowTitle, NULL, NULL);
+	window = glfwCreateWindow(width, height, windowTitle, NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window." << std::endl;
