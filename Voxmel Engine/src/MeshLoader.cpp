@@ -10,10 +10,16 @@ MeshLoader::~MeshLoader()
 
 void MeshLoader::OpenGLBufferLoading(std::vector<GLuint>& VAOs, std::vector<GLuint>& VBOs, std::vector<GLuint>& EBOs, std::vector<std::vector<unsigned int>>& indicesList)
 {
+    unsigned int verts = 0;
     for (unsigned int i = 0; i < myMeshes.size(); i++)
     {
         std::vector<unsigned int> newIndices = myMeshes[i].indices;
         indicesList.push_back(newIndices);
+
+        for (unsigned int n = 0; n < myMeshes[i].vertices.size(); n++)
+        {
+            verts++;
+        }
 
         GLuint VAO;
         GLuint VBO;
@@ -47,12 +53,13 @@ void MeshLoader::OpenGLBufferLoading(std::vector<GLuint>& VAOs, std::vector<GLui
 
         glBindVertexArray(0);
     }
+    std::cout << verts << std::endl;
 }
 
 bool MeshLoader::loadMesh(std::string meshPath)
 {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(meshPath, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene* scene = importer.ReadFile(meshPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
 
     // If the import failed, report it
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
