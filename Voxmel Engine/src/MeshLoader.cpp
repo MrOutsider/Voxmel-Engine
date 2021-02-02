@@ -8,31 +8,45 @@ MeshLoader::~MeshLoader()
 {
 }
 
-void MeshLoader::OpenGLBufferLoading(GLuint& VAO, GLuint& VBO, GLuint& EBO, unsigned int numVerts)
+void MeshLoader::OpenGLBufferLoading(std::vector<GLuint>& VAOs, std::vector<GLuint>& VBOs, std::vector<GLuint>& EBOs, std::vector<std::vector<unsigned int>>& indicesList)
 {
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
+    for (unsigned int i = 0; i < myMeshes.size(); i++)
+    {
+        std::vector<unsigned int> newIndices = myMeshes[i].indices;
+        indicesList.push_back(newIndices);
 
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        GLuint VAO;
+        GLuint VBO;
+        GLuint EBO;
 
-    //glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+        VAOs.push_back(VAO);
+        VBOs.push_back(VBO);
+        EBOs.push_back(EBO);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+        glGenVertexArrays(1, &VAOs.back());
+        glGenBuffers(1, &VBOs.back());
+        glGenBuffers(1, &EBOs.back());
 
-    // Vertex positions
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-    // Vertex normals
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
-    // Vertex texture coords
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+        glBindVertexArray(VAOs.back());
+        glBindBuffer(GL_ARRAY_BUFFER, VBOs.back());
 
-    glBindVertexArray(0);
+        glBufferData(GL_ARRAY_BUFFER, myMeshes[i].vertices.size() * sizeof(Vertex), &myMeshes[i].vertices[0], GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs.back());
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, myMeshes[i].indices.size() * sizeof(unsigned int), &myMeshes[i].indices[0], GL_STATIC_DRAW);
+
+        // Vertex positions
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+        // Vertex normals
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+        // Vertex texture coords
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+
+        glBindVertexArray(0);
+    }
 }
 
 bool MeshLoader::loadMesh(std::string meshPath)
@@ -58,9 +72,9 @@ void MeshLoader::processNode(aiNode* node, const aiScene* scene)
     // process all the node's meshes (if any)
     for (unsigned int i = 0; i < node->mNumMeshes; i++)
     {
-        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        //meshes.push_back(processMesh(mesh, scene));
-        processMesh(mesh, scene);
+        aiMesh* newMesh = scene->mMeshes[node->mMeshes[i]];
+        //myMeshes.push_back(processMesh(mesh, scene));
+        processMesh(newMesh, scene);
     }
     // then do the same for each of its children
     for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -71,9 +85,8 @@ void MeshLoader::processNode(aiNode* node, const aiScene* scene)
 
 void MeshLoader::processMesh(aiMesh* mesh, const aiScene* scene)
 {
-    //vector<Vertex> vertices;
-    //vector<unsigned int> indices;
-    //vector<Texture> textures;
+    Mesh newMesh;
+    myMeshes.push_back(newMesh);
 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
@@ -84,7 +97,6 @@ void MeshLoader::processMesh(aiMesh* mesh, const aiScene* scene)
         vector.y = mesh->mVertices[i].y;
         vector.z = mesh->mVertices[i].z;
         vertex.Position = vector;
-        //vertices.push_back(vertex);
 
         vector.x = mesh->mNormals[i].x;
         vector.y = mesh->mNormals[i].y;
@@ -100,37 +112,14 @@ void MeshLoader::processMesh(aiMesh* mesh, const aiScene* scene)
         }
         else
             vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+
+        myMeshes.back().vertices.push_back(vertex);
     }
     // process indices
     for (unsigned int i = 0; i < mesh->mNumFaces; i++)
     {
         aiFace face = mesh->mFaces[i];
-        //for (unsigned int j = 0; j < face.mNumIndices; j++)
-            //indices.push_back(face.mIndices[j]);
+        for (unsigned int j = 0; j < face.mNumIndices; j++)
+            myMeshes.back().indices.push_back(face.mIndices[j]);
     }
-    // process material
-    if (mesh->mMaterialIndex >= 0)
-    {
-        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        //vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-        //textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-        //vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-        //textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    }
-
-    /*vector<Texture> loadMaterialTextures(aiMaterial * mat, aiTextureType type, string typeName)
-    {
-        vector<Texture> textures;
-        for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
-        {
-            aiString str;
-            mat->GetTexture(type, i, &str);
-            Texture texture;
-            texture.id = TextureFromFile(str.C_Str(), directory);
-            texture.type = typeName;
-            texture.path = str;
-            textures.push_back(texture);
-        }
-        return textures;
-    }*/
 }

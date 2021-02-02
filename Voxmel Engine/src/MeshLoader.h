@@ -30,7 +30,6 @@ public:
     {
         std::vector<Vertex>       vertices;
         std::vector<unsigned int> indices;
-        std::vector<Texture>      textures;
     };
 
     std::string directory;
@@ -38,14 +37,14 @@ public:
 	MeshLoader();
 	~MeshLoader();
 
-    void OpenGLBufferLoading(GLuint& VAO, GLuint& VBO, GLuint& EBO, unsigned int numVerts);
+    void OpenGLBufferLoading(std::vector<GLuint>& VAOs, std::vector<GLuint>& VBOs, std::vector<GLuint>& EBOs, std::vector<std::vector<unsigned int>>& indicesList);
     bool loadMesh(std::string meshPath);
 
 private:
     void processNode(aiNode* node, const aiScene* scene);
     void processMesh(aiMesh* mesh, const aiScene* scene);
 
-    std::vector<Mesh> meshes;
+    std::vector<Mesh> myMeshes;
 };
 #endif // !MESH_LOADER_H
 

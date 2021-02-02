@@ -5,12 +5,79 @@ Renderer::Renderer(GLFWwindow* win, float* mouseScroll)
 	window = win;
 	mouseS = mouseScroll;
 	init();
-	loadModel();
 }
 
 void Renderer::addCamera(Camera& cam)
 {
 	camera = &cam;
+}
+
+void Renderer::loadEntityData(Entity& entity)
+{
+	loadModel(entity.modelPath, entity.albedoPath, entity);
+}
+
+void Renderer::removeEntity(Entity& entity)
+{
+	for (unsigned int i = 0; i < renderList.size(); i++)
+	{
+		if (renderList[i]->ID == entity.ID)
+		{
+			renderList.erase(renderList.begin() + i);
+		}
+	}
+
+	for (unsigned int i = 0; i < models.size(); i++)
+	{
+		if (models[i].entity->ID == entity.ID)
+		{
+			for (unsigned int n = 0; n < models[i].VAOs.size(); n++)
+			{
+				glDeleteVertexArrays(1, &models[i].VAOs[n]);
+			}
+
+			for (unsigned int n = 0; n < models[i].VBOs.size(); n++)
+			{
+				glDeleteVertexArrays(1, &models[i].VBOs[n]);
+			}
+
+			for (unsigned int n = 0; n < models[i].EBOs.size(); n++)
+			{
+				glDeleteVertexArrays(1, &models[i].EBOs[n]);
+			}
+
+			glDeleteTextures(1, &models[i].albedo);
+		}
+
+		models.erase(models.begin() + i);
+	}
+}
+
+void Renderer::addEntityToRenderList(Entity& entinty)
+{
+	for (unsigned int i = 0; i < models.size(); i++)
+	{
+		if (models[i].entity->ID == entinty.ID)
+		{
+			renderList.push_back(&entinty);
+		}
+		else
+		{
+			std::string IDstring = std::to_string(entinty.ID);
+			std::cout << "Entity data not loaded : ID : #" + IDstring << std::endl;
+		}
+	}
+}
+
+void Renderer::removeEntityFromRenderList(Entity& entinty)
+{
+	for (unsigned int i = 0; i < renderList.size(); i++)
+	{
+		if (renderList[i]->ID == entinty.ID)
+		{
+			renderList.erase(renderList.begin() + i);
+		}
+	}
 }
 
 void Renderer::init()
@@ -23,15 +90,20 @@ void Renderer::compileShaders()
 {
 	Shader entityShader;
 	shaders.push_back(entityShader);
-	shaders.back().create("res/textures/entity.vs", "res/textures/entity.fs");
+	shaders.back().create("res/shaders/entity.vs", "res/shaders/entity.fs");
 }
 
-void Renderer::loadModel()
+void Renderer::loadModel(const char* modelPath, const char* texturePath, Entity& entity)
 {
-	// TODO : VAO, VBO, EBO, and Texture GLuints
+	RenderTarget newTarget;
+	newTarget.entity = &entity;
+
 	MeshLoader meshData;
-	meshData.setupMesh(VAO, VBO, EBO);
-	loadTexture("res/textures/container2.png", albedo, true);
+	meshData.loadMesh(modelPath);
+	meshData.OpenGLBufferLoading(newTarget.VAOs, newTarget.VBOs, newTarget.EBOs, newTarget.indicesList);
+	loadTexture(texturePath, newTarget.albedo, true);
+
+	models.push_back(newTarget);
 }
 
 void Renderer::loadTexture(const char* textureName, GLuint& texture, bool transparent)
@@ -99,28 +171,105 @@ void Renderer::render()
 		fov = 45.0f;
 	projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 100.0f);
 
-	glm::mat4 model = glm::mat4(1.0f);
+	for (unsigned int i = 0; i < renderList.size(); i++)
+	{
+		for (unsigned n = 0; n < models.size(); n++)
+		{
+			if (renderList[i]->ID == models[n].entity->ID)
+			{
+				for (unsigned int m = 0; m < models[n].indicesList.size(); m++)
+				{
+					glm::mat4 model = glm::mat4(1.0f);
+					model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
 
-	glm::mat4 MVP = projection * view * model;
+					// Translate
+					if (models[n].entity->transform != glm::vec3(0.0f))
+					{
+						model = glm::translate(model, models[n].entity->transform);
+					}
+					// Rotate
+					if (models[n].entity->rotation.x != 0.0f)
+					{
+						model = glm::rotate(model, models[n].entity->rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+					}
+					if (models[n].entity->rotation.y != 0.0f)
+					{
+						model = glm::rotate(model, models[n].entity->rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
+					}
+					if (models[n].entity->rotation.z != 0.0f)
+					{
+						model = glm::rotate(model, models[n].entity->rotation.x, glm::vec3(1.0f, 0.0f, 1.0f));
+					}
+					// Scale
+					if (models[n].entity->scale != glm::vec3(1.0f))
+					{
+						model = glm::scale(model, models[n].entity->scale);
+					}
 
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, numOfVerticies, GL_UNSIGNED_INT, &EBO);
-	//glDrawArrays(GL_TRIANGLES, 0, vertSize);
-	//glBindVertexArray(0);
+					glm::mat4 MVP = projection * view * model;
 
+					shaders[0].use();
+
+					shaders[0].setMat4("MVP", MVP);
+
+					glActiveTexture(GL_TEXTURE0);
+					glBindTexture(GL_TEXTURE_2D, models[n].albedo);
+					shaders[0].setInt("albedo", 0);
+
+					glBindVertexArray(models[n].VAOs[m]);
+					glDrawElements(GL_TRIANGLES, models[n].indicesList[m].size(), GL_UNSIGNED_INT, 0);
+					glBindVertexArray(0);
+				}
+			}
+		}
+		/*for (unsigned int m = 0; m < models[i].indicesList.size(); m++)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
+
+			glm::mat4 MVP = projection * view * model;
+
+			shaders[0].use();
+
+			shaders[0].setMat4("MVP", MVP);
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, models[i].albedo);
+			shaders[0].setInt("albedo", 0);
+
+			glBindVertexArray(models[i].VAOs[m]);
+			glDrawElements(GL_TRIANGLES, models[i].indicesList[n].size(), GL_UNSIGNED_INT, 0);
+			glBindVertexArray(0);
+		}*/
+	}
 	glfwSwapBuffers(window);
 }
 
 void Renderer::destroy()
 {
-	for (size_t i = 0; i < shaders.size(); i++)
+	for (unsigned int i = 0; i < shaders.size(); i++)
 	{
 		shaders[i].destroy();
 	}
 
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteVertexArrays(1, &VBO);
-	glDeleteVertexArrays(1, &EBO);
-	glDeleteTextures(1, &albedo);
+	for (unsigned int i = 0; i < models.size(); i++)
+	{
+		for (unsigned int n = 0; n < models[i].VAOs.size(); n++)
+		{
+			glDeleteVertexArrays(1, &models[i].VAOs[n]);
+		}
+
+		for (unsigned int n = 0; n < models[i].VBOs.size(); n++)
+		{
+			glDeleteVertexArrays(1, &models[i].VBOs[n]);
+		}
+
+		for (unsigned int n = 0; n < models[i].EBOs.size(); n++)
+		{
+			glDeleteVertexArrays(1, &models[i].EBOs[n]);
+		}
+
+		glDeleteTextures(1, &models[i].albedo);
+	}
 }
 

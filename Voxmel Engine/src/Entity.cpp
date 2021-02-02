@@ -1,9 +1,8 @@
 #include "Entity.h"
 
-Entity::Entity()
+Entity::Entity(unsigned int newID, const char* newModelPath, const char* newAlbedoPath)
 {
-}
-
-Entity::~Entity()
-{
+	ID = newID;
+	modelPath = newModelPath;
+	albedoPath = newAlbedoPath;
 }

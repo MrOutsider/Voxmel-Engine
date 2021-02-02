@@ -19,14 +19,26 @@
 class Renderer
 {
 public:
-	struct Light
+	struct RenderTarget
 	{
-		glm::vec3 position;
-		glm::vec3 color;
+		Entity* entity;
+
+		std::vector<std::vector<unsigned int>> indicesList;
+		std::vector<GLuint> VAOs;
+		std::vector<GLuint> VBOs;
+		std::vector<GLuint> EBOs;
+		GLuint albedo;
 	};
 
 	Renderer(GLFWwindow* win, float* mouseScroll);
 	void addCamera(Camera& cam);
+
+	void loadEntityData(Entity& entity);
+	void removeEntity(Entity& entity);
+
+	void addEntityToRenderList(Entity& entinty);
+	void removeEntityFromRenderList(Entity& entinty);
+
 	void render();
 	void destroy();
 private:
@@ -39,17 +51,12 @@ private:
 	const float FOV = 45.0f;
 	float fov = FOV;
 
-	//---------------------------------------------
-	unsigned int numOfVerticies;
-	GLuint VAO;
-	GLuint VBO;
-	GLuint EBO;
-	GLuint albedo;
-	//---------------------------------------------
+	std::vector<RenderTarget> models;
+	std::vector<Entity*> renderList;
 
 	void init();
 	void compileShaders();
-	void loadModel();
+	void loadModel(const char* modelPath, const char* texturePath, Entity& entity);
 	void loadTexture(const char* textureName, GLuint& target, bool transparent);
 };
 

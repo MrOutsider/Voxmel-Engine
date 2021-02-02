@@ -58,6 +58,13 @@ int main()
 
 	glfwMaximizeWindow(window.get_window());
 
+	unsigned int ID = 0;
+
+	Entity backPack(ID, "res/models/backpack.obj", "res/textures/diffuse.png");
+	ID++;
+	renderer.loadEntityData(backPack);
+	renderer.addEntityToRenderList(backPack);
+
 	// Main Loop
 	while (!glfwWindowShouldClose(window.get_window()))
 	{
