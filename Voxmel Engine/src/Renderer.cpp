@@ -83,7 +83,6 @@ void Renderer::removeEntityFromRenderList(Entity& entinty)
 void Renderer::init()
 {
 	compileShaders();
-	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::compileShaders()
@@ -159,6 +158,12 @@ void Renderer::loadTexture(const char* textureName, GLuint& texture, bool transp
 
 void Renderer::render()
 {
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
