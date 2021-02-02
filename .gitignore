@@ -5,6 +5,7 @@
 
 # Game Related
 textures/
+models/
 
 # User-specific files
 *.rsuser
