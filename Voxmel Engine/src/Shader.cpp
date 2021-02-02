@@ -34,7 +34,7 @@ void Shader::create(const char* vertexPath, const char* fragmentPath)
     const char* fShaderCode = fragmentCode.c_str();
 
     // Compile shaders
-    uint32_t vertex, fragment;
+    GLuint vertex, fragment;
 
     // Vertex Shader
     vertex = glCreateShader(GL_VERTEX_SHADER);
@@ -73,7 +73,7 @@ void Shader::destroy()
     glDeleteProgram(ID);
 }
 
-uint32_t Shader::getID()
+GLuint Shader::getID()
 {
     return ID;
 }

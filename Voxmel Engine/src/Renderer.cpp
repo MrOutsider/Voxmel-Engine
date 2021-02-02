@@ -91,7 +91,7 @@ Renderer::Renderer(GLFWwindow* win, float* mouseScroll)
 		glm::vec3(1.0f)
 	};
 
-	for (uint32_t i = 0; i < 4; i++)
+	for (unsigned int i = 0; i < 4; i++)
 	{
 		Light newLight;
 		newLight.position = pointLightPositions[i];
@@ -172,7 +172,7 @@ void Renderer::loadModel()
 {
 }
 
-void Renderer::loadTexture(const char* textureName, uint32_t& target, bool transparent)
+void Renderer::loadTexture(const char* textureName, GLuint& target, bool transparent)
 {
 	// Texture load and binding
 	glGenTextures(1, &target);
@@ -250,7 +250,7 @@ void Renderer::render()
 			glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
-	for (uint32_t i = 0; i < EntityList.size(); i++)
+	for (unsigned int i = 0; i < EntityList.size(); i++)
 	{
 		/*glm::mat4 model = glm::mat4(1.0f);
 		if ((EntityList[i].entity->transform.x != 0) || (EntityList[i].entity->transform.y != 0) || (EntityList[i].entity->transform.z != 0))
@@ -307,7 +307,7 @@ void Renderer::render()
 		glBindVertexArray(0);
 	}
 
-	for (uint32_t i = 0; i < 10; i++)
+	for (unsigned int i = 0; i < 10; i++)
 	{
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, cubePositions[i]);
@@ -349,7 +349,7 @@ void Renderer::render()
 			600		1.0			0.007	0.0002
 			3250	1.0			0.0014	0.000007*/
 
-		for (uint32_t i = 0; i < 4; i++)
+		for (unsigned int i = 0; i < 4; i++)
 		{
 			shaders[1].setVec3("pointLights[" + std::to_string(i) + "].position", glm::vec3(view * glm::vec4(pointLights[i].position, 1.0f)));
 			shaders[1].setVec3("pointLights[" + std::to_string(i) + "].ambient", pointLights[i].color * 0.01f);
@@ -371,7 +371,7 @@ void Renderer::render()
 		glBindVertexArray(0);
 	}
 
-	for (uint32_t i = 0; i < pointLights.size(); i++)
+	for (unsigned int i = 0; i < pointLights.size(); i++)
 	{
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, pointLights[i].position);

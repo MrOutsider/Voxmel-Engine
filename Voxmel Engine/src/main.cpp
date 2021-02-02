@@ -19,11 +19,11 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 float delta = 0.0f;
-float fps = 59.0f;
+float fps = 30.0f;
 
 // Settings
-const uint32_t WINDOW_WIDTH = 800;
-const uint32_t WINDOW_HEIGHT = 600;
+const unsigned int WINDOW_WIDTH = 800;
+const unsigned int WINDOW_HEIGHT = 600;
 
 std::string windowTitle = "VoxMel Engine";
 const char* winTitle = windowTitle.c_str();
@@ -49,7 +49,7 @@ int main()
 	Camera cam(window.get_window(), &mousePos);
 	renderer.addCamera(cam);
 
-	for (uint32_t i = 0; i < 10; i++)
+	for (unsigned int i = 0; i < 10; i++)
 	{
 		Entity newE;
 		renderer.addEntityRenderTarget(newE);
@@ -61,7 +61,7 @@ int main()
 	float limitFPS = 1.0f / fps, limitPhysicsSteps = 1.0f / 30.0f;
 	float lastTime = glfwGetTime(), nowTime = 0.0f, timer = lastTime;
 	float deltaTimeRender = 0.0f, deltaTimePhysics = 0.0f;
-	uint32_t frames = 0, physicsUpdates = 0;
+	unsigned int frames = 0, physicsUpdates = 0;
 
 	glfwMaximizeWindow(window.get_window());
 

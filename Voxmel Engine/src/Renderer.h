@@ -19,17 +19,17 @@
 struct RenderTarget
 {
 	Entity* entity;
+	
+	GLuint ID; // ID assosiated with imported entity
+	GLuint shader = 0;
 
-	uint32_t ID; // ID assosiated with imported entity
-	uint32_t shader = 0;
+	GLuint vertsSize;
 
-	uint32_t vertsSize;
+	GLuint VAO;
+	GLuint VBO;
 
-	uint32_t VAO;
-	uint32_t VBO;
-
-	uint32_t albedoTexture = 0;
-	uint32_t secondTexturePath = 0;
+	GLuint albedoTexture = 0;
+	GLuint secondTexturePath = 0;
 };
 
 struct Light
@@ -54,11 +54,11 @@ private:
 	std::vector<Shader> shaders;
 	std::vector<RenderTarget> EntityList;
 
-	uint32_t tempVertSize;
-	uint32_t tempVAO;
-	uint32_t tempVBO;
-	uint32_t diffuseTexture;
-	uint32_t specularTexture;
+	unsigned int tempVertSize;
+	GLuint tempVAO;
+	GLuint tempVBO;
+	GLuint diffuseTexture;
+	GLuint specularTexture;
 
 	std::vector<Light> pointLights;
 
@@ -68,7 +68,7 @@ private:
 	void init();
 	void compileShaders();
 	void loadModel();
-	void loadTexture(const char* textureName, uint32_t& target, bool transparent);
+	void loadTexture(const char* textureName, GLuint& target, bool transparent);
 };
 
 #endif // !RENDERER_H
