@@ -88,6 +88,12 @@ void Renderer::init()
 
 void Renderer::compileShaders()
 {
+	// 0
+	Shader voxelShader;
+	shaders.push_back(voxelShader);
+	shaders.back().create("res/shaders/entity.vs", "res/shaders/entity.fs");
+
+	// 1
 	Shader entityShader;
 	shaders.push_back(entityShader);
 	shaders.back().create("res/shaders/entity.vs", "res/shaders/entity.fs");
@@ -208,13 +214,13 @@ void Renderer::render()
 
 					glm::mat4 MVP = projection * view * model;
 
-					shaders[0].use();
+					shaders[1].use();
 
-					shaders[0].setMat4("MVP", MVP);
+					shaders[1].setMat4("MVP", MVP);
 
 					glActiveTexture(GL_TEXTURE0);
 					glBindTexture(GL_TEXTURE_2D, models[n].albedo);
-					shaders[0].setInt("albedo", 0);
+					shaders[1].setInt("albedo", 0);
 
 					glBindVertexArray(models[n].VAOs[m]);
 					glDrawElements(GL_TRIANGLES, models[n].indicesList[m].size(), GL_UNSIGNED_INT, 0);
@@ -222,25 +228,6 @@ void Renderer::render()
 				}
 			}
 		}
-		/*for (unsigned int m = 0; m < models[i].indicesList.size(); m++)
-		{
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
-
-			glm::mat4 MVP = projection * view * model;
-
-			shaders[0].use();
-
-			shaders[0].setMat4("MVP", MVP);
-
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, models[i].albedo);
-			shaders[0].setInt("albedo", 0);
-
-			glBindVertexArray(models[i].VAOs[m]);
-			glDrawElements(GL_TRIANGLES, models[i].indicesList[n].size(), GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
-		}*/
 	}
 	glfwSwapBuffers(window);
 }
