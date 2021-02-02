@@ -1,6 +1,5 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <stb/stb_image.h>
 
 #include "WindowManager.h"
 #include "Renderer.h"
@@ -48,12 +47,6 @@ int main()
 
 	Camera cam(window.get_window(), &mousePos);
 	renderer.addCamera(cam);
-
-	for (unsigned int i = 0; i < 10; i++)
-	{
-		Entity newE;
-		renderer.addEntityRenderTarget(newE);
-	}
 
 	// Timesteps
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());

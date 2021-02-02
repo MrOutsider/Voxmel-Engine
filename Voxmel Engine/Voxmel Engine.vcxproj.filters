@@ -41,6 +41,9 @@
     <ClCompile Include="src\ChunkManager.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\MeshLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h">
@@ -60,6 +63,9 @@
     </ClInclude>
     <ClInclude Include="src\ChunkManager.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MeshLoader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

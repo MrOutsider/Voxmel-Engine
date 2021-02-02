@@ -5,99 +5,6 @@ Renderer::Renderer(GLFWwindow* win, float* mouseScroll)
 	window = win;
 	mouseS = mouseScroll;
 	init();
-
-	// Temp
-	//-------------------------------------------------------------
-
-	float vertices[] = {
-		// Verts			  // Normals           // UVs
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
-	};
-
-	tempVertSize = sizeof(vertices);
-
-	glGenVertexArrays(1, &tempVAO);
-	glGenBuffers(1, &tempVBO);
-
-	glBindVertexArray(tempVAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, tempVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0 * sizeof(float)));
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	loadTexture("res/textures/container2.png", diffuseTexture, true);
-	loadTexture("res/textures/container2_specular.png", specularTexture, true);
-
-	// Load lights
-	glm::vec3 pointLightPositions[4] = {
-		glm::vec3(0.7f,  0.2f,  2.0f),
-		glm::vec3(2.3f, -3.3f, -4.0f),
-		glm::vec3(-4.0f,  2.0f, -12.0f),
-		glm::vec3(0.0f,  0.0f, -3.0f)
-	};
-	
-	glm::vec3 pointLightColors[4] = {
-		glm::vec3(1.0f),
-		glm::vec3(1.0f),
-		glm::vec3(1.0f),
-		glm::vec3(1.0f)
-	};
-
-	for (unsigned int i = 0; i < 4; i++)
-	{
-		Light newLight;
-		newLight.position = pointLightPositions[i];
-		newLight.color = pointLightColors[i];
-		pointLights.push_back(newLight);
-	}
 }
 
 void Renderer::addEntityRenderTarget(Entity& e)
@@ -150,21 +57,14 @@ void Renderer::init()
 
 void Renderer::compileShaders()
 {
-	Shader basicShader;
-	shaders.push_back(basicShader);
-	shaders.back().create("res/shaders/basic.vs", "res/shaders/basic.fs");
-
-	Shader tempShader;
-	shaders.push_back(tempShader);
-	shaders.back().create("res/shaders/temp.vs", "res/shaders/temp.fs");
-
-	Shader lightShader;
-	shaders.push_back(lightShader);
-	shaders.back().create("res/shaders/light.vs", "res/shaders/light.fs");
+	Shader entityShader;
+	shaders.push_back(entityShader);
+	shaders.back().create("res/textures/entity.vs", "res/textures/entity.fs");
 }
 
 void Renderer::loadModel()
 {
+	MeshLoader loader();
 }
 
 void Renderer::loadTexture(const char* textureName, GLuint& target, bool transparent)
@@ -232,156 +132,11 @@ void Renderer::render()
 		fov = 45.0f;
 	projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 100.0f);
 
-	glm::vec3 cubePositions[] = {
-			glm::vec3(0.0f,  0.0f,  0.0f),
-			glm::vec3(2.0f,  5.0f, -15.0f),
-			glm::vec3(-1.5f, -2.2f, -2.5f),
-			glm::vec3(-3.8f, -2.0f, -12.3f),
-			glm::vec3(2.4f, -0.4f, -3.5f),
-			glm::vec3(-1.7f,  3.0f, -7.5f),
-			glm::vec3(1.3f, -2.0f, -2.5f),
-			glm::vec3(1.5f,  2.0f, -2.5f),
-			glm::vec3(1.5f,  0.2f, -1.5f),
-			glm::vec3(-1.3f,  1.0f, -1.5f)
-	};
+	glm::mat4 model = glm::mat4(1.0f);
 
-	for (unsigned int i = 0; i < EntityList.size(); i++)
-	{
-		/*glm::mat4 model = glm::mat4(1.0f);
-		if ((EntityList[i].entity->transform.x != 0) || (EntityList[i].entity->transform.y != 0) || (EntityList[i].entity->transform.z != 0))
-		{
-			model = glm::translate(model, EntityList[i].entity->transform);
-		}
-		if (EntityList[i].entity->rotation.x != 0)
-		{
-			model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.x * (float)glfwGetTime()), glm::vec3(1.0f, 0.0f, 0.0f));
-		}
-		if (EntityList[i].entity->rotation.y != 0)
-		{
-			model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.y * (float)glfwGetTime()), glm::vec3(0.0f, 1.0f, 0.0f));
-		}
-		if (EntityList[i].entity->rotation.z != 0)
-		{
-			model = glm::rotate(model, glm::radians(EntityList[i].entity->rotation.z * (float)glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
-		}
-		if ((EntityList[i].entity->scale.x != 1) || (EntityList[i].entity->scale.y != 1) || (EntityList[i].entity->scale.z != 1))
-		{
-			model = glm::scale(model, EntityList[i].entity->scale);
-		}*/
-
-		//----------------------------------------------------------------------------
-		// This is just to move the spawned cubes around
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, cubePositions[i] + glm::vec3(20.0f, 0.0f, 0.0f));
-		float angle = 20.0f * i * glfwGetTime();
-		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-		//----------------------------------------------------------------------------
-
-		shaders[EntityList[i].shader].use();
-
-		shaders[EntityList[i].shader].setMat4("model", model);
-		shaders[EntityList[i].shader].setMat4("view", view);
-		shaders[EntityList[i].shader].setMat4("projection", projection);
-
-		if (!EntityList[i].albedoTexture == 0)
-		{
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, EntityList[i].albedoTexture);
-			shaders[EntityList[i].shader].setInt("albedoTexture", 0);
-		}
-
-		shaders[EntityList[i].shader].setInt("blockX", 19);
-		shaders[EntityList[i].shader].setInt("blockY", 0);
-
-		glBindVertexArray(EntityList[i].VAO);
-		glDrawArrays(GL_TRIANGLES, 0, EntityList[i].vertsSize);
-		glBindVertexArray(0);
-	}
-
-	for (unsigned int i = 0; i < 10; i++)
-	{
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, cubePositions[i]);
-		float angle = 20.0f * i * glfwGetTime();
-		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-
-		glm::mat4 MVP = projection * view * model;
-		glm::mat3 normalMat = glm::transpose(glm::inverse(view * model));
-
-		shaders[1].use();
-
-		shaders[1].setMat4("MVP", MVP);
-		shaders[1].setMat3("normalMat", normalMat);
-
-		shaders[1].setMat4("model", model);
-		shaders[1].setMat4("view", view);
-		shaders[1].setMat4("projection", projection);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, diffuseTexture);
-		shaders[1].setInt("material.diffuse", 0);
-
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, specularTexture);
-		shaders[1].setInt("material.specular", 1);
-		shaders[1].setFloat("material.shininess", 32.0f);
-
-		/*Distance	Constant	Linear	Quadratic
-			7		1.0			0.7		1.8
-			13		1.0			0.35	0.44
-			20		1.0			0.22	0.20
-			32		1.0			0.14	0.07
-			50		1.0			0.09	0.032
-			65		1.0			0.07	0.017
-			100		1.0			0.045	0.0075
-			160		1.0			0.027	0.0028
-			200		1.0			0.022	0.0019
-			325		1.0			0.014	0.0007
-			600		1.0			0.007	0.0002
-			3250	1.0			0.0014	0.000007*/
-
-		for (unsigned int i = 0; i < 4; i++)
-		{
-			shaders[1].setVec3("pointLights[" + std::to_string(i) + "].position", glm::vec3(view * glm::vec4(pointLights[i].position, 1.0f)));
-			shaders[1].setVec3("pointLights[" + std::to_string(i) + "].ambient", pointLights[i].color * 0.01f);
-			shaders[1].setVec3("pointLights[" + std::to_string(i) + "].diffuse", pointLights[i].color * 0.8f);
-			shaders[1].setVec3("pointLights[" + std::to_string(i) + "].specular", pointLights[i].color * 1.0f);
-
-			shaders[1].setFloat("pointLights[" + std::to_string(i) + "].constant", 1.0f);
-			shaders[1].setFloat("pointLights[" + std::to_string(i) + "].linear", 0.09f);
-			shaders[1].setFloat("pointLights[" + std::to_string(i) + "].quadratic", 0.032f);
-		}
-
-		shaders[1].setVec3("dirLight.direction", glm::vec3(view * glm::vec4(-0.2f, -1.0f, -0.3f, 0.0f)));
-		shaders[1].setVec3("dirLight.ambient", glm::vec3(1.0f) * 0.01f);
-		shaders[1].setVec3("dirLight.diffuse", glm::vec3(1.0f) * 0.8f);
-		shaders[1].setVec3("dirLight.specular", glm::vec3(1.0f) * 1.0f);
-
-		glBindVertexArray(tempVAO);
-		glDrawArrays(GL_TRIANGLES, 0, tempVertSize);
-		glBindVertexArray(0);
-	}
-
-	for (unsigned int i = 0; i < pointLights.size(); i++)
-	{
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, pointLights[i].position);
-		model = glm::scale(model, glm::vec3(0.2f));
-
-		glm::mat4 MVP = projection * view * model;
-
-		shaders[2].use();
-
-		shaders[2].setMat4("MVP", MVP);
-		shaders[2].setMat4("model", model);
-		shaders[2].setMat4("view", view);
-		shaders[2].setMat4("projection", projection);
-		shaders[2].setVec3("lightColor", pointLights[i].color);
-
-		glBindVertexArray(tempVAO);
-		glDrawArrays(GL_TRIANGLES, 0, tempVertSize);
-		glBindVertexArray(0);
-	}
+	//glBindVertexArray(VAO);
+	//glDrawArrays(GL_TRIANGLES, 0, vertSize);
+	//glBindVertexArray(0);
 
 	glfwSwapBuffers(window);
 }

@@ -7,12 +7,12 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include <string>
 #include <vector>
 
 #include "Shader.h"
+#include "MeshLoader.h"
 #include "Camera.h"
 #include "Entity.h"
 
@@ -53,14 +53,6 @@ private:
 
 	std::vector<Shader> shaders;
 	std::vector<RenderTarget> EntityList;
-
-	unsigned int tempVertSize;
-	GLuint tempVAO;
-	GLuint tempVBO;
-	GLuint diffuseTexture;
-	GLuint specularTexture;
-
-	std::vector<Light> pointLights;
 
 	const float FOV = 45.0f;
 	float fov = FOV;
