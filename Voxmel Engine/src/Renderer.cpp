@@ -60,10 +60,10 @@ Renderer::Renderer(GLFWwindow* win, float* mouseScroll)
 	glGenBuffers(1, &tempVBO);
 
 	glBindVertexArray(tempVAO);
-	// we only need to bind to the VBO, the container's VBO's data already contains the data.
+
 	glBindBuffer(GL_ARRAY_BUFFER, tempVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
-	// set the vertex attribute 
+
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0 * sizeof(float)));
 	glEnableVertexAttribArray(0);
 
@@ -133,12 +133,7 @@ void Renderer::addEntityRenderTarget(Entity& e)
 
 	if (e.modelData.texture.albedoPath != "NULL")
 	{
-		loadTexture(e.modelData.texture.albedoPath, EntityList.back().albedoTexture, false);
-	}
-
-	if (e.modelData.texture.secondTexturePath != "NULL")
-	{
-		loadTexture(e.modelData.texture.secondTexturePath, EntityList.back().secondTexturePath, true);
+		loadTexture(e.modelData.texture.albedoPath, EntityList.back().albedoTexture, true);
 	}
 }
 
@@ -295,12 +290,8 @@ void Renderer::render()
 			shaders[EntityList[i].shader].setInt("albedoTexture", 0);
 		}
 
-		if (!EntityList[i].secondTexturePath == 0)
-		{
-			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, EntityList[i].secondTexturePath);
-			shaders[EntityList[i].shader].setInt("secondTexture", 1);
-		}
+		shaders[EntityList[i].shader].setInt("blockX", 19);
+		shaders[EntityList[i].shader].setInt("blockY", 0);
 
 		glBindVertexArray(EntityList[i].VAO);
 		glDrawArrays(GL_TRIANGLES, 0, EntityList[i].vertsSize);

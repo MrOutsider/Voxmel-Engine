@@ -3,8 +3,9 @@
 
 #include <vector>
 
-#define AIR 0
-#define STONE 1
+#define AIR		0
+#define STONE	1
+#define DIRT	2
 
 class ChunkManager
 {

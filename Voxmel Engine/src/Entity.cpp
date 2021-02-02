@@ -48,8 +48,7 @@ Entity::Entity()
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
 
-	modelData.texture.albedoPath = "res/textures/container.jpg";
-	modelData.texture.secondTexturePath = "res/textures/awesomeface.png";
+	modelData.texture.albedoPath = "res/textures/block_atlas.png";
 }
 
 Entity::~Entity()
