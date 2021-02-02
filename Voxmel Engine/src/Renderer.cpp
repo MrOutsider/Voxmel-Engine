@@ -5,43 +5,7 @@ Renderer::Renderer(GLFWwindow* win, float* mouseScroll)
 	window = win;
 	mouseS = mouseScroll;
 	init();
-}
-
-void Renderer::addEntityRenderTarget(Entity& e)
-{
-	RenderTarget newEntity;
-	EntityList.push_back(newEntity);
-
-	EntityList.back().entity = &e;
-
-	EntityList.back().vertsSize = e.modelData.vertices.size() * sizeof(float);
-
-	// Generate the IDs
-	glGenVertexArrays(1, &EntityList.back().VAO);
-	glGenBuffers(1, &EntityList.back().VBO);
-
-	// Bind the VAO
-	glBindVertexArray(EntityList.back().VAO);
-
-	// Copy vertices array into a Vertex Buffer Object for OpenGL to use
-	glBindBuffer(GL_ARRAY_BUFFER, EntityList.back().VBO);
-	glBufferData(GL_ARRAY_BUFFER, e.modelData.vertices.size() * sizeof(float), &e.modelData.vertices.front(), GL_STATIC_DRAW);
-
-	// Set the vertex attributes
-	// Vertices
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0 * sizeof(float)));
-	glEnableVertexAttribArray(0);
-	// Normals
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	// UVs
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	if (e.modelData.texture.albedoPath != "NULL")
-	{
-		loadTexture(e.modelData.texture.albedoPath, EntityList.back().albedoTexture, true);
-	}
+	loadModel();
 }
 
 void Renderer::addCamera(Camera& cam)
@@ -64,14 +28,17 @@ void Renderer::compileShaders()
 
 void Renderer::loadModel()
 {
-	MeshLoader loader();
+	// TODO : VAO, VBO, EBO, and Texture GLuints
+	MeshLoader meshData;
+	meshData.setupMesh(VAO, VBO, EBO);
+	loadTexture("res/textures/container2.png", albedo, true);
 }
 
-void Renderer::loadTexture(const char* textureName, GLuint& target, bool transparent)
+void Renderer::loadTexture(const char* textureName, GLuint& texture, bool transparent)
 {
 	// Texture load and binding
-	glGenTextures(1, &target);
-	glBindTexture(GL_TEXTURE_2D, target);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 	// Wraping
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -134,7 +101,10 @@ void Renderer::render()
 
 	glm::mat4 model = glm::mat4(1.0f);
 
-	//glBindVertexArray(VAO);
+	glm::mat4 MVP = projection * view * model;
+
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, numOfVerticies, GL_UNSIGNED_INT, &EBO);
 	//glDrawArrays(GL_TRIANGLES, 0, vertSize);
 	//glBindVertexArray(0);
 
@@ -148,12 +118,9 @@ void Renderer::destroy()
 		shaders[i].destroy();
 	}
 
-	for (size_t i = 0; i < EntityList.size(); i++)
-	{
-		glDeleteVertexArrays(1, &EntityList[i].VAO);
-		glDeleteVertexArrays(1, &EntityList[i].VBO);
-		glDeleteTextures(1, &EntityList[i].albedoTexture);
-		glDeleteTextures(1, &EntityList[i].secondTexturePath);
-	}
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteVertexArrays(1, &VBO);
+	glDeleteVertexArrays(1, &EBO);
+	glDeleteTextures(1, &albedo);
 }
 

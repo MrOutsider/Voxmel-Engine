@@ -16,34 +16,17 @@
 #include "Camera.h"
 #include "Entity.h"
 
-struct RenderTarget
-{
-	Entity* entity;
-	
-	GLuint ID; // ID assosiated with imported entity
-	GLuint shader = 0;
-
-	GLuint vertsSize;
-
-	GLuint VAO;
-	GLuint VBO;
-
-	GLuint albedoTexture = 0;
-	GLuint secondTexturePath = 0;
-};
-
-struct Light
-{
-	glm::vec3 position;
-	glm::vec3 color;
-};
-
 class Renderer
 {
 public:
+	struct Light
+	{
+		glm::vec3 position;
+		glm::vec3 color;
+	};
+
 	Renderer(GLFWwindow* win, float* mouseScroll);
 	void addCamera(Camera& cam);
-	void addEntityRenderTarget(Entity& entity);
 	void render();
 	void destroy();
 private:
@@ -52,10 +35,17 @@ private:
 	float* mouseS;
 
 	std::vector<Shader> shaders;
-	std::vector<RenderTarget> EntityList;
 
 	const float FOV = 45.0f;
 	float fov = FOV;
+
+	//---------------------------------------------
+	unsigned int numOfVerticies;
+	GLuint VAO;
+	GLuint VBO;
+	GLuint EBO;
+	GLuint albedo;
+	//---------------------------------------------
 
 	void init();
 	void compileShaders();
