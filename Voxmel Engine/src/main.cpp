@@ -79,7 +79,7 @@ int main()
 		if (glfwGetTime() - timer > 1.0)
 		{
 			timer++;
-			std::string newTitle = windowTitle + " | FPS : " + std::to_string(frames + 1) + " | Physics : " + std::to_string(physicsUpdates);
+			std::string newTitle = windowTitle + " | FPS : " + std::to_string(frames) + " | Physics : " + std::to_string(physicsUpdates) + " | Draw : " + std::to_string(renderer.drawCalls);
 			winTitle = newTitle.c_str();
 			glfwSetWindowTitle(window.get_window(), winTitle);
 			//std::cout << "FPS: " << frames << " Physics Updates:" << physicsUpdates << std::endl;

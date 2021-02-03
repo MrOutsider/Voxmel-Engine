@@ -31,25 +31,14 @@ void Renderer::removeEntity(Entity& entity)
 	{
 		if (models[i].entity->ID == entity.ID)
 		{
-			for (unsigned int n = 0; n < models[i].VAOs.size(); n++)
-			{
-				glDeleteVertexArrays(1, &models[i].VAOs[n]);
-			}
 
-			for (unsigned int n = 0; n < models[i].VBOs.size(); n++)
-			{
-				glDeleteVertexArrays(1, &models[i].VBOs[n]);
-			}
-
-			for (unsigned int n = 0; n < models[i].EBOs.size(); n++)
-			{
-				glDeleteVertexArrays(1, &models[i].EBOs[n]);
-			}
-
+			glDeleteVertexArrays(1, &models[i].VAO);
+			glDeleteVertexArrays(1, &models[i].VBO);
+			glDeleteVertexArrays(1, &models[i].EBO);
 			glDeleteTextures(1, &models[i].albedo);
-		}
 
-		models.erase(models.begin() + i);
+			models.erase(models.begin() + i);
+		}
 	}
 }
 
@@ -105,7 +94,7 @@ void Renderer::loadModel(const char* modelPath, const char* texturePath, Entity&
 
 	MeshLoader meshData;
 	meshData.loadMesh(modelPath);
-	meshData.OpenGLBufferLoading(newTarget.VAOs, newTarget.VBOs, newTarget.EBOs, newTarget.indicesList);
+	meshData.OpenGLBufferLoading(newTarget.VAO, newTarget.VBO, newTarget.EBO, newTarget.indicesList);
 	loadTexture(texturePath, newTarget.albedo, true);
 
 	models.push_back(newTarget);
@@ -167,6 +156,8 @@ void Renderer::render()
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	drawCalls = 0;
+
 	glm::mat4 view = glm::mat4(1.0f);
 
 	view = glm::lookAt(camera->transform, camera->transform + camera->cameraFront, camera->cameraUp);
@@ -188,49 +179,47 @@ void Renderer::render()
 		{
 			if (renderList[i]->ID == models[n].entity->ID)
 			{
-				for (unsigned int m = 0; m < models[n].indicesList.size(); m++)
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
+
+				// Translate
+				if (models[n].entity->transform != glm::vec3(0.0f))
 				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
-
-					// Translate
-					if (models[n].entity->transform != glm::vec3(0.0f))
-					{
-						model = glm::translate(model, models[n].entity->transform);
-					}
-					// Rotate
-					if (models[n].entity->rotation.x != 0.0f)
-					{
-						model = glm::rotate(model, models[n].entity->rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-					}
-					if (models[n].entity->rotation.y != 0.0f)
-					{
-						model = glm::rotate(model, models[n].entity->rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
-					}
-					if (models[n].entity->rotation.z != 0.0f)
-					{
-						model = glm::rotate(model, models[n].entity->rotation.x, glm::vec3(1.0f, 0.0f, 1.0f));
-					}
-					// Scale
-					if (models[n].entity->scale != glm::vec3(1.0f))
-					{
-						model = glm::scale(model, models[n].entity->scale);
-					}
-
-					glm::mat4 MVP = projection * view * model;
-
-					shaders[1].use();
-
-					shaders[1].setMat4("MVP", MVP);
-
-					glActiveTexture(GL_TEXTURE0);
-					glBindTexture(GL_TEXTURE_2D, models[n].albedo);
-					shaders[1].setInt("albedo", 0);
-
-					glBindVertexArray(models[n].VAOs[m]);
-					glDrawElements(GL_TRIANGLES, models[n].indicesList[m].size(), GL_UNSIGNED_INT, 0);
-					glBindVertexArray(0);
+					model = glm::translate(model, models[n].entity->transform);
 				}
+				// Rotate
+				if (models[n].entity->rotation.x != 0.0f)
+				{
+					model = glm::rotate(model, models[n].entity->rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+				}
+				if (models[n].entity->rotation.y != 0.0f)
+				{
+					model = glm::rotate(model, models[n].entity->rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
+				}
+				if (models[n].entity->rotation.z != 0.0f)
+				{
+					model = glm::rotate(model, models[n].entity->rotation.x, glm::vec3(1.0f, 0.0f, 1.0f));
+				}
+				// Scale
+				if (models[n].entity->scale != glm::vec3(1.0f))
+				{
+					model = glm::scale(model, models[n].entity->scale);
+				}
+
+				glm::mat4 MVP = projection * view * model;
+
+				shaders[1].use();
+
+				shaders[1].setMat4("MVP", MVP);
+
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, models[n].albedo);
+				shaders[1].setInt("albedo", 0);
+
+				glBindVertexArray(models[n].VAO);
+				glDrawElements(GL_TRIANGLES, models[n].indicesList.size(), GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+				drawCalls++;
 			}
 		}
 	}
@@ -246,22 +235,14 @@ void Renderer::destroy()
 
 	for (unsigned int i = 0; i < models.size(); i++)
 	{
-		for (unsigned int n = 0; n < models[i].VAOs.size(); n++)
-		{
-			glDeleteVertexArrays(1, &models[i].VAOs[n]);
-		}
-
-		for (unsigned int n = 0; n < models[i].VBOs.size(); n++)
-		{
-			glDeleteVertexArrays(1, &models[i].VBOs[n]);
-		}
-
-		for (unsigned int n = 0; n < models[i].EBOs.size(); n++)
-		{
-			glDeleteVertexArrays(1, &models[i].EBOs[n]);
-		}
-
+		glDeleteVertexArrays(1, &models[i].VAO);
+		glDeleteVertexArrays(1, &models[i].VBO);
+		glDeleteVertexArrays(1, &models[i].EBO);
 		glDeleteTextures(1, &models[i].albedo);
 	}
+
+	shaders.clear();
+	models.clear();
+	renderList.clear();
 }
 

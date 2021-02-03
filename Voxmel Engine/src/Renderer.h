@@ -23,12 +23,14 @@ public:
 	{
 		Entity* entity;
 
-		std::vector<std::vector<unsigned int>> indicesList;
-		std::vector<GLuint> VAOs;
-		std::vector<GLuint> VBOs;
-		std::vector<GLuint> EBOs;
+		std::vector<unsigned int> indicesList;
+		GLuint VAO;
+		GLuint VBO;
+		GLuint EBO;
 		GLuint albedo;
 	};
+
+	unsigned int drawCalls = 0;
 
 	Renderer(GLFWwindow* win, float* mouseScroll);
 	void addCamera(Camera& cam);

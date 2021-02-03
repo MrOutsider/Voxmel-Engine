@@ -8,45 +8,52 @@ MeshLoader::~MeshLoader()
 {
 }
 
-void MeshLoader::OpenGLBufferLoading(std::vector<GLuint>& VAOs, std::vector<GLuint>& VBOs, std::vector<GLuint>& EBOs, std::vector<std::vector<unsigned int>>& indicesList)
+void MeshLoader::OpenGLBufferLoading(GLuint& VAO, GLuint& VBO, GLuint& EBO, std::vector<unsigned int>& indicesList)
 {
+    std::vector<unsigned int> newIndices;
+    std::vector<Vertex> newVertices;
+
+    unsigned int nxtInidices = 0;
+
     for (unsigned int i = 0; i < myMeshes.size(); i++)
     {
-        std::vector<unsigned int> newIndices = myMeshes[i].indices;
-        indicesList.push_back(newIndices);
+        for (unsigned int n = 0; n < myMeshes[i].indices.size(); n++)
+        {
+            newIndices.push_back(myMeshes[i].indices[n] + nxtInidices);
+        }
 
-        GLuint VAO;
-        GLuint VBO;
-        GLuint EBO;
-
-        VAOs.push_back(VAO);
-        VBOs.push_back(VBO);
-        EBOs.push_back(EBO);
-
-        glGenVertexArrays(1, &VAOs.back());
-        glGenBuffers(1, &VBOs.back());
-        glGenBuffers(1, &EBOs.back());
-
-        glBindVertexArray(VAOs.back());
-        glBindBuffer(GL_ARRAY_BUFFER, VBOs.back());
-
-        glBufferData(GL_ARRAY_BUFFER, myMeshes[i].vertices.size() * sizeof(Vertex), &myMeshes[i].vertices[0], GL_STATIC_DRAW);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs.back());
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, myMeshes[i].indices.size() * sizeof(unsigned int), &myMeshes[i].indices[0], GL_STATIC_DRAW);
-
-        // Vertex positions
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-        // Vertex normals
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
-        // Vertex texture coords
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
-
-        glBindVertexArray(0);
+        for (unsigned int n = 0; n < myMeshes[i].vertices.size(); n++)
+        {
+            newVertices.push_back(myMeshes[i].vertices[n]);
+            nxtInidices++;
+        }
     }
+
+    indicesList = newIndices;
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+    glBufferData(GL_ARRAY_BUFFER, newVertices.size() * sizeof(Vertex), &newVertices[0], GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, newIndices.size() * sizeof(unsigned int), &newIndices[0], GL_STATIC_DRAW);
+
+    // Vertex positions
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    // Vertex normals
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+    // Vertex texture coords
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+
+    glBindVertexArray(0);
 }
 
 bool MeshLoader::loadMesh(std::string meshPath)

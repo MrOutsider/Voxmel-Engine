@@ -37,7 +37,7 @@ public:
 	MeshLoader();
 	~MeshLoader();
 
-    void OpenGLBufferLoading(std::vector<GLuint>& VAOs, std::vector<GLuint>& VBOs, std::vector<GLuint>& EBOs, std::vector<std::vector<unsigned int>>& indicesList);
+    void OpenGLBufferLoading(GLuint& VAO, GLuint& VBO, GLuint& EBO, std::vector<unsigned int>& indicesList);
     bool loadMesh(std::string meshPath);
 
 private:
