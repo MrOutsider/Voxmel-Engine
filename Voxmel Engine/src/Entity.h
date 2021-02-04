@@ -1,7 +1,9 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <glad/glad.h>
 #include <glm/glm.hpp>
+
 #include <string>
 #include <vector>
 
@@ -12,6 +14,15 @@ public:
 
 	const char* modelPath;
 	const char* albedoPath;
+
+	// OpenGL : Buffers
+	GLuint VAO;
+	GLuint VBO;
+	GLuint EBO;
+	std::vector<unsigned int> indices;
+
+	// OpenGL : Textures
+	GLuint albedo;
 
 	glm::vec3 transform = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);

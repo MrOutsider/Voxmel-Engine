@@ -12,61 +12,35 @@ void Renderer::addCamera(Camera& cam)
 	camera = &cam;
 }
 
-void Renderer::loadEntityData(Entity& entity)
+void Renderer::addEntity(Entity& entity)
 {
-	loadModel(entity.modelPath, entity.albedoPath, entity);
+	models.push_back(&entity);
 }
 
 void Renderer::removeEntity(Entity& entity)
 {
-	for (unsigned int i = 0; i < renderList.size(); i++)
-	{
-		if (renderList[i]->ID == entity.ID)
-		{
-			renderList.erase(renderList.begin() + i);
-		}
-	}
-
 	for (unsigned int i = 0; i < models.size(); i++)
 	{
-		if (models[i].entity->ID == entity.ID)
+		if (models[i]->ID == entity.ID)
 		{
-
-			glDeleteVertexArrays(1, &models[i].VAO);
-			glDeleteVertexArrays(1, &models[i].VBO);
-			glDeleteVertexArrays(1, &models[i].EBO);
-			glDeleteTextures(1, &models[i].albedo);
-
 			models.erase(models.begin() + i);
 		}
 	}
 }
 
-void Renderer::addEntityToRenderList(Entity& entinty)
+void Renderer::loadEntityBuffers(Entity& entity)
 {
-	for (unsigned int i = 0; i < models.size(); i++)
-	{
-		if (models[i].entity->ID == entinty.ID)
-		{
-			renderList.push_back(&entinty);
-		}
-		else
-		{
-			std::string IDstring = std::to_string(entinty.ID);
-			std::cout << "Entity data not loaded : ID : #" + IDstring << std::endl;
-		}
-	}
+	loadModel(entity);
+	loadTexture(entity.albedoPath, entity.albedo, true);
 }
 
-void Renderer::removeEntityFromRenderList(Entity& entinty)
+void Renderer::eraseEntityBuffers(Entity& entity)
 {
-	for (unsigned int i = 0; i < renderList.size(); i++)
-	{
-		if (renderList[i]->ID == entinty.ID)
-		{
-			renderList.erase(renderList.begin() + i);
-		}
-	}
+	glDeleteVertexArrays(1, &entity.VAO);
+	glDeleteVertexArrays(1, &entity.VBO);
+	glDeleteVertexArrays(1, &entity.EBO);
+	glDeleteTextures(1, &entity.albedo);
+	entity.indices.clear();
 }
 
 void Renderer::init()
@@ -87,17 +61,11 @@ void Renderer::compileShaders()
 	shaders.back().create("res/shaders/entity.vs", "res/shaders/entity.fs");
 }
 
-void Renderer::loadModel(const char* modelPath, const char* texturePath, Entity& entity)
+void Renderer::loadModel(Entity& entity)
 {
-	RenderTarget newTarget;
-	newTarget.entity = &entity;
-
 	MeshLoader meshData;
-	meshData.loadMesh(modelPath);
-	meshData.OpenGLBufferLoading(newTarget.VAO, newTarget.VBO, newTarget.EBO, newTarget.indicesList);
-	loadTexture(texturePath, newTarget.albedo, true);
-
-	models.push_back(newTarget);
+	meshData.loadMesh(entity.modelPath);
+	meshData.OpenGLBufferLoading(entity.VAO, entity.VBO, entity.EBO, entity.indices);
 }
 
 void Renderer::loadTexture(const char* textureName, GLuint& texture, bool transparent)
@@ -177,71 +145,49 @@ void Renderer::render()
 
 	glm::mat4 MVP = projection * view * model;
 
-	if (vertexCount != 0)
+	for (unsigned i = 0; i < models.size(); i++)
 	{
-		shaders[0].use();
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
 
-		shaders[0].setMat4("MVP", MVP);
+		// Translate
+		if (models[i]->transform != glm::vec3(0.0f))
+		{
+			model = glm::translate(model, models[i]->transform);
+		}
+		// Rotate
+		if (models[i]->rotation.x != 0.0f)
+		{
+			model = glm::rotate(model, models[i]->rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (models[i]->rotation.y != 0.0f)
+		{
+			model = glm::rotate(model, models[i]->rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		if (models[i]->rotation.z != 0.0f)
+		{
+			model = glm::rotate(model, models[i]->rotation.x, glm::vec3(1.0f, 0.0f, 1.0f));
+		}
+		// Scale
+		if (models[i]->scale != glm::vec3(1.0f))
+		{
+			model = glm::scale(model, models[i]->scale);
+		}
+
+		MVP = projection * view * model;
+
+		shaders[1].use();
+
+		shaders[1].setMat4("MVP", MVP);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, chunkAlbedo);
-		shaders[0].setInt("albedo", 0);
+		glBindTexture(GL_TEXTURE_2D, models[i]->albedo);
+		shaders[1].setInt("albedo", 0);
 
-		glBindVertexArray(chunkMeshVAO);
-		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+		glBindVertexArray(models[i]->VAO);
+		glDrawElements(GL_TRIANGLES, models[i]->indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 		drawCalls++;
-	}
-
-	for (unsigned int i = 0; i < renderList.size(); i++)
-	{
-		for (unsigned n = 0; n < models.size(); n++)
-		{
-			if (renderList[i]->ID == models[n].entity->ID)
-			{
-				model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
-
-				// Translate
-				if (models[n].entity->transform != glm::vec3(0.0f))
-				{
-					model = glm::translate(model, models[n].entity->transform);
-				}
-				// Rotate
-				if (models[n].entity->rotation.x != 0.0f)
-				{
-					model = glm::rotate(model, models[n].entity->rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-				}
-				if (models[n].entity->rotation.y != 0.0f)
-				{
-					model = glm::rotate(model, models[n].entity->rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
-				}
-				if (models[n].entity->rotation.z != 0.0f)
-				{
-					model = glm::rotate(model, models[n].entity->rotation.x, glm::vec3(1.0f, 0.0f, 1.0f));
-				}
-				// Scale
-				if (models[n].entity->scale != glm::vec3(1.0f))
-				{
-					model = glm::scale(model, models[n].entity->scale);
-				}
-
-				glm::mat4 MVP = projection * view * model;
-
-				shaders[1].use();
-
-				shaders[1].setMat4("MVP", MVP);
-
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, models[n].albedo);
-				shaders[1].setInt("albedo", 0);
-
-				glBindVertexArray(models[n].VAO);
-				glDrawElements(GL_TRIANGLES, models[n].indicesList.size(), GL_UNSIGNED_INT, 0);
-				glBindVertexArray(0);
-				drawCalls++;
-			}
-		}
 	}
 	glfwSwapBuffers(window);
 }
@@ -255,19 +201,12 @@ void Renderer::destroy()
 
 	for (unsigned int i = 0; i < models.size(); i++)
 	{
-		glDeleteVertexArrays(1, &models[i].VAO);
-		glDeleteVertexArrays(1, &models[i].VBO);
-		glDeleteVertexArrays(1, &models[i].EBO);
-		glDeleteTextures(1, &models[i].albedo);
+		glDeleteVertexArrays(1, &models[i]->VAO);
+		glDeleteVertexArrays(1, &models[i]->VBO);
+		glDeleteVertexArrays(1, &models[i]->EBO);
+		glDeleteTextures(1, &models[i]->albedo);
 	}
 
 	shaders.clear();
 	models.clear();
-	renderList.clear();
-}
-
-void Renderer::initChunk()
-{
-	cManager.chunkMesher(vertexCount, chunkMeshVAO, chunkMeshVBO);
-	loadTexture("res/textures/container2.png", chunkAlbedo, true);
 }

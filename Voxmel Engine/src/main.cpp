@@ -60,12 +60,10 @@ int main()
 
 	unsigned int ID = 0;
 
-	//Entity backPack(ID, "res/models/backpack.obj", "res/textures/diffuse.png");
-	//ID++;
-	//renderer.loadEntityData(backPack);
-	//renderer.addEntityToRenderList(backPack);
-
-	renderer.initChunk();
+	Entity backPack(ID, "res/models/backpack.obj", "res/textures/diffuse.png");
+	ID++;
+	renderer.loadEntityBuffers(backPack);
+	renderer.addEntity(backPack);
 
 	// Main Loop
 	while (!glfwWindowShouldClose(window.get_window()))
@@ -84,7 +82,6 @@ int main()
 			std::string newTitle = windowTitle + " | FPS : " + std::to_string(frames) + " | Physics : " + std::to_string(physicsUpdates) + " | Draw : " + std::to_string(renderer.drawCalls);
 			winTitle = newTitle.c_str();
 			glfwSetWindowTitle(window.get_window(), winTitle);
-			//std::cout << "FPS: " << frames << " Physics Updates:" << physicsUpdates << std::endl;
 			physicsUpdates = 0, frames = 0;
 		}
 
@@ -171,3 +168,32 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	mouseScroll = yoffset;
 }
+
+//for (unsigned int i = 0; i < 36; i++)
+//{
+//	chunkMesh.push_back(voxel[0 + (i * 5)] + (x * voxelSize * 2));
+//	chunkMesh.push_back(voxel[1 + ((i * 1) * 5)] + (y * voxelSize * 2));
+//	chunkMesh.push_back(voxel[2 + ((i * 1) * 5)] + (z * voxelSize * 2));
+//	vertCount += 3;
+//	chunkMesh.push_back(voxel[3 + ((i * 1) * 5)]);
+//	chunkMesh.push_back(voxel[4 + ((i * 1) * 5)]);
+//}
+//
+//if (!chunkMesh.empty())
+//{
+//	glGenVertexArrays(1, &VAO);
+//	glGenBuffers(1, &VBO);
+//
+//	glBindVertexArray(VAO);
+//
+//	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+//	glBufferData(GL_ARRAY_BUFFER, chunkMesh.size() * sizeof(float), &chunkMesh[0], GL_STATIC_DRAW);
+//
+//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(0 * sizeof(float)));
+//	glEnableVertexAttribArray(0);
+//
+//	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+//	glEnableVertexAttribArray(1);
+//
+//	glBindVertexArray(0);
+//}

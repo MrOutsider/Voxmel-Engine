@@ -16,40 +16,22 @@
 #include "Camera.h"
 #include "Entity.h"
 
-#include "ChunkManager.h"
-
 class Renderer
 {
 public:
-	struct RenderTarget
-	{
-		Entity* entity;
-
-		std::vector<unsigned int> indicesList;
-		GLuint VAO;
-		GLuint VBO;
-		GLuint EBO;
-		GLuint albedo;
-	};
-
 	unsigned int drawCalls = 0;
-	//----------------------------------
-	ChunkManager cManager;
 
-	unsigned int vertexCount = 0;
-	GLuint chunkMeshVAO;
-	GLuint chunkMeshVBO;
-	GLuint chunkAlbedo;
-	void initChunk();
-	//----------------------------------
 	Renderer(GLFWwindow* win, float* mouseScroll);
+
 	void addCamera(Camera& cam);
 
-	void loadEntityData(Entity& entity);
+	// Render Queue
+	void addEntity(Entity& entity);
 	void removeEntity(Entity& entity);
 
-	void addEntityToRenderList(Entity& entinty);
-	void removeEntityFromRenderList(Entity& entinty);
+	// OpenGL : Buffers
+	void loadEntityBuffers(Entity& entity);
+	void eraseEntityBuffers(Entity& entity);
 
 	void render();
 	void destroy();
@@ -65,12 +47,11 @@ private:
 	const float FOV = 45.0f;
 	float fov = FOV;
 
-	std::vector<RenderTarget> models;
-	std::vector<Entity*> renderList;
+	std::vector<Entity*> models;
 
 	void init();
 	void compileShaders();
-	void loadModel(const char* modelPath, const char* texturePath, Entity& entity);
+	void loadModel(Entity& entity);
 	void loadTexture(const char* textureName, GLuint& target, bool transparent);
 };
 
