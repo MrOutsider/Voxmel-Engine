@@ -10,7 +10,7 @@ struct Voxel
 	float z;
 
 	float blockUVoffsetX;
-	float blockUVoffsetX;
+	float blockUVoffsetY;
 };
 
 class Chunk
