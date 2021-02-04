@@ -32,12 +32,12 @@ private:
 		(-1 * voxelSize),  (1 * voxelSize), (-1 * voxelSize),	(1.0f), (1.0f),
 		 (1 * voxelSize),  (1 * voxelSize), (-1 * voxelSize),	(0.0f), (1.0f),
 		// Front													
-		(-1 * voxelSize), (1 * voxelSize),  (1 * voxelSize),		(0.0f), (1.0f),
-		(-1 * voxelSize), (-1 * voxelSize),  (1 * voxelSize),		(0.0f), (0.0f),
-		(1 * voxelSize), (-1 * voxelSize),  (1 * voxelSize),		(1.0f), (0.0f),
-		(1 * voxelSize), (-1 * voxelSize),  (1 * voxelSize),		(1.0f), (0.0f),
-		(1 * voxelSize), (1 * voxelSize),  (1 * voxelSize),		(1.0f), (1.0f),
-		(-1 * voxelSize), (1 * voxelSize),  (1 * voxelSize),		(0.0f), (1.0f),
+		(-1 * voxelSize),  (1 * voxelSize),  (1 * voxelSize),	(0.0f), (1.0f),
+		(-1 * voxelSize), (-1 * voxelSize),  (1 * voxelSize),	(0.0f), (0.0f),
+		 (1 * voxelSize), (-1 * voxelSize),  (1 * voxelSize),	(1.0f), (0.0f),
+		 (1 * voxelSize), (-1 * voxelSize),  (1 * voxelSize),	(1.0f), (0.0f),
+		 (1 * voxelSize),  (1 * voxelSize),  (1 * voxelSize),	(1.0f), (1.0f),
+		(-1 * voxelSize),  (1 * voxelSize),  (1 * voxelSize),	(0.0f), (1.0f),
 		// Top														
 		(-1 * voxelSize),  (1 * voxelSize), (-1 * voxelSize),	(0.0f), (1.0f),
 		(-1 * voxelSize),  (1 * voxelSize),  (1 * voxelSize),	(0.0f), (0.0f),

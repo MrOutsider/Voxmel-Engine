@@ -179,16 +179,16 @@ void Renderer::render()
 
 	if (chunkInit)
 	{
-		shaders[1].use();
+		shaders[0].use();
 
-		shaders[1].setMat4("MVP", MVP);
+		shaders[0].setMat4("MVP", MVP);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, chunkAlbedo);
-		shaders[1].setInt("albedo", 0);
+		shaders[0].setInt("albedo", 0);
 
 		glBindVertexArray(chunkMeshVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDrawArrays(GL_TRIANGLES, 0, 36);// vertexCount);
 		glBindVertexArray(0);
 		drawCalls++;
 	}
@@ -269,7 +269,7 @@ void Renderer::destroy()
 void Renderer::initChunk()
 {
 	cManager.chunkMesher(vertexCount, chunkMeshVAO, chunkMeshVBO);
-	loadTexture("res/textures/block_atlas.png", chunkAlbedo, true);
+	loadTexture("res/textures/container2.png", chunkAlbedo, true);
 
 	chunkInit = true;
 }
