@@ -21,7 +21,7 @@ private:
 	unsigned int blockX = 18;
 	unsigned int blockY = 1;
 
-	float voxelSize = 0.25f;
+	float voxelSize = 0.20f;
 	float voxel[180] =
 	{	// Verts												UVs
 		// Back

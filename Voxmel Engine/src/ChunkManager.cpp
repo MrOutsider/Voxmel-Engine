@@ -39,9 +39,9 @@ void ChunkManager::chunkMesher(GLuint& vertCount, GLuint& VAO, GLuint& VBO)
 
 	for (unsigned int i = 0; i < 36; i++)
 	{
-		chunkMesh.push_back(voxel[0 + (i * 5)]);
-		chunkMesh.push_back(voxel[1 + ((i * 1) * 5)]);
-		chunkMesh.push_back(voxel[2 + ((i * 1) * 5)]);
+		chunkMesh.push_back(voxel[0 + (i * 5)]		 + 0.0f);
+		chunkMesh.push_back(voxel[1 + ((i * 1) * 5)] + 0.0f);
+		chunkMesh.push_back(voxel[2 + ((i * 1) * 5)] + 0.0f);
 		vertCount += 3;
 		chunkMesh.push_back(voxel[3 + ((i * 1) * 5)]);
 		chunkMesh.push_back(voxel[4 + ((i * 1) * 5)]);
