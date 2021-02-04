@@ -59,7 +59,7 @@ void MeshLoader::OpenGLBufferLoading(GLuint& VAO, GLuint& VBO, GLuint& EBO, std:
 bool MeshLoader::loadMesh(std::string meshPath)
 {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(meshPath, aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs);
+    const aiScene* scene = importer.ReadFile(meshPath, aiProcess_JoinIdenticalVertices);
 
     // If the import failed, report it
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {

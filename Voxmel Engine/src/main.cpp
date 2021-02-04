@@ -64,10 +64,10 @@ int main()
 
 	unsigned int ID = 0;
 
-	Entity backPack(ID, "res/models/backpack.obj", "res/textures/diffuse.png");
+	Entity sword(ID, "res/models/momo_shikai.obj", "res/textures/momo_shikai_albedo.png");
 	ID++;
-	renderer.loadEntityBuffers(backPack);
-	renderer.addEntity(backPack);
+	renderer.loadEntityBuffers(sword);
+	renderer.addEntity(sword);
 
 	// Main Loop
 	while (!glfwWindowShouldClose(window.get_window()))
