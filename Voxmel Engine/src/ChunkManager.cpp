@@ -20,7 +20,7 @@ void ChunkManager::chunkMesher(GLuint& vertCount, GLuint& VAO, GLuint& VBO)
 		{
 			for (unsigned int z = 0; z < chunkSize; z++)
 			{
-				switch (chunk[x * chunkSize * chunkSize + y * chunkSize + z])
+				switch (chunk[x + y + z])
 				{
 				default:
 					std::cout << "Block Setter Error" << std::endl;
@@ -30,19 +30,21 @@ void ChunkManager::chunkMesher(GLuint& vertCount, GLuint& VAO, GLuint& VBO)
 					break;
 
 				case 1: // STONE
-					for (unsigned int i = 0; i < 36; i++)
-					{
-						chunkMesh.push_back(voxel[0 + (i * 5)]		 + (float)x);
-						chunkMesh.push_back(voxel[1 + ((i * 1) * 5)] + (float)y);
-						chunkMesh.push_back(voxel[2 + ((i * 1) * 5)] + (float)z);
-						vertCount += 3;
-						chunkMesh.push_back(voxel[3 + ((i * 1) * 5)]);
-						chunkMesh.push_back(voxel[4 + ((i * 1) * 5)]);
-					}
+					
 					break;
 				}
 			}
 		}
+	}
+
+	for (unsigned int i = 0; i < 36; i++)
+	{
+		chunkMesh.push_back(voxel[0 + (i * 5)]);
+		chunkMesh.push_back(voxel[1 + ((i * 1) * 5)]);
+		chunkMesh.push_back(voxel[2 + ((i * 1) * 5)]);
+		vertCount += 3;
+		chunkMesh.push_back(voxel[3 + ((i * 1) * 5)]);
+		chunkMesh.push_back(voxel[4 + ((i * 1) * 5)]);
 	}
 
 	//--------------------------------------------------------------------------------------------
@@ -54,7 +56,7 @@ void ChunkManager::chunkMesher(GLuint& vertCount, GLuint& VAO, GLuint& VBO)
 		glBindVertexArray(VAO);
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, chunkMesh.size(), &chunkMesh[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, chunkMesh.size() * sizeof(float), &chunkMesh[0], GL_STATIC_DRAW);
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(0 * sizeof(float)));
 		glEnableVertexAttribArray(0);
