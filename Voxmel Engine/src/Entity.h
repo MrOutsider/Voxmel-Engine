@@ -16,6 +16,7 @@ public:
 	const char* albedoPath;
 
 	// OpenGL : Buffers
+	// TODO : Load all models at start and ref them from Entity Class
 	GLuint VAO;
 	GLuint VBO;
 	GLuint EBO;

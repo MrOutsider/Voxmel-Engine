@@ -1,9 +1,26 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
+#include <glad/glad.h>
+
+struct Voxel
+{
+	float x;
+	float y;
+	float z;
+
+	float blockUVoffsetX;
+	float blockUVoffsetX;
+};
+
 class Chunk
 {
 public:
+	// OpenGL : Buffers
+	GLuint VAO;
+	GLuint VBO;
+	unsigned int verticiesAmount;
+
 	Chunk();
 	~Chunk();
 

@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-Camera::Camera(GLFWwindow* win, glm::vec4* mousePos)
+Camera::Camera(GLFWwindow* win, float* mousePos)
 {
 	window = win;
 	mPos = mousePos;
@@ -8,11 +8,11 @@ Camera::Camera(GLFWwindow* win, glm::vec4* mousePos)
 
 void Camera::update(float delta)
 {
-	mPos->z *= sensitivity;
-	mPos->w *= sensitivity;
+	mPos[2] *= sensitivity;
+	mPos[3] *= sensitivity;
 
-	yaw += mPos->z;
-	pitch += mPos->w;
+	yaw += mPos[2];
+	pitch += mPos[3];
 
 	if (pitch > 89.0f)
 		pitch = 89.0f;
