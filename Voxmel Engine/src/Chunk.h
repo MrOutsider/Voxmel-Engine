@@ -9,8 +9,7 @@ struct Voxel
 	float y;
 	float z;
 
-	float blockUVoffsetX;
-	float blockUVoffsetY;
+	unsigned int blockID;
 };
 
 class Chunk

@@ -56,12 +56,12 @@ void Camera::update(float delta)
 
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		newTransform -= glm::normalize(glm::cross(cameraFront, cameraUp));
+		newTransform -= cameraSide;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		newTransform += glm::normalize(glm::cross(cameraFront, cameraUp));
+		newTransform += cameraSide;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
