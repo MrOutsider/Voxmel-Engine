@@ -60,10 +60,12 @@ int main()
 
 	unsigned int ID = 0;
 
-	Entity backPack(ID, "res/models/backpack.obj", "res/textures/diffuse.png");
-	ID++;
-	renderer.loadEntityData(backPack);
-	renderer.addEntityToRenderList(backPack);
+	//Entity backPack(ID, "res/models/backpack.obj", "res/textures/diffuse.png");
+	//ID++;
+	//renderer.loadEntityData(backPack);
+	//renderer.addEntityToRenderList(backPack);
+
+	renderer.initChunk();
 
 	// Main Loop
 	while (!glfwWindowShouldClose(window.get_window()))

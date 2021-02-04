@@ -16,6 +16,8 @@
 #include "Camera.h"
 #include "Entity.h"
 
+#include "ChunkManager.h"
+
 class Renderer
 {
 public:
@@ -31,7 +33,17 @@ public:
 	};
 
 	unsigned int drawCalls = 0;
+	//----------------------------------
+	ChunkManager cManager;
 
+	unsigned int vertexCount;
+	GLuint chunkMeshVAO;
+	GLuint chunkMeshVBO;
+	GLuint chunkAlbedo;
+	void initChunk();
+
+	bool chunkInit = false;
+	//----------------------------------
 	Renderer(GLFWwindow* win, float* mouseScroll);
 	void addCamera(Camera& cam);
 

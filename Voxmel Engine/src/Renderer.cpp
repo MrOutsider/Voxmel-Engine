@@ -79,7 +79,7 @@ void Renderer::compileShaders()
 	// 0
 	Shader voxelShader;
 	shaders.push_back(voxelShader);
-	shaders.back().create("res/shaders/entity.vs", "res/shaders/entity.fs");
+	shaders.back().create("res/shaders/voxel.vs", "res/shaders/voxel.fs");
 
 	// 1
 	Shader entityShader;
@@ -154,7 +154,7 @@ void Renderer::render()
 	glDepthFunc(GL_LEQUAL);
 
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	drawCalls = 0;
 
@@ -173,13 +173,33 @@ void Renderer::render()
 		fov = 45.0f;
 	projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 100.0f);
 
+	glm::mat4 model = glm::mat4(1.0f);
+
+	glm::mat4 MVP = projection * view * model;
+
+	if (chunkInit)
+	{
+		shaders[1].use();
+
+		shaders[1].setMat4("MVP", MVP);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, chunkAlbedo);
+		shaders[1].setInt("albedo", 0);
+
+		glBindVertexArray(chunkMeshVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
+		drawCalls++;
+	}
+
 	for (unsigned int i = 0; i < renderList.size(); i++)
 	{
 		for (unsigned n = 0; n < models.size(); n++)
 		{
 			if (renderList[i]->ID == models[n].entity->ID)
 			{
-				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
 
 				// Translate
@@ -246,3 +266,10 @@ void Renderer::destroy()
 	renderList.clear();
 }
 
+void Renderer::initChunk()
+{
+	cManager.chunkMesher(vertexCount, chunkMeshVAO, chunkMeshVBO);
+	loadTexture("res/textures/block_atlas.png", chunkAlbedo, true);
+
+	chunkInit = true;
+}

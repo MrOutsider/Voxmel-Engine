@@ -22,6 +22,7 @@ void Camera::update(float delta)
 	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 	direction.y = sin(glm::radians(pitch));
 	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
 	cameraFront = glm::normalize(direction);
 	cameraSide = glm::normalize(glm::cross(cameraFront, cameraUp));
 	cameraForward = -glm::normalize(glm::cross(cameraSide, cameraUp));
