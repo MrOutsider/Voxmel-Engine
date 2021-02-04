@@ -30,7 +30,7 @@ void ChunkManager::chunkMesher(GLuint& vertCount, GLuint& VAO, GLuint& VBO)
 					break;
 
 				case 1: // STONE
-					for (unsigned int i = 0; i < 180; i++)
+					for (unsigned int i = 0; i < 36; i++)
 					{
 						chunkMesh.push_back(voxel[0 + (i * 5)]		 + (float)x);
 						chunkMesh.push_back(voxel[1 + ((i * 1) * 5)] + (float)y);
