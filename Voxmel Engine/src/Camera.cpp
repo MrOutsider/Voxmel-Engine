@@ -24,6 +24,7 @@ void Camera::update(float delta)
 	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 
 	cameraFront = glm::normalize(direction);
+
 	cameraSide = glm::normalize(glm::cross(cameraFront, cameraUp));
 	cameraForward = -glm::normalize(glm::cross(cameraSide, cameraUp));
 
@@ -56,11 +57,13 @@ void Camera::update(float delta)
 
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
+		cameraSide = glm::normalize(glm::cross(cameraFront, cameraUp));
 		newTransform -= cameraSide;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
+		cameraSide = glm::normalize(glm::cross(cameraFront, cameraUp));
 		newTransform += cameraSide;
 	}
 
@@ -75,4 +78,9 @@ void Camera::update(float delta)
 	}
 
 	transform += newTransform * moveSpeed * delta;
+}
+
+void Camera::setDir(float _yaw)
+{
+	yaw = _yaw;
 }

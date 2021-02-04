@@ -143,8 +143,7 @@ void Renderer::render()
 
 	glm::mat4 model = glm::mat4(1.0f);
 
-	glm::mat4 MVP = projection * view * model;
-
+	// Rendering entities
 	for (unsigned i = 0; i < models.size(); i++)
 	{
 		model = glm::mat4(1.0f);
@@ -174,7 +173,7 @@ void Renderer::render()
 			model = glm::scale(model, models[i]->scale);
 		}
 
-		MVP = projection * view * model;
+		glm::mat4 MVP = projection * view * model;
 
 		shaders[1].use();
 

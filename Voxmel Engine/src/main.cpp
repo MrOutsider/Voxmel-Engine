@@ -54,7 +54,7 @@ int main()
 
 	// Timesteps
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	fps = mode->refreshRate - 1.0f;
+	fps = mode->refreshRate;
 	float limitFPS = 1.0f / fps, limitPhysicsSteps = 1.0f / 30.0f;
 	float lastTime = glfwGetTime(), nowTime = 0.0f, timer = lastTime;
 	float deltaTimeRender = 0.0f, deltaTimePhysics = 0.0f;
@@ -68,6 +68,8 @@ int main()
 	ID++;
 	renderer.loadEntityBuffers(sword);
 	renderer.addEntity(sword);
+
+	bool cameraSet = false;
 
 	// Main Loop
 	while (!glfwWindowShouldClose(window.get_window()))
@@ -91,6 +93,13 @@ int main()
 
 		// Input
 		processInput(window.get_window());
+
+		if (!cameraSet)
+		{
+			cam.setDir(-90.0f);
+			cameraSet = true;
+		}
+
 		cam.update(delta);
 
 		if (deltaTimePhysics >= 1.0)
@@ -105,8 +114,6 @@ int main()
 		{
 			deltaTimeRender--;
 			frames++;
-
-			glfwMakeContextCurrent(window.get_window());
 
 			int w, h;
 			glfwGetWindowSize(window.get_window(), &w, &h);

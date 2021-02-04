@@ -20,6 +20,10 @@ public:
 	GLuint VBO;
 	unsigned int verticiesAmount;
 
+	unsigned int chunkSize = 16;
+
+	Voxel chunkVoxels[4096]; // 16^3
+
 	Chunk();
 	~Chunk();
 

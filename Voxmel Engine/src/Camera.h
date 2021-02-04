@@ -24,6 +24,7 @@ public:
 	Camera(GLFWwindow* win, float* mousePos);
 
 	void update(float delta);
+	void setDir(float _yaw);
 private:
 	GLFWwindow* window;
 	float* mPos;
