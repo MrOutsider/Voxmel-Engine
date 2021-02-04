@@ -147,8 +147,8 @@ void Renderer::loadTexture(const char* textureName, GLuint& texture, bool transp
 
 void Renderer::render()
 {
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
