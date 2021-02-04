@@ -11,40 +11,25 @@ ChunkManager::~ChunkManager()
 
 void ChunkManager::chunkMesher(GLuint& vertCount, GLuint& VAO, GLuint& VBO)
 {
-	chunkMesh.clear();
 	vertCount = 0;
 
-	for (unsigned int x = 0; x < chunkSize; x++)
+	for (unsigned int x = 0; x < 2; x++)
 	{
-		for (unsigned int y = 0; y < chunkSize; y++)
+		for (unsigned int y = 0; y < 2; y++)
 		{
-			for (unsigned int z = 0; z < chunkSize; z++)
+			for (unsigned int z = 0; z < 2; z++)
 			{
-				switch (chunk[x + y + z])
+				for (unsigned int i = 0; i < 36; i++)
 				{
-				default:
-					std::cout << "Block Setter Error" << std::endl;
-					break;
-
-				case 0: // AIR
-					break;
-
-				case 1: // STONE
-					
-					break;
+					chunkMesh.push_back(voxel[0 + (i * 5)] + (x * voxelSize * 2));
+					chunkMesh.push_back(voxel[1 + ((i * 1) * 5)] + (y * voxelSize * 2));
+					chunkMesh.push_back(voxel[2 + ((i * 1) * 5)] + (z * voxelSize * 2));
+					vertCount += 3;
+					chunkMesh.push_back(voxel[3 + ((i * 1) * 5)]);
+					chunkMesh.push_back(voxel[4 + ((i * 1) * 5)]);
 				}
 			}
 		}
-	}
-
-	for (unsigned int i = 0; i < 36; i++)
-	{
-		chunkMesh.push_back(voxel[0 + (i * 5)]		 + 0.0f);
-		chunkMesh.push_back(voxel[1 + ((i * 1) * 5)] + 0.0f);
-		chunkMesh.push_back(voxel[2 + ((i * 1) * 5)] + 0.0f);
-		vertCount += 3;
-		chunkMesh.push_back(voxel[3 + ((i * 1) * 5)]);
-		chunkMesh.push_back(voxel[4 + ((i * 1) * 5)]);
 	}
 
 	//--------------------------------------------------------------------------------------------
@@ -70,27 +55,4 @@ void ChunkManager::chunkMesher(GLuint& vertCount, GLuint& VAO, GLuint& VBO)
 
 void ChunkManager::chunkSetterTest()
 {
-	for (unsigned int x = 0; x < chunkSize; x++)
-	{
-		for (unsigned int y = 0; y < chunkSize; y++)
-		{
-			for (unsigned int z = 0; z < chunkSize; z++)
-			{
-				switch (x * chunkSize * chunkSize + y * chunkSize + z)
-				{
-				default:
-					chunk[x * chunkSize * chunkSize + y * chunkSize + z] = 0;
-					break;
-
-				case 0:
-					chunk[x * chunkSize * chunkSize + y * chunkSize + z] = 1;
-					break;
-
-				case 1:
-					chunk[x * chunkSize * chunkSize + y * chunkSize + z] = 1;
-					break;
-				}
-			}
-		}
-	}
 }

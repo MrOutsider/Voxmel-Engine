@@ -41,8 +41,6 @@ public:
 	GLuint chunkMeshVBO;
 	GLuint chunkAlbedo;
 	void initChunk();
-
-	bool chunkInit = false;
 	//----------------------------------
 	Renderer(GLFWwindow* win, float* mouseScroll);
 	void addCamera(Camera& cam);

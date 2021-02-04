@@ -177,7 +177,7 @@ void Renderer::render()
 
 	glm::mat4 MVP = projection * view * model;
 
-	if (chunkInit)
+	if (vertexCount != 0)
 	{
 		shaders[0].use();
 
@@ -188,7 +188,7 @@ void Renderer::render()
 		shaders[0].setInt("albedo", 0);
 
 		glBindVertexArray(chunkMeshVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);// vertexCount);
+		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 		glBindVertexArray(0);
 		drawCalls++;
 	}
@@ -270,6 +270,4 @@ void Renderer::initChunk()
 {
 	cManager.chunkMesher(vertexCount, chunkMeshVAO, chunkMeshVBO);
 	loadTexture("res/textures/container2.png", chunkAlbedo, true);
-
-	chunkInit = true;
 }
