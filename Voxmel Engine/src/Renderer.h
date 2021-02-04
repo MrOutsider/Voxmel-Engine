@@ -36,7 +36,7 @@ public:
 	//----------------------------------
 	ChunkManager cManager;
 
-	unsigned int vertexCount;
+	unsigned int vertexCount = 0;
 	GLuint chunkMeshVAO;
 	GLuint chunkMeshVBO;
 	GLuint chunkAlbedo;
