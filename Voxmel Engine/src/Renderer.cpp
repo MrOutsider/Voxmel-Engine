@@ -149,7 +149,7 @@ void Renderer::render()
 	// Test
 	shaders[0].use();
 
-	//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -25.0f));
 	glm::mat4 MVP = projection * view * model;
 
 	shaders[0].setMat4("MVP", MVP);
@@ -168,7 +168,7 @@ void Renderer::render()
 	for (unsigned i = 0; i < models.size(); i++)
 	{
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 
 		// Translate
 		if (models[i]->transform != glm::vec3(0.0f))

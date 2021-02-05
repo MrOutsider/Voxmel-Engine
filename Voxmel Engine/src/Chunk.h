@@ -11,8 +11,8 @@ struct Voxel
 
 	int UVoffset[2] = {0, 0};
 
-	bool sides[6] = {false,  // +Z
-					 false,  // -Z
+	bool sides[6] = {false,  // -Z
+					 false,  // +Z
 					 false,  // +Y
 					 false,  // -Y
 					 false,  // +X
