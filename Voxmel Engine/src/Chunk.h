@@ -9,7 +9,7 @@ struct Voxel
 	unsigned int y = 0;
 	unsigned int z = 0;
 
-	float UVoffset[2] = {0.0f, 0.0f};
+	int UVoffset[2] = {0, 0};
 
 	bool sides[6] = {false,  // +Z
 					 false,  // -Z
@@ -35,9 +35,10 @@ public:
 	GLuint VBO;
 	unsigned int verticiesAmount;
 
-	unsigned int chunkSize = 16;
+	float voxelSize = 0.5f;
 
-	Voxel chunkVoxels[4096]; // 16^3
+	unsigned int chunkSize = 16; // Size of strip
+	Voxel chunkVoxels[4096]; // chunkSize^3
 
 	Chunk();
 	~Chunk();

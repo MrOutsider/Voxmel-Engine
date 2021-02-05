@@ -8,6 +8,12 @@ ChunkManager::~ChunkManager()
 {
 }
 
+void ChunkManager::init()
+{
+	generateChunk();
+	generateMesh(loadedChunks.back());
+}
+
 void ChunkManager::generateChunk()
 {
 	Chunk* newChunk = new Chunk;
@@ -25,6 +31,7 @@ void ChunkManager::generateChunk()
 				loadedChunks.back()->chunkVoxels[i].y = y;
 				loadedChunks.back()->chunkVoxels[i].z = z;
 				loadedChunks.back()->chunkVoxels[i].blockID = 1;
+				loadedChunks.back()->chunkVoxels[i].tile = false;
 				loadedChunks.back()->chunkVoxels[i].opaque = true;
 				i++;
 			}
@@ -34,253 +41,81 @@ void ChunkManager::generateChunk()
 
 void ChunkManager::generateMesh(Chunk* chunk)
 {
+	chunk->verticiesAmount = 0;
 	std::vector<float> mesh;
 
-	for (unsigned int i = 0; i < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize; i++)
+	for (int i = 0; i < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize; i++)
 	{
-		if (!chunk->chunkVoxels[i].tile)
+		if (!chunk->chunkVoxels[i].tile && chunk->chunkVoxels[i].opaque)
 		{
+			// Assign UV Offsets();
 			checkNeighbors(chunk, i);
 			// Add Mesh
-			if (!chunk->chunkVoxels[i].sides[0])
+			if (chunk->chunkVoxels[i].sides[0] == false)
 			{
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
+				mesh.push_back(-1 * chunk->voxelSize + chunk->chunkVoxels[i].x);
+				mesh.push_back(1 * chunk->voxelSize + chunk->chunkVoxels[i].y);
+				mesh.push_back( 1 * chunk->voxelSize + chunk->chunkVoxels[i].z);
+				mesh.push_back((0 / 32.0f) + ((1.0f / 32.0f) * chunk->chunkVoxels[i].UVoffset[0]));
+				mesh.push_back((1 / 16.0f) + ((1.0f / 32.0f) * chunk->chunkVoxels[i].UVoffset[1]));
 
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
+				mesh.push_back(-1 * chunk->voxelSize + chunk->chunkVoxels[i].x);
+				mesh.push_back(-1 * chunk->voxelSize + chunk->chunkVoxels[i].y);
+				mesh.push_back(1 * chunk->voxelSize + chunk->chunkVoxels[i].z);
+				mesh.push_back((0 / 32.0f) + ((1.0f / 32.0f) * chunk->chunkVoxels[i].UVoffset[0]));
+				mesh.push_back((0 / 16.0f) + ((1.0f / 32.0f) * chunk->chunkVoxels[i].UVoffset[1]));
 
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
+				mesh.push_back( 1 * chunk->voxelSize + chunk->chunkVoxels[i].x);
+				mesh.push_back(-1 * chunk->voxelSize + chunk->chunkVoxels[i].y);
+				mesh.push_back(1 * chunk->voxelSize + chunk->chunkVoxels[i].z);
+				mesh.push_back((1 / 32.0f) + ((1.0f / 32.0f) * chunk->chunkVoxels[i].UVoffset[0]));
+				mesh.push_back((0 / 16.0f) + ((1.0f / 32.0f) * chunk->chunkVoxels[i].UVoffset[1]));
 
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
+				mesh.push_back( 1 * chunk->voxelSize + chunk->chunkVoxels[i].x);
+				mesh.push_back(-1 * chunk->voxelSize + chunk->chunkVoxels[i].y);
+				mesh.push_back(1 * chunk->voxelSize + chunk->chunkVoxels[i].z);
+				mesh.push_back((1 / 32.0f) + ((1.0f / 32.0f) * chunk->chunkVoxels[i].UVoffset[0]));
+				mesh.push_back((0 / 16.0f) + ((1.0f / 32.0f) * chunk->chunkVoxels[i].UVoffset[1]));
 
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
+				mesh.push_back( 1 * chunk->voxelSize + chunk->chunkVoxels[i].x);
+				mesh.push_back(1 * chunk->voxelSize + chunk->chunkVoxels[i].y);
+				mesh.push_back(1 * chunk->voxelSize + chunk->chunkVoxels[i].z);
+				mesh.push_back((1 / 32.0f) + ((1.0f / 32.0f) * chunk->chunkVoxels[i].UVoffset[0]));
+				mesh.push_back((1 / 16.0f) + ((1.0f / 32.0f) * chunk->chunkVoxels[i].UVoffset[1]));
 
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
+				mesh.push_back(-1 * chunk->voxelSize + chunk->chunkVoxels[i].x);
+				mesh.push_back(1 * chunk->voxelSize + chunk->chunkVoxels[i].y);
+				mesh.push_back(1 * chunk->voxelSize + chunk->chunkVoxels[i].z);
+				mesh.push_back((0 / 32.0f) + ((1.0f / 32.0f) * chunk->chunkVoxels[i].UVoffset[0]));
+				mesh.push_back((1 / 16.0f) + ((1.0f / 32.0f) * chunk->chunkVoxels[i].UVoffset[1]));
 
 				chunk->verticiesAmount += 6;
 			}
-			if (!chunk->chunkVoxels[i].sides[1])
+			if (chunk->chunkVoxels[i].sides[1] == false)
 			{
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
+				/*mesh.push_back(0.0f * chunk->voxelSize);
+				mesh.push_back(0.0f * chunk->voxelSize);
+				mesh.push_back(0.0f * chunk->voxelSize);
+				mesh.push_back((0.0f / 32.0f) + ((1.0f / 32.0f) * chunk->chunkVoxels[i].UVoffset[0]));
+				mesh.push_back((0.0f / 16.0f) + ((1.0f / 32.0f) * chunk->chunkVoxels[i].UVoffset[1]));
 
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				chunk->verticiesAmount += 6;
+				chunk->verticiesAmount += 6;*/
 			}
-			if (!chunk->chunkVoxels[i].sides[2])
+			if (chunk->chunkVoxels[i].sides[2] == false)
 			{
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				chunk->verticiesAmount += 6;
+				//chunk->verticiesAmount += 6;
 			}
-			if (!chunk->chunkVoxels[i].sides[3])
-			{
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				chunk->verticiesAmount += 6;
+			if (chunk->chunkVoxels[i].sides[3] == false)
+			{		
+				//chunk->verticiesAmount += 6;
 			}
-			if (!chunk->chunkVoxels[i].sides[4])
-			{
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				chunk->verticiesAmount += 6;
+			if (chunk->chunkVoxels[i].sides[4] == false)
+			{	
+				//chunk->verticiesAmount += 6;
 			}
-			if (!chunk->chunkVoxels[i].sides[5])
+			if (chunk->chunkVoxels[i].sides[5] == false)
 			{
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-				mesh.push_back(0.0f);
-
-				chunk->verticiesAmount += 6;
+				//chunk->verticiesAmount += 6;
 			}
 		}
 	}
@@ -295,27 +130,26 @@ void ChunkManager::generateMesh(Chunk* chunk)
 			chunk->buffersInit = true;
 		}
 
-		glBindVertexArray(chunk->VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, chunk->VBO);
+		glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(float), &mesh[0], GL_STATIC_DRAW);
 
-		glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(float), &mesh[0], GL_DYNAMIC_DRAW);
-
+		glBindVertexArray(chunk->VAO);
 		// Vertex Positions
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 		// Vertex UVs
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float), (void*)(3 * sizeof(float)));
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
 		glBindVertexArray(0);
 	}
 }
 
-void ChunkManager::checkNeighbors(Chunk* chunk, unsigned int i)
+void ChunkManager::checkNeighbors(Chunk* chunk, int i)
 {
 	if (i + 1 < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize) // +Z
 	{
-		if (chunk->chunkVoxels[i + 1].opaque == true)
+		if (chunk->chunkVoxels[i + 1].opaque)
 		{
 			chunk->chunkVoxels[i].sides[0] = true;
 		}
@@ -325,9 +159,9 @@ void ChunkManager::checkNeighbors(Chunk* chunk, unsigned int i)
 		}
 	}
 
-	if (i - 1 > 0)
+	if (i - 1 > -1)
 	{
-		if (chunk->chunkVoxels[i - 1].opaque == true) // -Z
+		if (chunk->chunkVoxels[i - 1].opaque) // -Z
 		{
 			chunk->chunkVoxels[i].sides[1] = true;
 		}
@@ -339,7 +173,7 @@ void ChunkManager::checkNeighbors(Chunk* chunk, unsigned int i)
 
 	if (i + chunk->chunkSize < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize)
 	{
-		if (chunk->chunkVoxels[i + chunk->chunkSize].opaque == true) // +Y
+		if (chunk->chunkVoxels[i + chunk->chunkSize].opaque) // +Y
 		{
 			chunk->chunkVoxels[i].sides[2] = true;
 		}
@@ -349,9 +183,9 @@ void ChunkManager::checkNeighbors(Chunk* chunk, unsigned int i)
 		}
 	}
 
-	if (i - chunk->chunkSize > 0)
+	if (i - chunk->chunkSize > -1)
 	{
-		if (chunk->chunkVoxels[i - chunk->chunkSize].opaque == true) // -Y
+		if (chunk->chunkVoxels[i - chunk->chunkSize].opaque) // -Y
 		{
 			chunk->chunkVoxels[i].sides[3] = true;
 		}
@@ -363,7 +197,7 @@ void ChunkManager::checkNeighbors(Chunk* chunk, unsigned int i)
 
 	if (i + chunk->chunkSize * chunk->chunkSize < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize)
 	{
-		if (chunk->chunkVoxels[i + chunk->chunkSize * chunk->chunkSize].opaque == true) // +X
+		if (chunk->chunkVoxels[i + chunk->chunkSize * chunk->chunkSize].opaque) // +X
 		{
 			chunk->chunkVoxels[i].sides[4] = true;
 		}
@@ -373,9 +207,9 @@ void ChunkManager::checkNeighbors(Chunk* chunk, unsigned int i)
 		}
 	}
 
-	if (i - chunk->chunkSize * chunk->chunkSize > 0)
+	if (i - chunk->chunkSize * chunk->chunkSize > -1)
 	{
-		if (chunk->chunkVoxels[i - chunk->chunkSize * chunk->chunkSize].opaque == true) // -X
+		if (chunk->chunkVoxels[i - chunk->chunkSize * chunk->chunkSize].opaque) // -X
 		{
 			chunk->chunkVoxels[i].sides[5] = true;
 		}

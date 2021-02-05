@@ -46,6 +46,8 @@ void Renderer::eraseEntityBuffers(Entity& entity)
 void Renderer::init()
 {
 	compileShaders();
+	CM.init();
+	loadTexture("res/textures/block_atlas.png", chunkAlbedo, true);
 }
 
 void Renderer::compileShaders()
@@ -115,8 +117,8 @@ void Renderer::loadTexture(const char* textureName, GLuint& texture, bool transp
 
 void Renderer::render()
 {
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -142,6 +144,25 @@ void Renderer::render()
 	projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 100.0f);
 
 	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
+
+	//-------------------------------------------------------
+	// Test
+	shaders[0].use();
+
+	glm::mat4 MVP = projection * view * model;
+
+	shaders[0].setMat4("MVP", MVP);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, chunkAlbedo);
+	shaders[0].setInt("albedo", 0);
+
+	glBindVertexArray(CM.loadedChunks.back()->VAO);
+	glDrawArrays(GL_TRIANGLES, 0, CM.loadedChunks.back()->verticiesAmount);
+	glBindVertexArray(0);
+	drawCalls++;
+	//-------------------------------------------------------
 
 	// Rendering entities
 	for (unsigned i = 0; i < models.size(); i++)

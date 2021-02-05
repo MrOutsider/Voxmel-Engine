@@ -8,13 +8,15 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <string>
-#include <vector>
-
 #include "Shader.h"
 #include "MeshLoader.h"
 #include "Camera.h"
 #include "Entity.h"
+
+#include "ChunkManager.h"
+
+#include <string>
+#include <vector>
 
 class Renderer
 {
@@ -48,6 +50,9 @@ private:
 	float fov = FOV;
 
 	std::vector<Entity*> models;
+
+	ChunkManager CM;
+	GLuint chunkAlbedo;
 
 	void init();
 	void compileShaders();

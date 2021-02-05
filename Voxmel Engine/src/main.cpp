@@ -66,8 +66,8 @@ int main()
 
 	Entity sword(ID, "res/models/momo_shikai.obj", "res/textures/momo_shikai_albedo.png");
 	ID++;
-	renderer.loadEntityBuffers(sword);
-	renderer.addEntity(sword);
+	//renderer.loadEntityBuffers(sword);
+	//renderer.addEntity(sword);
 
 	bool cameraSet = false;
 
