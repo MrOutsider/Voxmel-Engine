@@ -1,6 +1,8 @@
 #ifndef CHUNK_MANAGER_H
 #define CHUNK_MANAGER_H
 
+#include <glad/glad.h>
+
 #include "Chunk.h"
 
 #include <vector>

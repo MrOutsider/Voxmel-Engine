@@ -5,9 +5,11 @@
 
 struct Voxel
 {
-	float x = 0;
-	float y = 0;
-	float z = 0;
+	unsigned int x = 0;
+	unsigned int y = 0;
+	unsigned int z = 0;
+
+	float UVoffset[2] = {0.0f, 0.0f};
 
 	bool sides[6] = {false,  // +Z
 					 false,  // -Z
@@ -20,6 +22,7 @@ struct Voxel
 	int AO = 0;
 
 	unsigned int blockID = 0;
+	bool tile = false;
 	bool opaque = false;
 };
 
@@ -27,6 +30,7 @@ class Chunk
 {
 public:
 	// OpenGL : Buffers
+	bool buffersInit = false;
 	GLuint VAO;
 	GLuint VBO;
 	unsigned int verticiesAmount;

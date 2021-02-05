@@ -1,6 +1,5 @@
 #version 330 core
 
-in vec3 Normals;
 in vec2 UVs;
 
 out vec4 FragColor;

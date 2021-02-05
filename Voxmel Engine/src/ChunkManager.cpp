@@ -38,19 +38,277 @@ void ChunkManager::generateMesh(Chunk* chunk)
 
 	for (unsigned int i = 0; i < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize; i++)
 	{
-		switch (chunk->chunkVoxels[i].blockID)
+		if (!chunk->chunkVoxels[i].tile)
 		{
-		default:
-			break;
-
-		case 1:
 			checkNeighbors(chunk, i);
 			// Add Mesh
-			break;
+			if (!chunk->chunkVoxels[i].sides[0])
+			{
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				chunk->verticiesAmount += 6;
+			}
+			if (!chunk->chunkVoxels[i].sides[1])
+			{
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				chunk->verticiesAmount += 6;
+			}
+			if (!chunk->chunkVoxels[i].sides[2])
+			{
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				chunk->verticiesAmount += 6;
+			}
+			if (!chunk->chunkVoxels[i].sides[3])
+			{
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				chunk->verticiesAmount += 6;
+			}
+			if (!chunk->chunkVoxels[i].sides[4])
+			{
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				chunk->verticiesAmount += 6;
+			}
+			if (!chunk->chunkVoxels[i].sides[5])
+			{
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+				mesh.push_back(0.0f);
+
+				chunk->verticiesAmount += 6;
+			}
 		}
 	}
 
-	// OpenGL : Buffer Stuff Below
+	if (!mesh.empty())
+	{
+		// OpenGL : Buffer Stuff Below
+		if (!chunk->buffersInit)
+		{
+			glGenVertexArrays(1, &chunk->VAO);
+			glGenBuffers(1, &chunk->VBO);
+			chunk->buffersInit = true;
+		}
+
+		glBindVertexArray(chunk->VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, chunk->VBO);
+
+		glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(float), &mesh[0], GL_DYNAMIC_DRAW);
+
+		// Vertex Positions
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+		// Vertex UVs
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float), (void*)(3 * sizeof(float)));
+
+		glBindVertexArray(0);
+	}
 }
 
 void ChunkManager::checkNeighbors(Chunk* chunk, unsigned int i)
