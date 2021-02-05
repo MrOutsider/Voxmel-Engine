@@ -11,10 +11,12 @@ public:
 	ChunkManager();
 	~ChunkManager();
 
-	void generateChunkMesh();
-
 private:
-	std::vector<Chunk> loadedChunks;
+	std::vector<Chunk*> loadedChunks;
+
+	void generateChunk();
+	void generateMesh(Chunk* chunk);
+	void checkNeighbors(Chunk* chunk, unsigned int i);
 };
 
 #endif // !CHUNK_MANAGER_H

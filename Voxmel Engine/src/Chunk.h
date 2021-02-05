@@ -5,11 +5,22 @@
 
 struct Voxel
 {
-	float x;
-	float y;
-	float z;
+	float x = 0;
+	float y = 0;
+	float z = 0;
 
-	unsigned int blockID;
+	bool sides[6] = {false,  // +Z
+					 false,  // -Z
+					 false,  // +Y
+					 false,  // -Y
+					 false,  // +X
+					 false}; // -X
+
+	int lightLevel = 10;
+	int AO = 0;
+
+	unsigned int blockID = 0;
+	bool opaque = false;
 };
 
 class Chunk
