@@ -5,9 +5,9 @@
 
 struct Voxel
 {
-	unsigned int x = 0;
-	unsigned int y = 0;
-	unsigned int z = 0;
+	int x = 0;
+	int y = 0;
+	int z = 0;
 
 	int UVoffset[2] = {0, 0};
 
@@ -29,6 +29,12 @@ struct Voxel
 class Chunk
 {
 public:
+	unsigned int ID;
+
+	int x = 0;
+	int y = 0;
+	int z = 0;
+
 	// OpenGL : Buffers
 	bool buffersInit = false;
 	GLuint VAO;

@@ -144,12 +144,12 @@ void Renderer::render()
 	projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 100.0f);
 
 	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
 
 	//-------------------------------------------------------
 	// Test
 	shaders[0].use();
 
+	//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
 	glm::mat4 MVP = projection * view * model;
 
 	shaders[0].setMat4("MVP", MVP);
