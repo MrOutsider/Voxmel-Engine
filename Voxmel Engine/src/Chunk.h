@@ -18,7 +18,15 @@ struct Voxel
 					 false,  // +X
 					 false}; // -X
 
-	int lightLevel = 10;
+
+	int lightLevel = 0;
+	// TODO : Lighting done with 24 arr[3] so per vertex into the neighboring light level makes a gradient.
+	int neighborLight[6] = {  7,  // -Z
+							 10,  // +Z
+							 10,  // +Y
+							  7,  // -Y
+							 10,  // +X
+							  7}; // -X
 	int AO = 0;
 
 	unsigned int blockID = 0;
@@ -43,7 +51,7 @@ public:
 
 	float voxelSize = 0.5f;
 
-	unsigned int chunkSize = 16; // Size of strip
+	int chunkSize = 16; // Size of strip
 	Voxel chunkVoxels[4096]; // chunkSize^3
 
 	Chunk();

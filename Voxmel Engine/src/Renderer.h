@@ -57,7 +57,7 @@ private:
 	void init();
 	void compileShaders();
 	void loadModel(Entity& entity);
-	void loadTexture(const char* textureName, GLuint& target, bool transparent);
+	void loadTexture(const char* textureName, GLuint& target);
 };
 
 #endif // !RENDERER_H

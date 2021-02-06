@@ -31,7 +31,7 @@ void Renderer::removeEntity(Entity& entity)
 void Renderer::loadEntityBuffers(Entity& entity)
 {
 	loadModel(entity);
-	loadTexture(entity.albedoPath, entity.albedo, true);
+	loadTexture(entity.albedoPath, entity.albedo);
 }
 
 void Renderer::eraseEntityBuffers(Entity& entity)
@@ -47,7 +47,7 @@ void Renderer::init()
 {
 	compileShaders();
 	CM.init();
-	loadTexture("res/textures/block_atlas.png", chunkAlbedo, true);
+	loadTexture("res/textures/block_atlas.png", chunkAlbedo);
 }
 
 void Renderer::compileShaders()
@@ -70,7 +70,7 @@ void Renderer::loadModel(Entity& entity)
 	meshData.OpenGLBufferLoading(entity.VAO, entity.VBO, entity.EBO, entity.indices);
 }
 
-void Renderer::loadTexture(const char* textureName, GLuint& texture, bool transparent)
+void Renderer::loadTexture(const char* textureName, GLuint& texture)
 {
 	// Texture load and binding
 	glGenTextures(1, &texture);
@@ -87,39 +87,23 @@ void Renderer::loadTexture(const char* textureName, GLuint& texture, bool transp
 
 	unsigned char* textureData = stbi_load(textureName, &textureWidth, &textureHeight, &texture_nrChannels, 0);
 
-	if (!transparent)
+	if (textureData)
 	{
-		if (textureData)
-		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
-		else
-		{
-			std::cout << "Failed to load texture" << std::endl;
-		}
-		stbi_image_free(textureData);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
 	{
-		if (textureData)
-		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
-		else
-		{
-			std::cout << "Failed to load texture" << std::endl;
-		}
-		stbi_image_free(textureData);
+		std::cout << "Failed to load texture" << std::endl;
 	}
+	stbi_image_free(textureData);
 }
 
 void Renderer::render()
 {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-	glDisable(GL_CULL_FACE);//TMP
+	//glDisable(GL_CULL_FACE);//TMP
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
