@@ -23,7 +23,7 @@ class Renderer
 public:
 	unsigned int drawCalls = 0;
 
-	Renderer(GLFWwindow* win, float* mouseScroll);
+	Renderer(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager);
 
 	void addCamera(Camera& cam);
 
@@ -51,7 +51,7 @@ private:
 
 	std::vector<Entity*> models;
 
-	ChunkManager CM;
+	ChunkManager* CM;
 	GLuint chunkAlbedo;
 
 	void init();

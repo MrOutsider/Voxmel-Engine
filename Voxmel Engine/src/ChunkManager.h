@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 
 #include "Chunk.h"
+#include "Camera.h"
 
 #include <vector>
 
@@ -16,13 +17,18 @@ public:
 	~ChunkManager();
 
 	void init();
+	void playerInit(Camera& newPlayer);
 
 	std::vector<Chunk*> loadedChunks;
 private:
-	//std::vector<Chunk*> loadedChunks;
+	Camera* player;
+	bool pInit = false;
 
-	void generateChunk(); // All ID = 1
+	void generateChunk(int newX, int newY, int newZ);
+
 	void generateMesh(Chunk* chunk);
+
+	void setVoxelsByID(Chunk* chunk, int i);
 	void checkNeighbors(Chunk* chunk, int i);
 };
 

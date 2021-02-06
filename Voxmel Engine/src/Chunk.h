@@ -5,19 +5,22 @@
 
 struct Voxel
 {
+	unsigned int blockID = 0;
+	bool tile = false;
+	bool opaque = false;
+
 	int x = 0;
 	int y = 0;
 	int z = 0;
 
-	int UVoffset[2] = {0, 0};
+	int UVoffset[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-	bool sides[6] = {false,  // -Z
+	bool sides[6] = { false,  // -Z
 					 false,  // +Z
 					 false,  // +Y
 					 false,  // -Y
 					 false,  // +X
-					 false}; // -X
-
+					 false }; // -X
 
 	int lightLevel = 0;
 	// TODO : Lighting done with 24 arr[3] so per vertex into the neighboring light level makes a gradient.
@@ -27,18 +30,11 @@ struct Voxel
 							  7,  // -Y
 							 10,  // +X
 							  7}; // -X
-	int AO = 0;
-
-	unsigned int blockID = 0;
-	bool tile = false;
-	bool opaque = false;
 };
 
 class Chunk
 {
 public:
-	unsigned int ID;
-
 	int x = 0;
 	int y = 0;
 	int z = 0;
@@ -54,7 +50,7 @@ public:
 	int chunkSize = 16; // Size of strip
 	Voxel chunkVoxels[4096]; // chunkSize^3
 
-	Chunk();
+	Chunk(int newX, int newY, int newZ);
 	~Chunk();
 
 private:

@@ -1,9 +1,10 @@
 #include "Renderer.h"
 
-Renderer::Renderer(GLFWwindow* win, float* mouseScroll)
+Renderer::Renderer(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager)
 {
 	window = win;
 	mouseS = mouseScroll;
+	CM = &ChunkManager;
 	init();
 }
 
@@ -46,7 +47,6 @@ void Renderer::eraseEntityBuffers(Entity& entity)
 void Renderer::init()
 {
 	compileShaders();
-	CM.init();
 	loadTexture("res/textures/block_atlas.png", chunkAlbedo);
 }
 
@@ -79,7 +79,7 @@ void Renderer::loadTexture(const char* textureName, GLuint& texture)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	//Mipmap
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	int textureWidth, textureHeight, texture_nrChannels;
@@ -90,7 +90,7 @@ void Renderer::loadTexture(const char* textureName, GLuint& texture)
 	if (textureData)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
-		glGenerateMipmap(GL_TEXTURE_2D);
+		//glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
 	{
@@ -103,7 +103,7 @@ void Renderer::render()
 {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-	//glDisable(GL_CULL_FACE);//TMP
+	glDisable(GL_CULL_FACE);//TMP
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -126,27 +126,36 @@ void Renderer::render()
 		fov = 20.0f;
 	if (fov > 45.0f)
 		fov = 45.0f;
-	projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 1000.0f);
 
 	glm::mat4 model = glm::mat4(1.0f);
 
 	//-------------------------------------------------------
 	// Test
-	shaders[0].use();
+	for (unsigned int i = 0; i < CM->loadedChunks.size(); i++)
+	{
+		shaders[0].use();
 
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -25.0f));
-	glm::mat4 MVP = projection * view * model;
+		//std::cout << CM.loadedChunks[i]->x << " | " << CM.loadedChunks[i]->z << std::endl;
 
-	shaders[0].setMat4("MVP", MVP);
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(CM->loadedChunks[i]->x * CM->loadedChunks[i]->chunkSize, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, CM->loadedChunks[i]->y * CM->loadedChunks[i]->chunkSize, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -CM->loadedChunks[i]->z * CM->loadedChunks[i]->chunkSize - ((float)i + 1.0f)));
+		
+		glm::mat4 MVP = projection * view * model;
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, chunkAlbedo);
-	shaders[0].setInt("albedo", 0);
+		shaders[0].setMat4("MVP", MVP);
 
-	glBindVertexArray(CM.loadedChunks.back()->VAO);
-	glDrawArrays(GL_TRIANGLES, 0, CM.loadedChunks.back()->verticiesAmount);
-	glBindVertexArray(0);
-	drawCalls++;
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, chunkAlbedo);
+		shaders[0].setInt("albedo", 0);
+
+		glBindVertexArray(CM->loadedChunks[i]->VAO);
+		glDrawArrays(GL_TRIANGLES, 0, CM->loadedChunks[i]->verticiesAmount);
+		glBindVertexArray(0);
+		drawCalls++;
+	}
 	//-------------------------------------------------------
 
 	// Rendering entities

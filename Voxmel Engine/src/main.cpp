@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include "WindowManager.h"
+#include "ChunkManager.h"
 #include "Renderer.h"
 
 #include "Camera.h"
@@ -41,16 +42,26 @@ int main()
 	WindowManager window(WINDOW_WIDTH, WINDOW_HEIGHT, winTitle);
 	window.captureMouse();
 
-	Renderer renderer(window.get_window(), &mouseScroll);
+	float* mouse_ptr = mousePos;
+	Camera player(window.get_window(), mouse_ptr);
+
+	ChunkManager newChunkManager;
+	newChunkManager.init();
+
+	newChunkManager.playerInit(player);
+
+	// EntityManager(ChunkManager)
+
+	// PHYSICS(ChunkManager, EntityManager)
+
+	Renderer renderer(window.get_window(), &mouseScroll, newChunkManager);
+	renderer.addCamera(player);
+	bool cameraSet = false;
 
 	// GLFW : Callback function
 	glfwSetFramebufferSizeCallback(window.get_window(), framebuffer_size_callback);
 	glfwSetCursorPosCallback(window.get_window(), mouse_callback);
 	glfwSetScrollCallback(window.get_window(), scroll_callback);
-
-	float* mouse_ptr = mousePos;
-	Camera cam(window.get_window(), mouse_ptr);
-	renderer.addCamera(cam);
 
 	// Timesteps
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -68,8 +79,6 @@ int main()
 	ID++;
 	//renderer.loadEntityBuffers(sword);
 	//renderer.addEntity(sword);
-
-	bool cameraSet = false;
 
 	// Main Loop
 	while (!glfwWindowShouldClose(window.get_window()))
@@ -96,11 +105,12 @@ int main()
 
 		if (!cameraSet)
 		{
-			cam.setDir(-90.0f);
+			player.transform = glm::vec3(0.0f, 30.0f, 0.0f);
+			//player.setDir(-90.0f);
 			cameraSet = true;
 		}
 
-		cam.update(delta);
+		player.update(delta);
 
 		if (deltaTimePhysics >= 1.0)
 		{
