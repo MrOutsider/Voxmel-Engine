@@ -41,7 +41,16 @@ void ChunkManager::generateChunk()
 	}
 
 	loadedChunks.back()->chunkVoxels[1130].opaque = false;
+
 	loadedChunks.back()->chunkVoxels[1190].opaque = false;
+	loadedChunks.back()->chunkVoxels[1191].opaque = false;
+	loadedChunks.back()->chunkVoxels[1190 + 16 * 16].opaque = false;
+	loadedChunks.back()->chunkVoxels[1191 + 16 * 16].opaque = false;
+
+	loadedChunks.back()->chunkVoxels[1190 + 16].opaque = false;
+	loadedChunks.back()->chunkVoxels[1191 + 16].opaque = false;
+	loadedChunks.back()->chunkVoxels[(1190 + 16) + 16 * 16].opaque = false;
+	loadedChunks.back()->chunkVoxels[(1191 + 16)+ 16 * 16].opaque = false;
 }
 
 void ChunkManager::generateMesh(Chunk* chunk)
@@ -327,13 +336,17 @@ void ChunkManager::generateMesh(Chunk* chunk)
 
 void ChunkManager::checkNeighbors(Chunk* chunk, int i)
 {
-	if (i < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize) // -Z
+	if (i < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize) // Z
 	{
 		if (chunk->chunkVoxels[i + 1].opaque)
 		{
 			if (i % chunk->chunkSize == chunk->chunkSize - 1)
 			{
 				chunk->chunkVoxels[i].sides[0] = false;
+			}
+			else if (chunk->chunkVoxels[i].z == chunk->chunkSize - 1)
+			{
+				chunk->chunkVoxels[i].sides[0] = false; // Look at nxt chunk
 			}
 			else
 			{
@@ -345,18 +358,26 @@ void ChunkManager::checkNeighbors(Chunk* chunk, int i)
 			chunk->chunkVoxels[i].sides[0] = false;
 		}
 	}
+	else if (chunk->chunkVoxels[i].z == chunk->chunkSize - 1)
+	{
+		chunk->chunkVoxels[i].sides[0] = false; // Look at nxt chunk
+	}
 	else
 	{
 		chunk->chunkVoxels[i].sides[0] = true;
 	}
 
-	if (i - 1 > -2)
+	if (i > -1)
 	{
-		if (chunk->chunkVoxels[i - 1].opaque) // +Z
+		if (chunk->chunkVoxels[i - 1].opaque) // -Z
 		{
 			if (i % chunk->chunkSize == 0)
 			{
 				chunk->chunkVoxels[i].sides[1] = false;
+			}
+			else if (chunk->chunkVoxels[i].z == 0)
+			{
+				chunk->chunkVoxels[i].sides[1] = false; // Look at nxt chunk
 			}
 			else
 			{
@@ -367,6 +388,10 @@ void ChunkManager::checkNeighbors(Chunk* chunk, int i)
 		{
 			chunk->chunkVoxels[i].sides[1] = false;
 		}
+	}
+	else if (chunk->chunkVoxels[i].z == 0)
+	{
+		chunk->chunkVoxels[i].sides[1] = false; // Look at nxt chunk
 	}
 	else
 	{
@@ -381,17 +406,13 @@ void ChunkManager::checkNeighbors(Chunk* chunk, int i)
 			{
 				chunk->chunkVoxels[i].sides[2] = false;
 			}
+			else if (chunk->chunkVoxels[i].y == chunk->chunkSize - 1)
+			{
+				chunk->chunkVoxels[i].sides[2] = false; // Look at nxt chunk
+			}
 			else
 			{
 				chunk->chunkVoxels[i].sides[2] = true;
-			}
-
-			for (unsigned int n = 0; n < chunk->chunkSize; n++)
-			{
-				if (i % (chunk->chunkSize * chunk->chunkSize * (n + 1) - 1) == 0)
-				{
-					chunk->chunkVoxels[i].sides[2] = false;
-				}
 			}
 		}
 		else
@@ -399,21 +420,40 @@ void ChunkManager::checkNeighbors(Chunk* chunk, int i)
 			chunk->chunkVoxels[i].sides[2] = false;
 		}
 	}
+	else if (chunk->chunkVoxels[i].y == chunk->chunkSize - 1)
+	{
+		chunk->chunkVoxels[i].sides[2] = false; // Look at nxt chunk
+	}
 	else
 	{
 		chunk->chunkVoxels[i].sides[2] = true;
 	}
 
-	if (i - chunk->chunkSize > -1)
+	if (i - 16 > -1)
 	{
-		if (chunk->chunkVoxels[i - chunk->chunkSize].opaque) // -Y
+		if (chunk->chunkVoxels[i - 16].opaque) // -Y
 		{
-			chunk->chunkVoxels[i].sides[3] = true;
+			if (i + chunk->chunkSize % (chunk->chunkSize * 2) == chunk->chunkSize - 1)
+			{
+				chunk->chunkVoxels[i].sides[3] = false;
+			}
+			else if (chunk->chunkVoxels[i].y == 0)
+			{
+				chunk->chunkVoxels[i].sides[3] = false; // Look at nxt chunk
+			}
+			else
+			{
+				chunk->chunkVoxels[i].sides[3] = true;
+			}
 		}
 		else
 		{
-			chunk->chunkVoxels[i].sides[3] = true;//false;
+			chunk->chunkVoxels[i].sides[3] = false;
 		}
+	}
+	else if (chunk->chunkVoxels[i].y == 0)
+	{
+		chunk->chunkVoxels[i].sides[3] = false; // Look at nxt chunk
 	}
 	else
 	{
