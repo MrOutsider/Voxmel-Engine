@@ -132,7 +132,6 @@ void ChunkManager::generateMesh(Chunk* chunk)
 {
 	chunk->verticiesAmount = 0;
 	std::vector<float> mesh;
-	setVoxelsByID(chunk);
 	setVoxelsNeighbors(chunk);
 
 	for (int i = 0; i < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize; i++)
@@ -514,7 +513,6 @@ void ChunkManager::setVoxelsNeighbors(Chunk* chunk)
 				}
 				else if (zPos != nullptr)
 				{
-					std::cout << "zPos\n";
 					chunk->chunkVoxels[k].opaqueNeighbors[0] = false;
 				}
 				else

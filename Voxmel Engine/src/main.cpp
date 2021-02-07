@@ -77,8 +77,9 @@ int main()
 
 	Entity sword(ID, "res/models/momo_shikai.obj", "res/textures/momo_shikai_albedo.png");
 	ID++;
-	//renderer.loadEntityBuffers(sword);
-	//renderer.addEntity(sword);
+	renderer.loadEntityBuffers(sword);
+	renderer.addEntity(sword);
+	sword.transform.y = 30;
 
 	// Main Loop
 	while (!glfwWindowShouldClose(window.get_window()))
