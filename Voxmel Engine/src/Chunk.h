@@ -15,7 +15,7 @@ struct Voxel
 
 	int UVoffset[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-	bool sides[6] = { false,  // -Z
+	bool opaqueNeighbors[6] = { false,  // -Z
 					 false,  // +Z
 					 false,  // +Y
 					 false,  // -Y

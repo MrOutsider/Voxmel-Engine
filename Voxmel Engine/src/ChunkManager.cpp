@@ -59,38 +59,87 @@ void ChunkManager::generateChunk(int newX, int newY, int newZ)
 		}
 	}
 
-	loadedChunks.back()->chunkVoxels[1130].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 5, 8, 7)].blockID = 1;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 6, 8, 7)].blockID = 1;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 8, 7)].blockID = 1;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 8, 8, 7)].blockID = 1;
 
-	loadedChunks.back()->chunkVoxels[1190].blockID = 0;
-	loadedChunks.back()->chunkVoxels[1191].blockID = 0;
-	loadedChunks.back()->chunkVoxels[1190 + 16 * 16].blockID = 0;
-	loadedChunks.back()->chunkVoxels[1191 + 16 * 16].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 5, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 6, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 8, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 5, 6, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 6, 6, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 6, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 8, 6, 7)].blockID = 0;
 
-	loadedChunks.back()->chunkVoxels[1190 + 16].blockID = 0;
-	loadedChunks.back()->chunkVoxels[1191 + 16].blockID = 0;
-	loadedChunks.back()->chunkVoxels[(1190 + 16) + 16 * 16].blockID = 0;
-	loadedChunks.back()->chunkVoxels[(1191 + 16) + 16 * 16].blockID = 0;
 
-	loadedChunks.back()->chunkVoxels[1190 + 16].blockID = 3;
-	loadedChunks.back()->chunkVoxels[1190 + 16 + (16 * 16)].blockID = 3;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 0, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 1, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 2, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 3, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 4, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 5, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 6, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 8, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 9, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 10, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 11, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 12, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 13, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 14, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 15, 7, 7)].blockID = 0;
+
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 0)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 1)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 2)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 3)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 4)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 5)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 6)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 8)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 9)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 10)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 11)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 12)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 13)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 14)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 15)].blockID = 0;
+
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 0, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 1, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 2, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 3, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 4, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 5, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 6, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 8, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 9, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 10, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 11, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 12, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 13, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 14, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 15, 7)].blockID = 0;
+
+	setVoxelsByID(loadedChunks.back());
 }
 
 void ChunkManager::generateMesh(Chunk* chunk)
 {
 	chunk->verticiesAmount = 0;
 	std::vector<float> mesh;
+	setVoxelsByID(chunk);
+	setVoxelsNeighbors(chunk);
 
 	for (int i = 0; i < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize; i++)
 	{
-		setVoxelsByID(chunk, i);
-	}
-
-	for (int i = 0; i < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize; i++)
-	{
-		checkNeighbors(chunk, i);
 		if (!chunk->chunkVoxels[i].tile && chunk->chunkVoxels[i].opaque)
 		{
-			if (chunk->chunkVoxels[i].sides[0] == false)
+			if (chunk->chunkVoxels[i].opaqueNeighbors[0] == false)
 			{
 				mesh.push_back(-1 * chunk->voxelSize + chunk->chunkVoxels[i].x);
 				mesh.push_back(1 * chunk->voxelSize + chunk->chunkVoxels[i].y);
@@ -137,7 +186,7 @@ void ChunkManager::generateMesh(Chunk* chunk)
 
 				chunk->verticiesAmount += 6;
 			}
-			if (chunk->chunkVoxels[i].sides[1] == false)
+			if (chunk->chunkVoxels[i].opaqueNeighbors[1] == false)
 			{
 				mesh.push_back(1 * chunk->voxelSize + chunk->chunkVoxels[i].x);
 				mesh.push_back(1 * chunk->voxelSize + chunk->chunkVoxels[i].y);
@@ -183,7 +232,7 @@ void ChunkManager::generateMesh(Chunk* chunk)
 
 				chunk->verticiesAmount += 6;
 			}
-			if (chunk->chunkVoxels[i].sides[2] == false)
+			if (chunk->chunkVoxels[i].opaqueNeighbors[2] == false)
 			{
 				mesh.push_back(-1 * chunk->voxelSize + chunk->chunkVoxels[i].x);
 				mesh.push_back( 1 * chunk->voxelSize + chunk->chunkVoxels[i].y);
@@ -229,7 +278,7 @@ void ChunkManager::generateMesh(Chunk* chunk)
 
 				chunk->verticiesAmount += 6;
 			}
-			if (chunk->chunkVoxels[i].sides[3] == false)
+			if (chunk->chunkVoxels[i].opaqueNeighbors[3] == false)
 			{		
 				mesh.push_back( 1 * chunk->voxelSize + chunk->chunkVoxels[i].x);
 				mesh.push_back(-1 * chunk->voxelSize + chunk->chunkVoxels[i].y);
@@ -275,7 +324,7 @@ void ChunkManager::generateMesh(Chunk* chunk)
 
 				chunk->verticiesAmount += 6;
 			}
-			if (chunk->chunkVoxels[i].sides[4] == false)
+			if (chunk->chunkVoxels[i].opaqueNeighbors[4] == false)
 			{	
 				mesh.push_back( 1 * chunk->voxelSize + chunk->chunkVoxels[i].x);
 				mesh.push_back( 1 * chunk->voxelSize + chunk->chunkVoxels[i].y);
@@ -321,7 +370,7 @@ void ChunkManager::generateMesh(Chunk* chunk)
 
 				chunk->verticiesAmount += 6;
 			}
-			if (chunk->chunkVoxels[i].sides[5] == false)
+			if (chunk->chunkVoxels[i].opaqueNeighbors[5] == false)
 			{
 				mesh.push_back(-1 * chunk->voxelSize + chunk->chunkVoxels[i].x);
 				mesh.push_back( 1 * chunk->voxelSize + chunk->chunkVoxels[i].y);
@@ -398,37 +447,102 @@ void ChunkManager::generateMesh(Chunk* chunk)
 	}
 }
 
-void ChunkManager::checkNeighbors(Chunk* chunk, int i)
+void ChunkManager::setVoxelsNeighbors(Chunk* chunk)
 {
-	for (int n = 0; n < loadedChunks.size(); n++)
+	for (int x = 0; x < chunk->chunkSize; x++)
 	{
-		if (loadedChunks[n]->x == chunk->x && loadedChunks[n]->y == chunk->y && loadedChunks[n]->z == chunk->z + 1)
+		for (int y = 0; y < chunk->chunkSize; y++)
 		{
+			for (int z = 0; z < chunk->chunkSize; z++)
+			{
+				int k = getVert(chunk, x, y, z);
+				int maxSize = chunk->chunkSize * chunk->chunkSize * chunk->chunkSize;
 
-		}
-		if (loadedChunks[n]->x == chunk->x && loadedChunks[n]->y == chunk->y && loadedChunks[n]->z == chunk->z - 1)
-		{
+				chunk->chunkVoxels[k].opaqueNeighbors[0] = true;
+				chunk->chunkVoxels[k].opaqueNeighbors[1] = true;
+				chunk->chunkVoxels[k].opaqueNeighbors[2] = true;
+				chunk->chunkVoxels[k].opaqueNeighbors[3] = true;
+				chunk->chunkVoxels[k].opaqueNeighbors[4] = true;
+				chunk->chunkVoxels[k].opaqueNeighbors[5] = true;
 
-		}
-		if (loadedChunks[n]->x == chunk->x && loadedChunks[n]->y == chunk->y + 1 && loadedChunks[n]->z == chunk->z)
-		{
-
-		}
-		if (loadedChunks[n]->x == chunk->x && loadedChunks[n]->y == chunk->y - 1 && loadedChunks[n]->z == chunk->z)
-		{
-
-		}
-		if (loadedChunks[n]->x == chunk->x + 1 && loadedChunks[n]->y == chunk->y && loadedChunks[n]->z == chunk->z)
-		{
-
-		}
-		if (loadedChunks[n]->x == chunk->x - 1 && loadedChunks[n]->y == chunk->y && loadedChunks[n]->z == chunk->z)
-		{
-
+				// +Z
+				if (k + 1 < maxSize)
+				{
+					if (chunk->chunkVoxels[k + 1].opaque && chunk->chunkVoxels[k + 1].z != 0)
+					{
+						chunk->chunkVoxels[k].opaqueNeighbors[0] = true;
+					}
+					else
+					{
+						chunk->chunkVoxels[k].opaqueNeighbors[0] = false;
+					}
+				}
+				// -Z
+				if (k - 1 > -1)
+				{
+					if (chunk->chunkVoxels[k - 1].opaque && chunk->chunkVoxels[k - 1].z != chunk->chunkSize - 1)
+					{
+						chunk->chunkVoxels[k].opaqueNeighbors[1] = true;
+					}
+					else
+					{
+						chunk->chunkVoxels[k].opaqueNeighbors[1] = false;
+					}
+				}
+				// +Y
+				if (k + chunk->chunkSize < maxSize)
+				{
+					if (chunk->chunkVoxels[k + chunk->chunkSize].opaque && chunk->chunkVoxels[k + chunk->chunkSize].y != 0)
+					{
+						chunk->chunkVoxels[k].opaqueNeighbors[2] = true;
+					}
+					else
+					{
+						chunk->chunkVoxels[k].opaqueNeighbors[2] = false;
+					}
+				}
+				// -Y
+				if (k - chunk->chunkSize > -1)
+				{
+					if (chunk->chunkVoxels[k - chunk->chunkSize].opaque && chunk->chunkVoxels[k - chunk->chunkSize].y != chunk->chunkSize - 1)
+					{
+						chunk->chunkVoxels[k].opaqueNeighbors[3] = true;
+					}
+					else
+					{
+						chunk->chunkVoxels[k].opaqueNeighbors[3] = false;
+					}
+				}
+				// +X
+				if (k + chunk->chunkSize * chunk->chunkSize < maxSize)
+				{
+					if (chunk->chunkVoxels[k + chunk->chunkSize * chunk->chunkSize].opaque && chunk->chunkVoxels[k + chunk->chunkSize * chunk->chunkSize].x != 0)
+					{
+						chunk->chunkVoxels[k].opaqueNeighbors[4] = true;
+					}
+					else
+					{
+						chunk->chunkVoxels[k].opaqueNeighbors[4] = false;
+					}
+				}
+				// -X
+				if (k - chunk->chunkSize * chunk->chunkSize > -1)
+				{
+					if (chunk->chunkVoxels[k - chunk->chunkSize * chunk->chunkSize].opaque && chunk->chunkVoxels[k - chunk->chunkSize * chunk->chunkSize].x != chunk->chunkSize - 1)
+					{
+						chunk->chunkVoxels[k].opaqueNeighbors[5] = true;
+					}
+					else
+					{
+						chunk->chunkVoxels[k].opaqueNeighbors[5] = false;
+					}
+				}
+				//----------------------------------------------------------------------------
+			}
 		}
 	}
 
-	if (i < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize) // Z
+	/*if (i < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize) // Z
 	{
 		if (chunk->chunkVoxels[i + 1].opaque)
 		{
@@ -588,48 +702,65 @@ void ChunkManager::checkNeighbors(Chunk* chunk, int i)
 	else
 	{
 		chunk->chunkVoxels[i].sides[5] = true;
-	}
+	}*/
 }
 
-void ChunkManager::setVoxelsByID(Chunk* chunk, int i)
+int ChunkManager::getVert(Chunk* chunk, int x, int y, int z)
 {
-	switch (chunk->chunkVoxels[i].blockID)
+	int i = z + y * chunk->chunkSize + x * chunk->chunkSize * chunk->chunkSize;
+	return i;
+}
+
+void ChunkManager::setVoxelsByID(Chunk* chunk)
+{
+	for (unsigned int i = 0; i < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize; i++)
 	{
-	default:
-		break;
-
-	case 0:
-		// AIR
-		chunk->chunkVoxels[i].tile = false;
-		chunk->chunkVoxels[i].opaque = false;
-		break;
-
-	case 1:
-		// BEDROCK
-		break;
-
-	case 2:
-		// STONE
-		chunk->chunkVoxels[i].tile = false;
-		chunk->chunkVoxels[i].opaque = true;
-		for (int n = 0; n < 12; n++)
+		switch (chunk->chunkVoxels[i].blockID)
 		{
-			chunk->chunkVoxels[i].UVoffset[n] = 19;
-			chunk->chunkVoxels[i].UVoffset[n + 1] = 15;
-			n++;
-		}
-		break;
+		default:
+			break;
 
-	case 3:
-		// DIRT
-		chunk->chunkVoxels[i].tile = false;
-		chunk->chunkVoxels[i].opaque = true;
-		for (int n = 0; n < 12; n++)
-		{
-			chunk->chunkVoxels[i].UVoffset[n] = 18;
-			chunk->chunkVoxels[i].UVoffset[n + 1] = 14;
-			n++;
+		case 0:
+			// AIR
+			chunk->chunkVoxels[i].tile = false;
+			chunk->chunkVoxels[i].opaque = false;
+			break;
+
+		case 1:
+			// BEDROCK
+			chunk->chunkVoxels[i].tile = false;
+			chunk->chunkVoxels[i].opaque = true;
+			for (int n = 0; n < 12; n++)
+			{
+				chunk->chunkVoxels[i].UVoffset[n] = 0;
+				chunk->chunkVoxels[i].UVoffset[n + 1] = 14;
+				n++;
+			}
+			break;
+
+		case 2:
+			// STONE
+			chunk->chunkVoxels[i].tile = false;
+			chunk->chunkVoxels[i].opaque = true;
+			for (int n = 0; n < 12; n++)
+			{
+				chunk->chunkVoxels[i].UVoffset[n] = 19;
+				chunk->chunkVoxels[i].UVoffset[n + 1] = 15;
+				n++;
+			}
+			break;
+
+		case 3:
+			// DIRT
+			chunk->chunkVoxels[i].tile = false;
+			chunk->chunkVoxels[i].opaque = true;
+			for (int n = 0; n < 12; n++)
+			{
+				chunk->chunkVoxels[i].UVoffset[n] = 18;
+				chunk->chunkVoxels[i].UVoffset[n + 1] = 14;
+				n++;
+			}
+			break;
 		}
-		break;
 	}
 }

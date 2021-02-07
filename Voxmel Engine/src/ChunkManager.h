@@ -28,8 +28,9 @@ private:
 
 	void generateMesh(Chunk* chunk);
 
-	void setVoxelsByID(Chunk* chunk, int i);
-	void checkNeighbors(Chunk* chunk, int i);
+	void setVoxelsByID(Chunk* chunk);
+	void setVoxelsNeighbors(Chunk* chunk);
+	int getVert(Chunk* chunk, int x, int y, int z);
 };
 
 #endif // !CHUNK_MANAGER_H
