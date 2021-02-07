@@ -554,6 +554,15 @@ void ChunkManager::setVoxelsNeighbors(Chunk* chunk)
 						chunk->chunkVoxels[k].opaqueNeighbors[2] = false;
 					}
 				}
+				else if (yPos != nullptr)
+				{
+					chunk->chunkVoxels[k].opaqueNeighbors[2] = false;
+				}
+				else
+				{
+					chunk->chunkVoxels[k].opaqueNeighbors[2] = false;
+				}
+
 				// -Y
 				if (k - chunk->chunkSize > -1)
 				{
@@ -566,6 +575,15 @@ void ChunkManager::setVoxelsNeighbors(Chunk* chunk)
 						chunk->chunkVoxels[k].opaqueNeighbors[3] = false;
 					}
 				}
+				else if (yNeg != nullptr)
+				{
+					chunk->chunkVoxels[k].opaqueNeighbors[3] = false;
+				}
+				else
+				{
+					chunk->chunkVoxels[k].opaqueNeighbors[3] = false;
+				}
+
 				// +X
 				if (k + chunk->chunkSize * chunk->chunkSize < maxSize)
 				{
@@ -578,6 +596,15 @@ void ChunkManager::setVoxelsNeighbors(Chunk* chunk)
 						chunk->chunkVoxels[k].opaqueNeighbors[4] = false;
 					}
 				}
+				else if (xPos != nullptr)
+				{
+					chunk->chunkVoxels[k].opaqueNeighbors[4] = false;
+				}
+				else
+				{
+					chunk->chunkVoxels[k].opaqueNeighbors[4] = false;
+				}
+
 				// -X
 				if (k - chunk->chunkSize * chunk->chunkSize > -1)
 				{
@@ -590,172 +617,17 @@ void ChunkManager::setVoxelsNeighbors(Chunk* chunk)
 						chunk->chunkVoxels[k].opaqueNeighbors[5] = false;
 					}
 				}
-				//----------------------------------------------------------------------------
+				else if (xNeg != nullptr)
+				{
+					chunk->chunkVoxels[k].opaqueNeighbors[5] = false;
+				}
+				else
+				{
+					chunk->chunkVoxels[k].opaqueNeighbors[5] = false;
+				}
 			}
 		}
 	}
-
-	/*if (i < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize) // Z
-	{
-		if (chunk->chunkVoxels[i + 1].opaque)
-		{
-			if (chunk->chunkVoxels[i].z == chunk->chunkSize - 1)
-			{
-				chunk->chunkVoxels[i].sides[0] = false; // Look at nxt chunk
-			}
-			else
-			{
-				chunk->chunkVoxels[i].sides[0] = true;
-			}
-		}
-		else
-		{
-			chunk->chunkVoxels[i].sides[0] = false;
-		}
-	}
-	else if (chunk->chunkVoxels[i].z == chunk->chunkSize - 1)
-	{
-		chunk->chunkVoxels[i].sides[0] = false; // Look at nxt chunk
-	}
-	else
-	{
-		chunk->chunkVoxels[i].sides[0] = true;
-	}
-
-	if (i > -1)
-	{
-		if (chunk->chunkVoxels[i - 1].opaque) // -Z
-		{
-			if (chunk->chunkVoxels[i].z == 0)
-			{
-				chunk->chunkVoxels[i].sides[1] = false; // Look at nxt chunk
-			}
-			else
-			{
-				chunk->chunkVoxels[i].sides[1] = true;
-			}
-		}
-		else
-		{
-			chunk->chunkVoxels[i].sides[1] = false;
-		}
-	}
-	else if (chunk->chunkVoxels[i].z == 0)
-	{
-		chunk->chunkVoxels[i].sides[1] = false; // Look at nxt chunk
-	}
-	else
-	{
-		chunk->chunkVoxels[i].sides[1] = true;
-	}
-
-	if (i + chunk->chunkSize < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize)
-	{
-		if (chunk->chunkVoxels[i + chunk->chunkSize].opaque) // +Y
-		{
-			if (chunk->chunkVoxels[i].y == chunk->chunkSize - 1)
-			{
-				chunk->chunkVoxels[i].sides[2] = false; // Look at nxt chunk
-			}
-			else
-			{
-				chunk->chunkVoxels[i].sides[2] = true;
-			}
-		}
-		else
-		{
-			chunk->chunkVoxels[i].sides[2] = false;
-		}
-	}
-	else if (chunk->chunkVoxels[i].y == chunk->chunkSize - 1)
-	{
-		chunk->chunkVoxels[i].sides[2] = false; // Look at nxt chunk
-	}
-	else
-	{
-		chunk->chunkVoxels[i].sides[2] = true;
-	}
-
-	if (i - 16 > -1)
-	{
-		if (chunk->chunkVoxels[i - chunk->chunkSize].opaque) // -Y
-		{
-			if (chunk->chunkVoxels[i].y == 0)
-			{
-				chunk->chunkVoxels[i].sides[3] = false; // Look at nxt chunk
-			}
-			else
-			{
-				chunk->chunkVoxels[i].sides[3] = true;
-			}
-		}
-		else
-		{
-			chunk->chunkVoxels[i].sides[3] = false;
-		}
-	}
-	else if (chunk->chunkVoxels[i].y == 0)
-	{
-		chunk->chunkVoxels[i].sides[3] = false; // Look at nxt chunk
-	}
-	else
-	{
-		chunk->chunkVoxels[i].sides[3] = true;
-	}
-
-	if (i + chunk->chunkSize * chunk->chunkSize < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize)
-	{
-		if (chunk->chunkVoxels[i + chunk->chunkSize * chunk->chunkSize].opaque) // +X
-		{
-			if (chunk->chunkVoxels[i].x == chunk->chunkSize - 1)
-			{
-				chunk->chunkVoxels[i].sides[4] = false; // Look at nxt chunk
-			}
-			else
-			{
-				chunk->chunkVoxels[i].sides[4] = true;
-			}
-		}
-		else
-		{
-			chunk->chunkVoxels[i].sides[4] = false;
-		}
-	}
-	else if (chunk->chunkVoxels[i].x == chunk->chunkSize - 1)
-	{
-		chunk->chunkVoxels[i].sides[4] = false; // Look at nxt chunk
-	}
-	else
-	{
-		chunk->chunkVoxels[i].sides[4] = true;
-	}
-
-	if (i - chunk->chunkSize * chunk->chunkSize > -1)
-	{
-		if (chunk->chunkVoxels[i - chunk->chunkSize * chunk->chunkSize].opaque) // -X
-		{
-			if (chunk->chunkVoxels[i].x == 0)
-			{
-				chunk->chunkVoxels[i].sides[5] = false; // Look at nxt chunk
-			}
-			else
-			{
-				chunk->chunkVoxels[i].sides[5] = true;
-			}
-		}
-		else
-		{
-			chunk->chunkVoxels[i].sides[5] = false;
-		}
-	}
-	else if (chunk->chunkVoxels[i].x == 0)
-	{
-		chunk->chunkVoxels[i].sides[5] = false; // Look at nxt chunk
-	}
-	else
-	{
-		chunk->chunkVoxels[i].sides[5] = true;
-	}*/
 }
 
 int ChunkManager::getVert(Chunk* chunk, int x, int y, int z)
