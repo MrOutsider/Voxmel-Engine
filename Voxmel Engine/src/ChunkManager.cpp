@@ -512,6 +512,17 @@ void ChunkManager::setVoxelsNeighbors(Chunk* chunk)
 						chunk->chunkVoxels[k].opaqueNeighbors[0] = false;
 					}
 				}
+				else if (zPos != nullptr)
+				{
+					std::cout << "zPos\n";
+					chunk->chunkVoxels[k].opaqueNeighbors[0] = false;
+				}
+				else
+				{
+					chunk->chunkVoxels[k].opaqueNeighbors[0] = false;
+				}
+
+
 				// -Z
 				if (k - 1 > -1)
 				{
@@ -524,6 +535,15 @@ void ChunkManager::setVoxelsNeighbors(Chunk* chunk)
 						chunk->chunkVoxels[k].opaqueNeighbors[1] = false;
 					}
 				}
+				else if (zNeg != nullptr)
+				{
+					chunk->chunkVoxels[k].opaqueNeighbors[1] = false;
+				}
+				else
+				{
+					chunk->chunkVoxels[k].opaqueNeighbors[1] = false;
+				}
+
 				// +Y
 				if (k + chunk->chunkSize < maxSize)
 				{
