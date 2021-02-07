@@ -449,6 +449,41 @@ void ChunkManager::generateMesh(Chunk* chunk)
 
 void ChunkManager::setVoxelsNeighbors(Chunk* chunk)
 {
+	Chunk* zPos = nullptr;
+	Chunk* zNeg = nullptr;
+	Chunk* yPos = nullptr;
+	Chunk* yNeg = nullptr;
+	Chunk* xPos = nullptr;
+	Chunk* xNeg = nullptr;
+
+	for (int i = 0; i < loadedChunks.size(); i++)
+	{
+		if (loadedChunks[i]->x == chunk->x && loadedChunks[i]->y == chunk->y && loadedChunks[i]->z == chunk->z + 1)
+		{
+			zPos = loadedChunks[i];
+		}
+		else if (loadedChunks[i]->x == chunk->x && loadedChunks[i]->y == chunk->y && loadedChunks[i]->z == chunk->z - 1)
+		{
+			zNeg = loadedChunks[i];
+		}
+		else if (loadedChunks[i]->x == chunk->x && loadedChunks[i]->y == chunk->y + 1 && loadedChunks[i]->z == chunk->z)
+		{
+			yPos = loadedChunks[i];
+		}
+		else if (loadedChunks[i]->x == chunk->x && loadedChunks[i]->y == chunk->y - 1 && loadedChunks[i]->z == chunk->z)
+		{
+			yNeg = loadedChunks[i];
+		}
+		else if (loadedChunks[i]->x == chunk->x + 1 && loadedChunks[i]->y == chunk->y && loadedChunks[i]->z == chunk->z)
+		{
+			xPos = loadedChunks[i];
+		}
+		else if (loadedChunks[i]->x == chunk->x - 1 && loadedChunks[i]->y == chunk->y && loadedChunks[i]->z == chunk->z)
+		{
+			xNeg = loadedChunks[i];
+		}
+	}
+
 	for (int x = 0; x < chunk->chunkSize; x++)
 	{
 		for (int y = 0; y < chunk->chunkSize; y++)
