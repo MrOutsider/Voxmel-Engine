@@ -79,7 +79,7 @@ int main()
 	ID++;
 	renderer.loadEntityBuffers(sword);
 	renderer.addEntity(sword);
-	sword.transform.y = 30;
+	sword.transform.y = 80;
 
 	// Main Loop
 	while (!glfwWindowShouldClose(window.get_window()))

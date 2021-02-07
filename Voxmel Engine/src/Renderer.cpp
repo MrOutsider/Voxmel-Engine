@@ -141,7 +141,7 @@ void Renderer::render()
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(CM->loadedChunks[i]->x * CM->loadedChunks[i]->chunkSize, 0.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(0.0f, CM->loadedChunks[i]->y * CM->loadedChunks[i]->chunkSize, 0.0f));
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -CM->loadedChunks[i]->z * CM->loadedChunks[i]->chunkSize - ((float)i + 1.0f)));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, CM->loadedChunks[i]->z * CM->loadedChunks[i]->chunkSize));
 		
 		glm::mat4 MVP = projection * view * model;
 
