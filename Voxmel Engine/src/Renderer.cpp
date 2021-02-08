@@ -142,9 +142,9 @@ void Renderer::render()
 
 		// Translate the chunk to a vec3 pos * sizeOf Chunk rows
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(CM->loadedChunks[i]->x * CM->loadedChunks[i]->chunkSize, 0.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(0.0f, CM->loadedChunks[i]->y * CM->loadedChunks[i]->chunkSize, 0.0f));
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, CM->loadedChunks[i]->z * CM->loadedChunks[i]->chunkSize));
+		model = glm::translate(model, glm::vec3(CM->loadedChunks[i]->x * CM->loadedChunks[i]->chunkSize * CM->loadedChunks[i]->voxelSizeHalf * 2, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, CM->loadedChunks[i]->y * CM->loadedChunks[i]->chunkSize * CM->loadedChunks[i]->voxelSizeHalf * 2, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, CM->loadedChunks[i]->z * CM->loadedChunks[i]->chunkSize * CM->loadedChunks[i]->voxelSizeHalf * 2));
 		
 		glm::mat4 MVP = projection * view * model;
 
@@ -158,9 +158,9 @@ void Renderer::render()
 		glDrawArrays(GL_TRIANGLES, 0, CM->loadedChunks[i]->verticiesAmount);
 		//------------------------------------------------------------------------------------
 		// Test for drawing lines
-		shaders[PHYSICS_SHADER].use();
+		/*shaders[PHYSICS_SHADER].use();
 		shaders[PHYSICS_SHADER].setMat4("MVP", MVP);
-		glDrawArrays(GL_LINES, 0, CM->loadedChunks[i]->verticiesAmount);
+		glDrawArrays(GL_LINES, 0, CM->loadedChunks[i]->verticiesAmount);*/
 		//------------------------------------------------------------------------------------
 		glBindVertexArray(0);
 		drawCalls++;

@@ -30,6 +30,8 @@ struct Voxel
 							  7,  // -Y
 							 10,  // +X
 							  7}; // -X
+
+	int AO[24]; // TODO : Assign each vert 0 ~ 2 based on surrounding opaque voxels to darken corners
 };
 
 class Chunk
@@ -45,7 +47,7 @@ public:
 	GLuint VBO;
 	unsigned int verticiesAmount;
 
-	float voxelSize = 0.5f;
+	float voxelSizeHalf = 0.5f;
 
 	int chunkSize = 16; // Size of strip
 	Voxel chunkVoxels[4096]; // chunkSize^3

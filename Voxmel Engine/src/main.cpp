@@ -106,7 +106,7 @@ int main()
 
 		if (!cameraSet)
 		{
-			player.transform = glm::vec3(0.0f, 30.0f, 0.0f);
+			player.transform = glm::vec3(-30.0f, 30.0f, -15.0f);
 			//player.setDir(-90.0f);
 			cameraSet = true;
 		}
@@ -191,32 +191,3 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	mouseScroll = yoffset;
 }
-
-//for (unsigned int i = 0; i < 36; i++)
-//{
-//	chunkMesh.push_back(voxel[0 + (i * 5)] + (x * voxelSize * 2));
-//	chunkMesh.push_back(voxel[1 + ((i * 1) * 5)] + (y * voxelSize * 2));
-//	chunkMesh.push_back(voxel[2 + ((i * 1) * 5)] + (z * voxelSize * 2));
-//	vertCount += 3;
-//	chunkMesh.push_back(voxel[3 + ((i * 1) * 5)]);
-//	chunkMesh.push_back(voxel[4 + ((i * 1) * 5)]);
-//}
-//
-//if (!chunkMesh.empty())
-//{
-//	glGenVertexArrays(1, &VAO);
-//	glGenBuffers(1, &VBO);
-//
-//	glBindVertexArray(VAO);
-//
-//	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//	glBufferData(GL_ARRAY_BUFFER, chunkMesh.size() * sizeof(float), &chunkMesh[0], GL_STATIC_DRAW);
-//
-//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(0 * sizeof(float)));
-//	glEnableVertexAttribArray(0);
-//
-//	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-//	glEnableVertexAttribArray(1);
-//
-//	glBindVertexArray(0);
-//}
