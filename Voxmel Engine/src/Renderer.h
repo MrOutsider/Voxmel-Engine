@@ -38,6 +38,10 @@ public:
 	void render();
 	void destroy();
 private:
+	const int PHYSICS_SHADER = 0;
+	const int VOXEL_SHADER = 1;
+	const int ENTITY_SHADER = 2;
+
 	GLFWwindow* window;
 	Camera* camera;
 	float* mouseS;

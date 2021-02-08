@@ -53,11 +53,16 @@ void Renderer::init()
 void Renderer::compileShaders()
 {
 	// 0
+	Shader physicsShader;
+	shaders.push_back(physicsShader);
+	shaders.back().create("res/shaders/physics.vs", "res/shaders/physics.fs");
+
+	// 1
 	Shader voxelShader;
 	shaders.push_back(voxelShader);
 	shaders.back().create("res/shaders/voxel.vs", "res/shaders/voxel.fs");
 
-	// 1
+	// 2
 	Shader entityShader;
 	shaders.push_back(entityShader);
 	shaders.back().create("res/shaders/entity.vs", "res/shaders/entity.fs");
@@ -103,7 +108,7 @@ void Renderer::render()
 {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-	glDisable(GL_CULL_FACE);//TMP
+	//glDisable(GL_CULL_FACE);//TMP
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -130,14 +135,12 @@ void Renderer::render()
 
 	glm::mat4 model = glm::mat4(1.0f);
 
-	//-------------------------------------------------------
-	// Test
+	// Rendering Voxels
 	for (unsigned int i = 0; i < CM->loadedChunks.size(); i++)
 	{
-		shaders[0].use();
+		shaders[VOXEL_SHADER].use();
 
-		//std::cout << CM.loadedChunks[i]->x << " | " << CM.loadedChunks[i]->z << std::endl;
-
+		// Translate the chunk to a vec3 pos * sizeOf Chunk rows
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(CM->loadedChunks[i]->x * CM->loadedChunks[i]->chunkSize, 0.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(0.0f, CM->loadedChunks[i]->y * CM->loadedChunks[i]->chunkSize, 0.0f));
@@ -145,18 +148,23 @@ void Renderer::render()
 		
 		glm::mat4 MVP = projection * view * model;
 
-		shaders[0].setMat4("MVP", MVP);
+		shaders[VOXEL_SHADER].setMat4("MVP", MVP);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, chunkAlbedo);
-		shaders[0].setInt("albedo", 0);
+		shaders[VOXEL_SHADER].setInt("albedo", 0);
 
 		glBindVertexArray(CM->loadedChunks[i]->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, CM->loadedChunks[i]->verticiesAmount);
+		//------------------------------------------------------------------------------------
+		// Test for drawing lines
+		shaders[PHYSICS_SHADER].use();
+		shaders[PHYSICS_SHADER].setMat4("MVP", MVP);
+		glDrawArrays(GL_LINES, 0, CM->loadedChunks[i]->verticiesAmount);
+		//------------------------------------------------------------------------------------
 		glBindVertexArray(0);
 		drawCalls++;
 	}
-	//-------------------------------------------------------
 
 	// Rendering entities
 	for (unsigned i = 0; i < models.size(); i++)
@@ -190,13 +198,13 @@ void Renderer::render()
 
 		glm::mat4 MVP = projection * view * model;
 
-		shaders[1].use();
+		shaders[ENTITY_SHADER].use();
 
-		shaders[1].setMat4("MVP", MVP);
+		shaders[ENTITY_SHADER].setMat4("MVP", MVP);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, models[i]->albedo);
-		shaders[1].setInt("albedo", 0);
+		shaders[ENTITY_SHADER].setInt("albedo", 0);
 
 		glBindVertexArray(models[i]->VAO);
 		glDrawElements(GL_TRIANGLES, models[i]->indices.size(), GL_UNSIGNED_INT, 0);
