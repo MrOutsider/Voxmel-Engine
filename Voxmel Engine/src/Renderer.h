@@ -47,8 +47,6 @@ private:
 	float* mouseS;
 
 	std::vector<Shader> shaders;
-	// Voxel = 0
-	// Entity = 1
 
 	const float FOV = 45.0f;
 	float fov = FOV;
