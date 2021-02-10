@@ -65,9 +65,9 @@ bool PhysicsManager::isPointInside(float x, float y, float z, AABB& box)
 
 bool PhysicsManager::isAABB_Intersect(AABB& a, AABB& b)
 {
-	if (a.position.x - a.xLength * 0.5f < b.position.x + b.xLength * 0.5f && a.position.x + a.xLength * 0.5f > b.position.x - b.xLength * 0.5f &&
-		a.position.y - a.yLength * 0.5f < b.position.y + b.yLength * 0.5f && a.position.y + a.yLength * 0.5f > b.position.y - b.yLength * 0.5f &&
-		a.position.z - a.zLength * 0.5f < b.position.z + b.zLength * 0.5f && a.position.z + a.zLength * 0.5f > b.position.z - b.zLength * 0.5f)
+	if (a.position.x - a.xLength * 0.5f <= b.position.x + b.xLength * 0.5f && a.position.x + a.xLength * 0.5f >= b.position.x - b.xLength * 0.5f &&
+		a.position.y - a.yLength * 0.5f <= b.position.y + b.yLength * 0.5f && a.position.y + a.yLength * 0.5f >= b.position.y - b.yLength * 0.5f &&
+		a.position.z - a.zLength * 0.5f <= b.position.z + b.zLength * 0.5f && a.position.z + a.zLength * 0.5f >= b.position.z - b.zLength * 0.5f)
 	{
 		return true;
 	}
