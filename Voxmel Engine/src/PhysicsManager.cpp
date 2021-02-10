@@ -18,35 +18,24 @@ void PhysicsManager::update(float delta)
 		aabbList[i]->isIntersecting = 0.0f;
 	}
 
-	std::vector<unsigned int> checkedIDs;
-
 	for (unsigned int i = 0; i < aabbList.size(); i++)
 	{
 		for (unsigned int n = 0; n < aabbList.size(); n++)
 		{
-			bool checked = false;
-
-			for (unsigned int m = 0; m < checkedIDs.size(); m++)
-			{
-				if (aabbList[n]->ID == checkedIDs[m])
-				{
-					checked = true;
-				}
-			}
-
 			if (aabbList[i]->enabled)
 			{
-				if (isAABB_Intersect(*aabbList[i], *aabbList[n]) && aabbList[i]->ID != aabbList[n]->ID)
+				if (aabbList[i]->typeOfBody == aabbList[i]->KINEMATIC)
 				{
-					aabbList[i]->isIntersecting = 1.0f;
+					if (aabbList[n]->typeOfBody == aabbList[n]->STATIC)
+					{
+						if (isAABB_Intersect(*aabbList[i], *aabbList[n]) && aabbList[i]->ID != aabbList[n]->ID)
+						{
+							aabbList[i]->isIntersecting = 1.0f;
+						}
+					}
 				}
 			}
-			else
-			{
-				aabbList[i]->isIntersecting = 2.0f;
-			}
 		}
-		checkedIDs.push_back(aabbList[i]->ID);
 	}
 }
 

@@ -64,8 +64,12 @@ private:
 	void loadModel(Entity& entity);
 	void loadTexture(const char* textureName, GLuint& target);
 
+	//---------------------------------
+	// DEBUG
+	bool renderPhysics = true;
 	GLuint PhysicsVAO;
 	GLuint PhysicsVBO;
+	//---------------------------------
 };
 
 #endif // !RENDERER_H

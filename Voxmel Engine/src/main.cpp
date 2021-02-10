@@ -75,6 +75,7 @@ int main()
 	// TMP
 	AABB firstBox;
 	firstBox.ID = 1;
+	firstBox.typeOfBody = firstBox.KINEMATIC;
 
 	AABB secondBox;
 	secondBox.ID = 2;
@@ -84,9 +85,7 @@ int main()
 	thirdBox.ID = 3;
 	thirdBox.position.y = 4;
 
-	physicsManager.addAABB(secondBox);
 	physicsManager.addAABB(firstBox);
-	physicsManager.addAABB(thirdBox);
 
 
 	// Main Loop
@@ -131,11 +130,11 @@ int main()
 		}
 		if (glfwGetKey(window.get_window(), GLFW_KEY_LEFT) == GLFW_PRESS)
 		{
-			firstBox.position.x += 5 * delta;
+			firstBox.position.z -= 5 * delta;
 		}
 		if (glfwGetKey(window.get_window(), GLFW_KEY_RIGHT) == GLFW_PRESS)
 		{
-			firstBox.position.x -= 5 * delta;
+			firstBox.position.z += 5 * delta;
 		}
 
 		if (deltaTimePhysics >= 1.0)
