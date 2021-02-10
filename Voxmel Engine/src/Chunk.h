@@ -3,6 +3,8 @@
 
 #include <glad/glad.h>
 
+#include "PhysicsManager.h"
+
 struct Voxel
 {
 	unsigned int blockID = 0;
@@ -32,6 +34,8 @@ struct Voxel
 							  7}; // -X
 
 	int AO[24]; // TODO : Assign each vert 0 ~ 2 based on surrounding opaque voxels to darken corners
+
+	AABB aabb;
 };
 
 class Chunk

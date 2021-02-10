@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 
 #include "Chunk.h"
+#include "PhysicsManager.h"
 #include "Camera.h"
 
 #include <vector>
@@ -13,7 +14,7 @@
 class ChunkManager
 {
 public:
-	ChunkManager();
+	ChunkManager(PhysicsManager& PM, Camera& cam);
 	~ChunkManager();
 
 	void init();
@@ -21,6 +22,7 @@ public:
 
 	std::vector<Chunk*> loadedChunks;
 private:
+	PhysicsManager* physicsManager;
 	Camera* player;
 	bool pInit = false;
 

@@ -46,14 +46,14 @@ int main()
 	float* mouse_ptr = mousePos;
 	Camera camera(window.get_window(), mouse_ptr);
 
-	ChunkManager mainChunkManager;
-	mainChunkManager.init();
+	PhysicsManager physicsManager;
 
-	PhysicsManager mainPhysicsManager;
+	ChunkManager chunkManager(physicsManager, camera);
+	chunkManager.init();
 	
 	// EntityManager(ChunkManager, PhysicsManager, Camera player)
 
-	Renderer renderer(window.get_window(), &mouseScroll, mainChunkManager, mainPhysicsManager);
+	Renderer renderer(window.get_window(), &mouseScroll, chunkManager, physicsManager);
 	renderer.addCamera(camera);
 	bool cameraSet = false;
 
@@ -74,11 +74,19 @@ int main()
 
 	// TMP
 	AABB firstBox;
-	AABB secondBox;
-	secondBox.position.y = 10;
+	firstBox.ID = 1;
 
-	mainPhysicsManager.addAABB(firstBox);
-	mainPhysicsManager.addAABB(secondBox);
+	AABB secondBox;
+	secondBox.ID = 2;
+	secondBox.position.y = 3;
+
+	AABB thirdBox;
+	thirdBox.ID = 3;
+	thirdBox.position.y = 4;
+
+	physicsManager.addAABB(secondBox);
+	physicsManager.addAABB(firstBox);
+	physicsManager.addAABB(thirdBox);
 
 
 	// Main Loop
@@ -121,14 +129,21 @@ int main()
 		{
 			firstBox.position.y -= 5 * delta;
 		}
-		
+		if (glfwGetKey(window.get_window(), GLFW_KEY_LEFT) == GLFW_PRESS)
+		{
+			firstBox.position.x += 5 * delta;
+		}
+		if (glfwGetKey(window.get_window(), GLFW_KEY_RIGHT) == GLFW_PRESS)
+		{
+			firstBox.position.x -= 5 * delta;
+		}
 
 		if (deltaTimePhysics >= 1.0)
 		{
 			deltaTimePhysics--;
 			physicsUpdates++;
 
-			mainPhysicsManager.update(delta);
+			physicsManager.update(delta);
 		}
 
 		if (deltaTimeRender >= 1.0)

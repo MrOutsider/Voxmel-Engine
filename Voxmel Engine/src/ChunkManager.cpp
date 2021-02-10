@@ -1,7 +1,9 @@
 #include "ChunkManager.h"
 
-ChunkManager::ChunkManager()
+ChunkManager::ChunkManager(PhysicsManager& PM, Camera& cam)
 {
+	physicsManager = &PM;
+	player = &cam;
 }
 
 ChunkManager::~ChunkManager()
@@ -15,6 +17,14 @@ void ChunkManager::init()
 	for (int i = 0; i < loadedChunks.size(); i++)
 	{
 		generateMesh(loadedChunks[i]);
+	}
+
+	for (unsigned int i = 0; i < loadedChunks.size(); i++)
+	{
+		for (unsigned int n = 0; n < loadedChunks[i]->chunkSize * loadedChunks[i]->chunkSize * loadedChunks[i]->chunkSize; n++)
+		{
+			//physicsManager->addAABB(loadedChunks[i]->chunkVoxels[n].aabb);
+		}
 	}
 }
 
@@ -729,6 +739,8 @@ void ChunkManager::setVoxelsByID(Chunk* chunk)
 			// AIR
 			chunk->chunkVoxels[i].tile = false;
 			chunk->chunkVoxels[i].opaque = false;
+
+			chunk->chunkVoxels[i].aabb.enabled = false;
 			break;
 
 		case 1:
@@ -741,6 +753,16 @@ void ChunkManager::setVoxelsByID(Chunk* chunk)
 				chunk->chunkVoxels[i].UVoffset[n + 1] = 14;
 				n++;
 			}
+
+			chunk->chunkVoxels[i].aabb.enabled = true;
+
+			chunk->chunkVoxels[i].aabb.position.x = chunk->chunkVoxels[i].x;
+			chunk->chunkVoxels[i].aabb.position.y = chunk->chunkVoxels[i].y;
+			chunk->chunkVoxels[i].aabb.position.z = chunk->chunkVoxels[i].z;
+
+			chunk->chunkVoxels[i].aabb.xLength = chunk->voxelSizeHalf * 2;
+			chunk->chunkVoxels[i].aabb.yLength = chunk->voxelSizeHalf * 2;
+			chunk->chunkVoxels[i].aabb.zLength = chunk->voxelSizeHalf * 2;
 			break;
 
 		case 2:
@@ -753,6 +775,15 @@ void ChunkManager::setVoxelsByID(Chunk* chunk)
 				chunk->chunkVoxels[i].UVoffset[n + 1] = 15;
 				n++;
 			}
+
+			chunk->chunkVoxels[i].aabb.enabled = true;
+			chunk->chunkVoxels[i].aabb.position.x = chunk->chunkVoxels[i].x;
+			chunk->chunkVoxels[i].aabb.position.y = chunk->chunkVoxels[i].y;
+			chunk->chunkVoxels[i].aabb.position.z = chunk->chunkVoxels[i].z;
+
+			chunk->chunkVoxels[i].aabb.xLength = chunk->voxelSizeHalf * 2;
+			chunk->chunkVoxels[i].aabb.yLength = chunk->voxelSizeHalf * 2;
+			chunk->chunkVoxels[i].aabb.zLength = chunk->voxelSizeHalf * 2;
 			break;
 
 		case 3:
@@ -765,6 +796,15 @@ void ChunkManager::setVoxelsByID(Chunk* chunk)
 				chunk->chunkVoxels[i].UVoffset[n + 1] = 14;
 				n++;
 			}
+
+			chunk->chunkVoxels[i].aabb.enabled = true;
+			chunk->chunkVoxels[i].aabb.position.x = chunk->chunkVoxels[i].x;
+			chunk->chunkVoxels[i].aabb.position.y = chunk->chunkVoxels[i].y;
+			chunk->chunkVoxels[i].aabb.position.z = chunk->chunkVoxels[i].z;
+
+			chunk->chunkVoxels[i].aabb.xLength = chunk->voxelSizeHalf * 2;
+			chunk->chunkVoxels[i].aabb.yLength = chunk->voxelSizeHalf * 2;
+			chunk->chunkVoxels[i].aabb.zLength = chunk->voxelSizeHalf * 2;
 			break;
 		}
 	}
