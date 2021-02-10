@@ -23,6 +23,17 @@ void ChunkManager::init()
 	{
 		for (unsigned int n = 0; n < loadedChunks[i]->chunkSize * loadedChunks[i]->chunkSize * loadedChunks[i]->chunkSize; n++)
 		{
+			if (loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[0] &&
+				loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[1] && 
+				loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[2] && 
+				loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[3] && 
+				loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[4] &&
+				loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[5])
+			{
+				loadedChunks[i]->chunkVoxels[n].aabb.enabled = false;
+			}
+			loadedChunks[i]->chunkVoxels[n].aabb.ID = physicsManager->nextID;
+			physicsManager->nextID++;
 			physicsManager->addAABB(loadedChunks[i]->chunkVoxels[n].aabb);
 		}
 	}

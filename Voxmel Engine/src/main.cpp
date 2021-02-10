@@ -67,25 +67,28 @@ int main()
 	// Timesteps
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	fps = mode->refreshRate;
-	float limitFPS = 1.0f / fps, limitPhysicsSteps = 1.0f / 30.0f;
+	float physcsSteps = 30.0f;
+	float limitFPS = 1.0f / fps, limitPhysicsSteps = 1.0f / physcsSteps;
 	float lastTime = glfwGetTime(), nowTime = 0.0f, timer = lastTime;
 	float deltaTimeRender = 0.0f, deltaTimePhysics = 0.0f;
 	unsigned int frames = 0, physicsUpdates = 0;
 
 	// TMP
 	AABB firstBox;
-	firstBox.ID = 1;
+	firstBox.ID = physicsManager.nextID;
+	physicsManager.nextID++;
 	firstBox.typeOfBody = firstBox.KINEMATIC;
 
-	AABB secondBox;
-	secondBox.ID = 2;
-	secondBox.position.y = 3;
-
-	AABB thirdBox;
-	thirdBox.ID = 3;
-	thirdBox.position.y = 4;
+	AABB box2;
+	box2.ID = physicsManager.nextID;
+	physicsManager.nextID++;
+	box2.typeOfBody = firstBox.STATIC;
+	box2.position.x = 3;
+	box2.position.y = 3;
+	box2.position.z = 3;
 
 	physicsManager.addAABB(firstBox);
+	physicsManager.addAABB(box2);
 
 
 	// Main Loop
@@ -135,6 +138,14 @@ int main()
 		if (glfwGetKey(window.get_window(), GLFW_KEY_RIGHT) == GLFW_PRESS)
 		{
 			firstBox.position.z += 5 * delta;
+		}
+		if (glfwGetKey(window.get_window(), GLFW_KEY_COMMA) == GLFW_PRESS)
+		{
+			firstBox.position.x += 5 * delta;
+		}
+		if (glfwGetKey(window.get_window(), GLFW_KEY_PERIOD) == GLFW_PRESS)
+		{
+			firstBox.position.x -= 5 * delta;
 		}
 
 		if (deltaTimePhysics >= 1.0)

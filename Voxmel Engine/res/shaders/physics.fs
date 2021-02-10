@@ -19,7 +19,7 @@ void main()
     }
     else if (Intersect == 2)
     {
-        color = vec3(0.7f, 0.5f, 0.0f);
+        color = vec3(0.0f, 1.0f, 1.0f);
     }
 
     FragColor = vec4(color, 1.0f);

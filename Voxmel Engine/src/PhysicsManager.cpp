@@ -15,22 +15,32 @@ void PhysicsManager::update(float delta)
 
 	for (unsigned int i = 0; i < aabbList.size(); i++)
 	{
-		aabbList[i]->isIntersecting = 0.0f;
+		if (aabbList[i]->typeOfBody == aabbList[i]->STATIC)
+		{
+			aabbList[i]->isIntersecting = 0.0f;
+		}
+		else
+		{
+			aabbList[i]->isIntersecting = 2.0f;
+		}
 	}
 
 	for (unsigned int i = 0; i < aabbList.size(); i++)
 	{
-		for (unsigned int n = 0; n < aabbList.size(); n++)
+		if (aabbList[i]->enabled)
 		{
-			if (aabbList[i]->enabled)
+			for (unsigned int n = 0; n < aabbList.size(); n++)
 			{
-				if (aabbList[i]->typeOfBody == aabbList[i]->KINEMATIC)
+				if (aabbList[n]->enabled)
 				{
-					if (aabbList[n]->typeOfBody == aabbList[n]->STATIC)
+					if (aabbList[i]->typeOfBody == aabbList[i]->KINEMATIC)
 					{
-						if (isAABB_Intersect(*aabbList[i], *aabbList[n]) && aabbList[i]->ID != aabbList[n]->ID)
+						if (aabbList[n]->typeOfBody == aabbList[n]->STATIC)
 						{
-							aabbList[i]->isIntersecting = 1.0f;
+							if (isAABB_Intersect(*aabbList[i], *aabbList[n]) && aabbList[i]->ID != aabbList[n]->ID)
+							{
+								aabbList[i]->isIntersecting = 1.0f;
+							}
 						}
 					}
 				}
