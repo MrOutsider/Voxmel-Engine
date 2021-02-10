@@ -25,6 +25,7 @@
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MeshLoader.cpp" />
+    <ClCompile Include="src\PhysicsManager.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\vendor\glad\glad.c" />
@@ -37,6 +38,7 @@
     <ClInclude Include="src\ChunkManager.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\MeshLoader.h" />
+    <ClInclude Include="src\PhysicsManager.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\WindowManager.h" />

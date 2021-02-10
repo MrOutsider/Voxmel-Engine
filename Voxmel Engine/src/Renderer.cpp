@@ -1,11 +1,13 @@
 #include "Renderer.h"
 
-Renderer::Renderer(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager)
+Renderer::Renderer(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager, /*TMP*/ PhysicsManager& pm)
 {
 	window = win;
 	mouseS = mouseScroll;
 	CM = &ChunkManager;
 	init();
+
+	newPM = &pm;
 }
 
 void Renderer::addCamera(Camera& cam)
@@ -48,6 +50,9 @@ void Renderer::init()
 {
 	compileShaders();
 	loadTexture("res/textures/block_atlas.png", chunkAlbedo);
+
+	glGenVertexArrays(1, &PhysicsVAO);
+	glGenBuffers(1, &PhysicsVBO);
 }
 
 void Renderer::compileShaders()
@@ -156,12 +161,6 @@ void Renderer::render()
 
 		glBindVertexArray(CM->loadedChunks[i]->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, CM->loadedChunks[i]->verticiesAmount);
-		//------------------------------------------------------------------------------------
-		// Test for drawing lines
-		/*shaders[PHYSICS_SHADER].use();
-		shaders[PHYSICS_SHADER].setMat4("MVP", MVP);
-		glDrawArrays(GL_LINES, 0, CM->loadedChunks[i]->verticiesAmount);*/
-		//------------------------------------------------------------------------------------
 		glBindVertexArray(0);
 		drawCalls++;
 	}
@@ -173,10 +172,10 @@ void Renderer::render()
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 
 		// Translate
-		if (models[i]->transform != glm::vec3(0.0f))
+		/*if (models[i]->transform != glm::vec3(0.0f))
 		{
 			model = glm::translate(model, models[i]->transform);
-		}
+		}*/
 		// Rotate
 		if (models[i]->rotation.x != 0.0f)
 		{
@@ -211,6 +210,164 @@ void Renderer::render()
 		glBindVertexArray(0);
 		drawCalls++;
 	}
+
+	// Rendering physics
+	std::vector<float> points;
+
+	if (!newPM->aabbList.empty())
+	{
+		for (unsigned int i = 0; i < newPM->aabbList.size(); i++)
+		{
+			// Z
+			points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			// X
+			points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			// Y
+			points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+
+			points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->ylength * 0.5f);
+			points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zlength * 0.5f);
+			points.push_back(newPM->aabbList[i]->isIntersecting);
+		}
+	}
+
+	if (!points.empty())
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, PhysicsVBO);
+		glBufferData(GL_ARRAY_BUFFER, points.size() * sizeof(float), &points[0], GL_DYNAMIC_DRAW);
+
+		glBindVertexArray(PhysicsVAO);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(3 * sizeof(float)));
+
+
+		glDisable(GL_DEPTH_TEST);
+		shaders[PHYSICS_SHADER].use();
+
+		model = glm::mat4(1.0f);
+		glm::mat4 MVP = projection * view * model;
+
+		shaders[PHYSICS_SHADER].setMat4("MVP", MVP);
+		glDrawArrays(GL_LINES, 0, points.size());
+		glBindVertexArray(0);
+		glIsEnabled(GL_DEPTH_TEST);
+		drawCalls++;
+	}
+		
 	glfwSwapBuffers(window);
 }
 
@@ -224,8 +381,8 @@ void Renderer::destroy()
 	for (unsigned int i = 0; i < models.size(); i++)
 	{
 		glDeleteVertexArrays(1, &models[i]->VAO);
-		glDeleteVertexArrays(1, &models[i]->VBO);
-		glDeleteVertexArrays(1, &models[i]->EBO);
+		glDeleteBuffers(1, &models[i]->VBO);
+		glDeleteBuffers(1, &models[i]->EBO);
 		glDeleteTextures(1, &models[i]->albedo);
 	}
 

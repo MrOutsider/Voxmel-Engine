@@ -3,6 +3,7 @@
 
 #include "WindowManager.h"
 #include "ChunkManager.h"
+#include "PhysicsManager.h"
 #include "Renderer.h"
 
 #include "Camera.h"
@@ -43,20 +44,20 @@ int main()
 	window.captureMouse();
 
 	float* mouse_ptr = mousePos;
-	Camera player(window.get_window(), mouse_ptr);
+	Camera camera(window.get_window(), mouse_ptr);
 
-	ChunkManager newChunkManager;
-	newChunkManager.init();
+	ChunkManager mainChunkManager;
+	mainChunkManager.init();
 
-	newChunkManager.playerInit(player);
+	PhysicsManager mainPhysicsManager;
+	
+	// EntityManager(ChunkManager, PhysicsManager, Camera player)
 
-	// EntityManager(ChunkManager)
-
-	// PHYSICS(ChunkManager, EntityManager)
-
-	Renderer renderer(window.get_window(), &mouseScroll, newChunkManager);
-	renderer.addCamera(player);
+	Renderer renderer(window.get_window(), &mouseScroll, mainChunkManager, mainPhysicsManager);
+	renderer.addCamera(camera);
 	bool cameraSet = false;
+
+	glfwMaximizeWindow(window.get_window());
 
 	// GLFW : Callback function
 	glfwSetFramebufferSizeCallback(window.get_window(), framebuffer_size_callback);
@@ -71,15 +72,14 @@ int main()
 	float deltaTimeRender = 0.0f, deltaTimePhysics = 0.0f;
 	unsigned int frames = 0, physicsUpdates = 0;
 
-	glfwMaximizeWindow(window.get_window());
+	// TMP
+	AABB firstBox;
+	AABB secondBox;
+	secondBox.position.y = 10;
 
-	unsigned int ID = 0;
+	mainPhysicsManager.addAABB(firstBox);
+	mainPhysicsManager.addAABB(secondBox);
 
-	Entity sword(ID, "res/models/momo_shikai.obj", "res/textures/momo_shikai_albedo.png");
-	ID++;
-	renderer.loadEntityBuffers(sword);
-	renderer.addEntity(sword);
-	sword.transform.y = 80;
 
 	// Main Loop
 	while (!glfwWindowShouldClose(window.get_window()))
@@ -106,19 +106,29 @@ int main()
 
 		if (!cameraSet)
 		{
-			player.transform = glm::vec3(-30.0f, 30.0f, -15.0f);
-			//player.setDir(-90.0f);
+			camera.transform = glm::vec3(-30.0f, 30.0f, -15.0f);
 			cameraSet = true;
 		}
 
-		player.update(delta);
+		camera.update(delta);
+
+		// TMP
+		if (glfwGetKey(window.get_window(), GLFW_KEY_UP) == GLFW_PRESS)
+		{
+			firstBox.position.y += 5 * delta;
+		}
+		if (glfwGetKey(window.get_window(), GLFW_KEY_DOWN) == GLFW_PRESS)
+		{
+			firstBox.position.y -= 5 * delta;
+		}
+		
 
 		if (deltaTimePhysics >= 1.0)
 		{
 			deltaTimePhysics--;
 			physicsUpdates++;
 
-			// Do physics here
+			mainPhysicsManager.update(delta);
 		}
 
 		if (deltaTimeRender >= 1.0)

@@ -11,6 +11,7 @@
 #include "Shader.h"
 #include "MeshLoader.h"
 #include "Camera.h"
+#include "PhysicsManager.h"
 #include "Entity.h"
 
 #include "ChunkManager.h"
@@ -23,7 +24,7 @@ class Renderer
 public:
 	unsigned int drawCalls = 0;
 
-	Renderer(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager);
+	Renderer(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager, /*TMP*/ PhysicsManager& pm);
 
 	void addCamera(Camera& cam);
 
@@ -42,11 +43,11 @@ private:
 	const int VOXEL_SHADER = 1;
 	const int ENTITY_SHADER = 2;
 
+	std::vector<Shader> shaders;
+
 	GLFWwindow* window;
 	Camera* camera;
 	float* mouseS;
-
-	std::vector<Shader> shaders;
 
 	const float FOV = 45.0f;
 	float fov = FOV;
@@ -56,10 +57,15 @@ private:
 	ChunkManager* CM;
 	GLuint chunkAlbedo;
 
+	PhysicsManager* newPM;
+
 	void init();
 	void compileShaders();
 	void loadModel(Entity& entity);
 	void loadTexture(const char* textureName, GLuint& target);
+
+	GLuint PhysicsVAO;
+	GLuint PhysicsVBO;
 };
 
 #endif // !RENDERER_H

@@ -10,15 +10,7 @@ ChunkManager::~ChunkManager()
 
 void ChunkManager::init()
 {
-	generateChunk(0, 0, 0);
-	generateChunk(1, 0, 0);
-	generateChunk(-1, 0, 0);
-	generateChunk(0, 1, 0);
 	generateChunk(0, -1, 0);
-	generateChunk(0, 0, 1);
-	generateChunk(0, 0, -1);
-
-	generateChunk(0, 0, 2);
 
 	for (int i = 0; i < loadedChunks.size(); i++)
 	{
