@@ -43,11 +43,13 @@ class PhysicsManager
 public:
 	unsigned int nextID = 1;
 
+	std::vector<AABB*> kinematicList;
 	std::vector<AABB*> aabbList;
 
 	PhysicsManager();
 
 	void addAABB(AABB& obj);
+	void removeAABB(AABB& obj);
 
 	void update(float delta);
 private:

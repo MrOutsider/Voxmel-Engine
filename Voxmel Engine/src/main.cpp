@@ -87,7 +87,7 @@ int main()
 	box2.position.y = 3;
 	box2.position.z = 3;
 
-	physicsManager.addAABB(firstBox);
+	physicsManager.kinematicList.push_back(&firstBox);
 	physicsManager.addAABB(box2);
 
 

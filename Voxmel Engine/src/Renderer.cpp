@@ -214,161 +214,47 @@ void Renderer::render()
 	// Rendering physics
 	std::vector<float> points;
 
-	if (!newPM->aabbList.empty() && renderPhysics)
+	if (renderPhysics)
 	{
 		for (unsigned int i = 0; i < newPM->aabbList.size(); i++)
 		{
 			if (newPM->aabbList[i]->enabled)
 			{
-				// Z
-				points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				// X
-				points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				// Y
-				points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z - newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x - newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y + newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
-
-				points.push_back(newPM->aabbList[i]->position.x + newPM->aabbList[i]->xLength * 0.5f + newPM->aabbList[i]->xOffset);
-				points.push_back(newPM->aabbList[i]->position.y - newPM->aabbList[i]->yLength * 0.5f + newPM->aabbList[i]->yOffset);
-				points.push_back(newPM->aabbList[i]->position.z + newPM->aabbList[i]->zLength * 0.5f + newPM->aabbList[i]->zOffset);
-				points.push_back(newPM->aabbList[i]->isIntersecting);
+				drawBox(points, *newPM->aabbList[i]);
 			}
 		}
-	}
+		for (unsigned int i = 0; i < newPM->kinematicList.size(); i++)
+		{
+			if (newPM->kinematicList[i]->enabled)
+			{
+				drawBox(points, *newPM->kinematicList[i]);
+			}
+		}
 
-	if (!points.empty() && renderPhysics)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, PhysicsVBO);
-		glBufferData(GL_ARRAY_BUFFER, points.size() * sizeof(float), &points[0], GL_DYNAMIC_DRAW);
+		if (!points.empty())
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, PhysicsVBO);
+			glBufferData(GL_ARRAY_BUFFER, points.size() * sizeof(float), &points[0], GL_DYNAMIC_DRAW);
 
-		glBindVertexArray(PhysicsVAO);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(3 * sizeof(float)));
+			glBindVertexArray(PhysicsVAO);
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(3 * sizeof(float)));
 
 
-		//glDisable(GL_DEPTH_TEST);
-		shaders[PHYSICS_SHADER].use();
+			//glDisable(GL_DEPTH_TEST);
+			shaders[PHYSICS_SHADER].use();
 
-		model = glm::mat4(1.0f);
-		glm::mat4 MVP = projection * view * model;
+			model = glm::mat4(1.0f);
+			glm::mat4 MVP = projection * view * model;
 
-		shaders[PHYSICS_SHADER].setMat4("MVP", MVP);
-		glDrawArrays(GL_LINES, 0, points.size());
-		glBindVertexArray(0);
-		glIsEnabled(GL_DEPTH_TEST);
-		drawCalls++;
+			shaders[PHYSICS_SHADER].setMat4("MVP", MVP);
+			glDrawArrays(GL_LINES, 0, points.size());
+			glBindVertexArray(0);
+			glIsEnabled(GL_DEPTH_TEST);
+			drawCalls++;
+		}
 	}
 		
 	glfwSwapBuffers(window);
@@ -389,6 +275,134 @@ void Renderer::destroy()
 		glDeleteTextures(1, &models[i]->albedo);
 	}
 
+	glDeleteVertexArrays(1, &PhysicsVAO);
+	glDeleteBuffers(1, &PhysicsVBO);
+
 	shaders.clear();
 	models.clear();
+}
+
+void Renderer::drawBox(std::vector<float>& listOfLines, AABB& box)
+{
+	listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	// X
+	listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	// Y
+	listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
+
+	listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
+	listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
+	listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
+	listOfLines.push_back(box.isIntersecting);
 }

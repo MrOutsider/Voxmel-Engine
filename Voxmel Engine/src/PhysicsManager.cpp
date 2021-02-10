@@ -9,39 +9,42 @@ void PhysicsManager::addAABB(AABB& obj)
 	aabbList.push_back(&obj);
 }
 
+void PhysicsManager::removeAABB(AABB& obj)
+{
+	for (unsigned i = 0; i < aabbList.size(); i++)
+	{
+		if (aabbList[i]->ID == obj.ID)
+		{
+			aabbList.erase(aabbList.begin() + i);
+		}
+	}
+}
+
 void PhysicsManager::update(float delta)
 {
 	// Apply velocity and gravity
 
-	for (unsigned int i = 0; i < aabbList.size(); i++)
+	for (unsigned int i = 0; i < kinematicList.size(); i++)
 	{
-		if (aabbList[i]->typeOfBody == aabbList[i]->STATIC)
-		{
-			aabbList[i]->isIntersecting = 0.0f;
-		}
-		else
-		{
-			aabbList[i]->isIntersecting = 2.0f;
-		}
+		kinematicList[i]->isIntersecting = 2.0f;
 	}
 
 	for (unsigned int i = 0; i < aabbList.size(); i++)
 	{
-		if (aabbList[i]->enabled)
+		aabbList[i]->isIntersecting = 0.0f;
+	}
+
+	for (unsigned int i = 0; i < kinematicList.size(); i++)
+	{
+		if (kinematicList[i]->enabled)
 		{
 			for (unsigned int n = 0; n < aabbList.size(); n++)
 			{
 				if (aabbList[n]->enabled)
 				{
-					if (aabbList[i]->typeOfBody == aabbList[i]->KINEMATIC)
+					if (isAABB_Intersect(*kinematicList[i], *aabbList[n]))
 					{
-						if (aabbList[n]->typeOfBody == aabbList[n]->STATIC)
-						{
-							if (isAABB_Intersect(*aabbList[i], *aabbList[n]) && aabbList[i]->ID != aabbList[n]->ID)
-							{
-								aabbList[i]->isIntersecting = 1.0f;
-							}
-						}
+						kinematicList[i]->isIntersecting = 1.0f;
 					}
 				}
 			}

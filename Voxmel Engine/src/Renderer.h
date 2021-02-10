@@ -69,6 +69,7 @@ private:
 	bool renderPhysics = true;
 	GLuint PhysicsVAO;
 	GLuint PhysicsVBO;
+	void drawBox(std::vector<float>& listOfLines, AABB& box);
 	//---------------------------------
 };
 

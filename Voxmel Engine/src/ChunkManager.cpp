@@ -23,18 +23,17 @@ void ChunkManager::init()
 	{
 		for (unsigned int n = 0; n < loadedChunks[i]->chunkSize * loadedChunks[i]->chunkSize * loadedChunks[i]->chunkSize; n++)
 		{
-			if (loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[0] &&
-				loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[1] && 
-				loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[2] && 
-				loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[3] && 
-				loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[4] &&
-				loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[5])
+			if (!loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[0] ||
+				!loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[1] || 
+				!loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[2] || 
+				!loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[3] || 
+				!loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[4] ||
+				!loadedChunks[i]->chunkVoxels[n].opaqueNeighbors[5])
 			{
-				loadedChunks[i]->chunkVoxels[n].aabb.enabled = false;
+				loadedChunks[i]->chunkVoxels[n].aabb.ID = physicsManager->nextID;
+				physicsManager->nextID++;
+				physicsManager->addAABB(loadedChunks[i]->chunkVoxels[n].aabb);
 			}
-			loadedChunks[i]->chunkVoxels[n].aabb.ID = physicsManager->nextID;
-			physicsManager->nextID++;
-			physicsManager->addAABB(loadedChunks[i]->chunkVoxels[n].aabb);
 		}
 	}
 }
@@ -67,86 +66,86 @@ void ChunkManager::generateChunk(int newX, int newY, int newZ)
 		}
 	}
 
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 5, 8, 7)].blockID = 1;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 6, 8, 7)].blockID = 1;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 8, 7)].blockID = 1;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 8, 8, 7)].blockID = 1;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 5, 8, 7)].blockID = 1;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 6, 8, 7)].blockID = 1;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 8, 7)].blockID = 1;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 8, 8, 7)].blockID = 1;
 
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 3, 3, 15)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 3, 3, 0)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 3, 3, 15)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 3, 3, 0)].blockID = 0;
 
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 5, 15, 5)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 4, 15, 4)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 5, 0, 5)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 3, 0, 3)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 5, 15, 5)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 4, 15, 4)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 5, 0, 5)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 3, 0, 3)].blockID = 0;
 
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 10, 10, 15)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 12, 12, 0)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 10, 10, 15)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 12, 12, 0)].blockID = 0;
 
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 5, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 6, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 8, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 5, 6, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 6, 6, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 6, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 8, 6, 7)].blockID = 0;
-
-
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 0, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 1, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 2, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 3, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 4, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 5, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 6, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 8, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 9, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 10, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 11, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 12, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 13, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 14, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 15, 7, 7)].blockID = 0;
-
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 0)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 1)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 2)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 3)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 4)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 5)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 6)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 8)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 9)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 10)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 11)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 12)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 13)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 14)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 15)].blockID = 0;
-
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 0, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 1, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 2, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 3, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 4, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 5, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 6, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 7, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 8, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 9, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 10, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 11, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 12, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 13, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 14, 7)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 7, 15, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 5, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 6, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 8, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 5, 6, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 6, 6, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 6, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 8, 6, 7)].blockID = 0;
 
 
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 15, 2, 2)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVert(loadedChunks.back(), 0, 3, 2)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 0, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 1, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 2, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 3, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 4, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 5, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 6, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 8, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 9, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 10, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 11, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 12, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 13, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 14, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 15, 7, 7)].blockID = 0;
+
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 0)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 1)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 2)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 3)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 4)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 5)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 6)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 8)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 9)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 10)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 11)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 12)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 13)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 14)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 15)].blockID = 0;
+
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 0, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 1, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 2, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 3, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 4, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 5, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 6, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 7, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 8, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 9, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 10, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 11, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 12, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 13, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 14, 7)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 7, 15, 7)].blockID = 0;
+
+
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 15, 2, 2)].blockID = 0;
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 0, 3, 2)].blockID = 0;
 
 	setVoxelsByID(loadedChunks.back());
 }
@@ -512,7 +511,7 @@ void ChunkManager::setVoxelsNeighbors(Chunk* chunk)
 		{
 			for (int z = 0; z < chunk->chunkSize; z++)
 			{
-				int k = getVert(chunk, x, y, z);
+				int k = getVoxelLoc(chunk, x, y, z);
 				int maxSize = chunk->chunkSize * chunk->chunkSize * chunk->chunkSize;
 
 				chunk->chunkVoxels[k].opaqueNeighbors[0] = true;
@@ -731,7 +730,7 @@ void ChunkManager::setVoxelsNeighbors(Chunk* chunk)
 	}
 }
 
-int ChunkManager::getVert(Chunk* chunk, int x, int y, int z)
+int ChunkManager::getVoxelLoc(Chunk* chunk, int x, int y, int z)
 {
 	int i = z + y * chunk->chunkSize + x * chunk->chunkSize * chunk->chunkSize;
 	return i;

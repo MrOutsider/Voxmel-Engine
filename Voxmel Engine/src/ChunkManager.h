@@ -20,6 +20,9 @@ public:
 	void init();
 	void playerInit(Camera& newPlayer);
 
+	void removeBlock();
+	void addBlock(unsigned int blockID);
+
 	std::vector<Chunk*> loadedChunks;
 private:
 	PhysicsManager* physicsManager;
@@ -32,7 +35,7 @@ private:
 
 	void setVoxelsByID(Chunk* chunk);
 	void setVoxelsNeighbors(Chunk* chunk);
-	int getVert(Chunk* chunk, int x, int y, int z);
+	int getVoxelLoc(Chunk* chunk, int x, int y, int z);
 };
 
 #endif // !CHUNK_MANAGER_H
