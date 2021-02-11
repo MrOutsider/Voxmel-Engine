@@ -57,7 +57,7 @@ private:
 	ChunkManager* CM;
 	GLuint chunkAlbedo;
 
-	PhysicsManager* newPM;
+	PhysicsManager* physicsManager;
 
 	void init();
 	void compileShaders();

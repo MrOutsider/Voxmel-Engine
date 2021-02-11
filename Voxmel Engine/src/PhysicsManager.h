@@ -18,6 +18,10 @@ struct PhysicsObject
 
 	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	float xOffset = 0.0f;
+	float yOffset = 0.0f;
+	float zOffset = 0.0f;
 };
 
 struct AABB : PhysicsObject
@@ -32,10 +36,11 @@ struct AABB : PhysicsObject
 	float xLength = 1.0f;
 	float yLength = 1.0f;
 	float zLength = 1.0f;
+};
 
-	float xOffset = 0.0f;
-	float yOffset = 0.0f;
-	float zOffset = 0.0f;
+struct CHUNK_AABB : AABB
+{
+	std::vector<AABB*> voxelBoxList;
 };
 
 class PhysicsManager
@@ -43,8 +48,10 @@ class PhysicsManager
 public:
 	unsigned int nextID = 1;
 
-	std::vector<AABB*> kinematicList;
-	std::vector<AABB*> aabbList;
+	std::vector<AABB*> dynamicList;
+	std::vector<CHUNK_AABB*> chunkBoxList;
+
+	std::vector<AABB*> physicsRenderList;
 
 	PhysicsManager();
 

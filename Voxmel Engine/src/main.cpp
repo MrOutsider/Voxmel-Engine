@@ -78,17 +78,11 @@ int main()
 	firstBox.ID = physicsManager.nextID;
 	physicsManager.nextID++;
 	firstBox.typeOfBody = firstBox.KINEMATIC;
+	firstBox.position.x = 7;
+	firstBox.position.y = 1;
+	firstBox.position.z = 7;
 
-	AABB box2;
-	box2.ID = physicsManager.nextID;
-	physicsManager.nextID++;
-	box2.typeOfBody = firstBox.STATIC;
-	box2.position.x = 3;
-	box2.position.y = 3;
-	box2.position.z = 3;
-
-	physicsManager.kinematicList.push_back(&firstBox);
-	physicsManager.addAABB(box2);
+	physicsManager.dynamicList.push_back(&firstBox);
 
 
 	// Main Loop

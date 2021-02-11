@@ -56,6 +56,8 @@ public:
 	int chunkSize = 16; // Size of strip
 	Voxel chunkVoxels[4096]; // chunkSize^3
 
+	CHUNK_AABB chunkAABB;
+
 	Chunk(int newX, int newY, int newZ);
 	~Chunk();
 

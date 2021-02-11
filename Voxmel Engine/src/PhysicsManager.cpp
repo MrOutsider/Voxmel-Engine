@@ -6,45 +6,63 @@ PhysicsManager::PhysicsManager()
 
 void PhysicsManager::addAABB(AABB& obj)
 {
-	aabbList.push_back(&obj);
+	//chunkBoxList.push_back(&obj);
 }
 
 void PhysicsManager::removeAABB(AABB& obj)
 {
-	for (unsigned i = 0; i < aabbList.size(); i++)
+	/*for (unsigned i = 0; i < chunkBoxList.size(); i++)
 	{
-		if (aabbList[i]->ID == obj.ID)
+		if (chunkBoxList[i]->ID == obj.ID)
 		{
-			aabbList.erase(aabbList.begin() + i);
+			chunkBoxList.erase(chunkBoxList.begin() + i);
 		}
-	}
+	}*/
 }
 
 void PhysicsManager::update(float delta)
 {
 	// Apply velocity and gravity
 
-	for (unsigned int i = 0; i < kinematicList.size(); i++)
+	physicsRenderList.clear();
+
+	for (unsigned int i = 0; i < dynamicList.size(); i++)
 	{
-		kinematicList[i]->isIntersecting = 2.0f;
+		dynamicList[i]->isIntersecting = 2.0f;
 	}
 
-	for (unsigned int i = 0; i < aabbList.size(); i++)
+	for (unsigned int i = 0; i < chunkBoxList.size(); i++)
 	{
-		aabbList[i]->isIntersecting = 0.0f;
+		chunkBoxList[i]->isIntersecting = 0.0f;
 	}
 
-	for (unsigned int i = 0; i < kinematicList.size(); i++)
+	for (unsigned int i = 0; i < dynamicList.size(); i++)
 	{
-		if (kinematicList[i]->enabled)
+		if (dynamicList[i]->enabled)
 		{
-			for (unsigned int n = 0; n < aabbList.size(); n++)
+			physicsRenderList.push_back(dynamicList[i]);
+
+			for (unsigned int n = 0; n < chunkBoxList.size(); n++)
 			{
-				if (aabbList[n]->enabled)
+				if (chunkBoxList[n]->enabled)
 				{
-					if (isAABB_Intersect(*kinematicList[i], *aabbList[n]))
+					physicsRenderList.push_back(chunkBoxList[n]);
+
+					if (isAABB_Intersect(*dynamicList[i], *chunkBoxList[n]))
 					{
-						kinematicList[i]->isIntersecting = 1.0f;
+						chunkBoxList[n]->isIntersecting = 2.0f;
+
+						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
+						{
+							if (chunkBoxList[n]->voxelBoxList[m]->enabled)
+							{
+								if (isAABB_Intersect(*dynamicList[i], *chunkBoxList[n]->voxelBoxList[m]))
+								{
+									dynamicList[i]->isIntersecting = 1.0f;
+									physicsRenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
+								}
+							}
+						}
 					}
 				}
 			}
