@@ -14,19 +14,17 @@
 class ChunkManager
 {
 public:
-	ChunkManager(PhysicsManager& PM, Camera& cam);
+	ChunkManager(PhysicsManager& PM);
 	~ChunkManager();
 
 	void init();
-	void playerInit(Camera& newPlayer);
 
-	void removeBlock();
-	void addBlock(unsigned int blockID);
+	void addBlock(CHUNK_AABB& chunkAABB, unsigned int blockID);
+	void removeBlock(CHUNK_AABB& chunkAABB, AABB& voxelAABB);
 
 	std::vector<Chunk*> loadedChunks;
 private:
 	PhysicsManager* physicsManager;
-	Camera* player;
 	bool pInit = false;
 
 	void generateChunk(int newX, int newY, int newZ);

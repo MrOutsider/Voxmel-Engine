@@ -212,10 +212,11 @@ void Renderer::render()
 	}
 
 	// Rendering physics
-	std::vector<float> points;
 
 	if (renderPhysics)
 	{
+		std::vector<float> points;
+
 		for (unsigned int i = 0; i < physicsManager->physicsRenderList.size(); i++)
 		{
 			drawBox(points, *physicsManager->physicsRenderList[i]);

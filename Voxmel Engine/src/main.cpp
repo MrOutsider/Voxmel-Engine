@@ -48,7 +48,7 @@ int main()
 
 	PhysicsManager physicsManager;
 
-	ChunkManager chunkManager(physicsManager, camera);
+	ChunkManager chunkManager(physicsManager);
 	chunkManager.init();
 	
 	// EntityManager(ChunkManager, PhysicsManager, Camera player)
@@ -78,9 +78,13 @@ int main()
 	firstBox.ID = physicsManager.nextID;
 	physicsManager.nextID++;
 	firstBox.typeOfBody = firstBox.KINEMATIC;
-	firstBox.position.x = 7;
-	firstBox.position.y = 1;
-	firstBox.position.z = 7;
+	firstBox.position.x = 16 + 8;
+	firstBox.position.y = 33;
+	firstBox.position.z = 16 + 8;
+
+	firstBox.xLength = 0.9f;
+	firstBox.zLength = 0.9f;
+	firstBox.yLength = 1.9f;
 
 	physicsManager.dynamicList.push_back(&firstBox);
 
