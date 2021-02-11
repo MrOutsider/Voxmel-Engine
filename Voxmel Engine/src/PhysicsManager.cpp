@@ -50,7 +50,7 @@ void PhysicsManager::update(float delta)
 
 					if (isAABB_Intersect(*dynamicList[i], *chunkBoxList[n]))
 					{
-						chunkBoxList[n]->isIntersecting = 2.0f;
+						chunkBoxList[n]->isIntersecting = 1.0f;
 
 						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
 						{
