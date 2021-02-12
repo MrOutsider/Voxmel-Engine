@@ -54,16 +54,18 @@ void PhysicsManager::update(float delta)
 	for (unsigned int i = 0; i < dynamicList.size(); i++)
 	{
 		dynamicList[i]->isIntersecting = 2.0f;
+		dynamicList[i]->listOfIntersecting.clear();
 	}
-
 	for (unsigned int i = 0; i < chunkBoxList.size(); i++)
 	{
 		chunkBoxList[i]->isIntersecting = 0.0f;
+		chunkBoxList[i]->listOfIntersecting.clear();
 	}
 
 	for (unsigned int i = 0; i < raycastList.size(); i++)
 	{
 		raycastList[i]->isIntersecting = 2.0f;
+		raycastList[i]->listOfIntersecting.clear();
 	}
 
 	for (unsigned int i = 0; i < dynamicList.size(); i++)
@@ -103,10 +105,25 @@ void PhysicsManager::update(float delta)
 		if (raycastList[i]->enabled)
 		{
 			raycastRenderList.push_back(raycastList[i]);
-
-			if (false)
+			for (unsigned int n = 0; n < chunkBoxList.size(); n++)
 			{
-				raycastList[i]->isIntersecting = 1.0f;
+				if (chunkBoxList[n]->enabled)
+				{
+					if (isPointAABB(raycastList[i]->position.x, raycastList[i]->position.y, raycastList[i]->position.z, *chunkBoxList[n]))
+					{
+						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
+						{
+							if (chunkBoxList[n]->voxelBoxList[m]->enabled)
+							{
+								if (isPointAABB(raycastList[i]->position.x, raycastList[i]->position.y, raycastList[i]->position.z, *chunkBoxList[n]->voxelBoxList[m]))
+								{
+									raycastList[i]->isIntersecting = 1.0f;
+									raycastList[i]->isInsideOf = chunkBoxList[n]->voxelBoxList[m]->ID;
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}

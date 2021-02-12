@@ -17,6 +17,7 @@ struct Raycast
 	int length = 0;
 
 	float isIntersecting = 0.0f;
+	unsigned int isInsideOf = 0;
 	std::vector<unsigned int> listOfIntersecting;
 };
 

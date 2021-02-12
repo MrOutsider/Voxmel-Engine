@@ -410,7 +410,7 @@ void Renderer::drawRay(std::vector<float>& listOfLines, Raycast& ray)
 	listOfLines.push_back(ray.position.z);
 	listOfLines.push_back(ray.isIntersecting);
 
-	glm::vec3 endPos = glm::vec3(ray.position.x + ray.Direction.x * ray.length, ray.position.y + ray.Direction.y * ray.length, ray.position.z + ray.Direction.z * ray.length);
+	glm::vec3 endPos = glm::vec3(ray.position + ray.Direction * (float)ray.length);
 
 	listOfLines.push_back(endPos.x);
 	listOfLines.push_back(endPos.y);
