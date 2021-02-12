@@ -6,11 +6,18 @@
 #include <vector>
 #include <iostream>
 
-struct Ray
+struct Raycast
 {
+	unsigned int ID = 0;
+
+	bool enabled = true;
+
 	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 Direction = glm::vec3(0.0f, 0.0f, 0.0f);
 	int length = 0;
+
+	float isIntersecting = 0.0f;
+	std::vector<unsigned int> listOfIntersecting;
 };
 
 struct PhysicsObject
@@ -59,11 +66,13 @@ struct CHUNK_AABB : AABB
 class PhysicsManager
 {
 public:
-	std::vector<AABB*> dynamicList;
-	std::vector<Ray*> raycastList;
 	std::vector<CHUNK_AABB*> chunkBoxList;
 
+	std::vector<AABB*> dynamicList;
+	std::vector<Raycast*> raycastList;
+
 	std::vector<AABB*> AABB_RenderList;
+	std::vector<Raycast*> raycastRenderList;
 
 	PhysicsManager();
 
@@ -71,6 +80,9 @@ public:
 
 	void addDynamic_AABB(AABB& aabb);
 	void removeDynamic_AABB(AABB& aabb);
+
+	void addRaycast(Raycast& ray);
+	void removeRaycast(Raycast& ray);
 
 	void update(float delta);
 private:
@@ -80,7 +92,7 @@ private:
 
 	bool isPointAABB(float x, float y, float z, AABB& box);
 	bool isAABB_AABB(AABB& a, AABB& b);
-	int isRayAABB(Ray ray, AABB aabb);
+	int isRayAABB(Raycast ray, AABB aabb);
 };
 #endif // !PHYSICS_MANAGER
 

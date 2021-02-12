@@ -8,13 +8,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "PhysicsManager.h"
+#include "ChunkManager.h"
+
 #include "Shader.h"
 #include "MeshLoader.h"
 #include "Camera.h"
-#include "PhysicsManager.h"
 #include "Entity.h"
-
-#include "ChunkManager.h"
 
 #include <string>
 #include <vector>
@@ -70,6 +70,7 @@ private:
 	GLuint PhysicsVAO;
 	GLuint PhysicsVBO;
 	void drawBox(std::vector<float>& listOfLines, AABB& box);
+	void drawRay(std::vector<float>& listOfLines, Raycast& ray);
 	//---------------------------------
 };
 

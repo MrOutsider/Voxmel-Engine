@@ -27,11 +27,29 @@ void PhysicsManager::removeDynamic_AABB(AABB& aabb)
 	}
 }
 
+void PhysicsManager::addRaycast(Raycast& ray)
+{
+	raycastList.push_back(&ray);
+}
+
+void PhysicsManager::removeRaycast(Raycast& ray)
+{
+	for (unsigned i = 0; i < raycastList.size(); i++)
+	{
+		if (raycastList[i]->ID == ray.ID)
+		{
+			raycastList.erase(raycastList.begin() + i);
+			return;
+		}
+	}
+}
+
 void PhysicsManager::update(float delta)
 {
 	// Apply velocity and gravity
 
 	AABB_RenderList.clear();
+	raycastRenderList.clear();
 
 	for (unsigned int i = 0; i < dynamicList.size(); i++)
 	{
@@ -41,6 +59,11 @@ void PhysicsManager::update(float delta)
 	for (unsigned int i = 0; i < chunkBoxList.size(); i++)
 	{
 		chunkBoxList[i]->isIntersecting = 0.0f;
+	}
+
+	for (unsigned int i = 0; i < raycastList.size(); i++)
+	{
+		raycastList[i]->isIntersecting = 2.0f;
 	}
 
 	for (unsigned int i = 0; i < dynamicList.size(); i++)
@@ -75,9 +98,17 @@ void PhysicsManager::update(float delta)
 		}
 	}
 
-	for (size_t i = 0; i < 1; i++)
+	for (unsigned int i = 0; i < raycastList.size(); i++)
 	{
+		if (raycastList[i]->enabled)
+		{
+			raycastRenderList.push_back(raycastList[i]);
 
+			if (false)
+			{
+				raycastList[i]->isIntersecting = 1.0f;
+			}
+		}
 	}
 }
 
@@ -107,4 +138,9 @@ bool PhysicsManager::isAABB_AABB(AABB& a, AABB& b)
 	{
 		return false;
 	}
+}
+
+int PhysicsManager::isRayAABB(Raycast ray, AABB aabb)
+{
+	return -1;
 }

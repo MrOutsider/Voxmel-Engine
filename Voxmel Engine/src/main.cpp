@@ -91,6 +91,17 @@ int main()
 	renderer.addEntity(monkey);
 	renderer.loadEntityBuffers(monkey);
 
+	Raycast ray1;
+	ray1.ID = physicsManager.assignID();
+	ray1.length = -2;
+	ray1.Direction = glm::vec3(1.0f, 0.0f, 0.0f);
+	physicsManager.addRaycast(ray1);
+
+	Raycast cameraRay;
+	cameraRay.ID = physicsManager.assignID();
+	cameraRay.length = 8;
+	physicsManager.addRaycast(cameraRay);
+
 	// Main Loop
 	while (!glfwWindowShouldClose(window.get_window()))
 	{
@@ -121,6 +132,10 @@ int main()
 		}
 
 		camera.update(delta);
+		cameraRay.position = camera.transform + camera.cameraFront * 2.0f;
+		cameraRay.Direction = monkey.collisionBox.position - camera.transform;
+
+		ray1.position = monkey.collisionBox.position;
 
 		// TMP
 		if (glfwGetKey(window.get_window(), GLFW_KEY_UP) == GLFW_PRESS)
