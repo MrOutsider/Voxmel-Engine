@@ -81,6 +81,7 @@ void PhysicsManager::update(float delta)
 					if (isAABB_AABB(*dynamicList[i], *chunkBoxList[n]))
 					{
 						chunkBoxList[n]->isIntersecting = 1.0f;
+						dynamicList[i]->listOfIntersecting.push_back(chunkBoxList[n]->ID);
 						AABB_RenderList.push_back(chunkBoxList[n]);
 
 						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
@@ -90,6 +91,7 @@ void PhysicsManager::update(float delta)
 								if (isAABB_AABB(*dynamicList[i], *chunkBoxList[n]->voxelBoxList[m]))
 								{
 									dynamicList[i]->isIntersecting = 1.0f;
+									dynamicList[i]->listOfIntersecting.push_back(chunkBoxList[n]->voxelBoxList[m]->ID);
 									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
 								}
 							}
@@ -111,6 +113,7 @@ void PhysicsManager::update(float delta)
 				{
 					if (isPointAABB(raycastList[i]->position.x, raycastList[i]->position.y, raycastList[i]->position.z, *chunkBoxList[n]))
 					{
+						raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->ID);
 						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
 						{
 							if (chunkBoxList[n]->voxelBoxList[m]->enabled)
@@ -119,6 +122,7 @@ void PhysicsManager::update(float delta)
 								{
 									raycastList[i]->isIntersecting = 1.0f;
 									raycastList[i]->isInsideOf = chunkBoxList[n]->voxelBoxList[m]->ID;
+									raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->voxelBoxList[m]->ID);
 								}
 							}
 						}
