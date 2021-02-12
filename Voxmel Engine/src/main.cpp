@@ -99,7 +99,7 @@ int main()
 
 	Raycast cameraRay;
 	cameraRay.ID = physicsManager.assignID();
-	cameraRay.length = 8;
+	cameraRay.length = 1;
 	physicsManager.addRaycast(cameraRay);
 
 	// Main Loop
@@ -133,7 +133,7 @@ int main()
 
 		camera.update(delta);
 		cameraRay.position = camera.transform + camera.cameraFront * 2.0f;
-		cameraRay.Direction = monkey.collisionBox.position - camera.transform;
+		cameraRay.Direction = glm::normalize(monkey.collisionBox.position - camera.transform);
 
 		ray1.position = monkey.collisionBox.position;
 
