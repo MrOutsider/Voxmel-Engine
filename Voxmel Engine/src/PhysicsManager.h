@@ -6,6 +6,13 @@
 #include <vector>
 #include <iostream>
 
+struct Ray
+{
+	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 Direction = glm::vec3(0.0f, 0.0f, 0.0f);
+	int length = 0;
+};
+
 struct PhysicsObject
 {
 	unsigned int ID = 0;
@@ -36,37 +43,49 @@ struct AABB : PhysicsObject
 	float xLength = 1.0f;
 	float yLength = 1.0f;
 	float zLength = 1.0f;
+
+	int voxelID = -1;
 };
 
 struct CHUNK_AABB : AABB
 {
+	int chunkX = 0;
+	int chunkY = 0;
+	int chunkZ = 0;
+
 	std::vector<AABB*> voxelBoxList;
 };
 
 class PhysicsManager
 {
 public:
-	unsigned int nextID = 1;
-
 	std::vector<AABB*> dynamicList;
+	std::vector<Ray*> raycastList;
 	std::vector<CHUNK_AABB*> chunkBoxList;
 
-	std::vector<AABB*> physicsRenderList;
+	std::vector<AABB*> AABB_RenderList;
 
 	PhysicsManager();
 
-	void addAABB(AABB& obj);
-	void removeAABB(AABB& obj);
+	unsigned int assignID();
+
+	void addDynamic_AABB(AABB& aabb);
+	void removeDynamic_AABB(AABB& aabb);
 
 	void update(float delta);
 private:
 	const float GRAVITY = 9.7f;
 
-	bool isPointInside(float x, float y, float z, AABB& box);
-	bool isAABB_Intersect(AABB& a, AABB& b);
+	unsigned int nextID = 1;
+
+	bool isPointAABB(float x, float y, float z, AABB& box);
+	bool isAABB_AABB(AABB& a, AABB& b);
+	int isRayAABB(Ray ray, AABB aabb);
 };
 #endif // !PHYSICS_MANAGER
 
 // HALP
-// https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection
+// https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection -> Point, Sphere, AABB
+// https://gdbooks.gitbooks.io/3dcollisions/content/Chapter3/raycast_aabb.html -> Ray
+// [LINK] -> OOB
 

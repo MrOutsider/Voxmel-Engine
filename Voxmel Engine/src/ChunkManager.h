@@ -18,6 +18,7 @@ public:
 	~ChunkManager();
 
 	void init();
+	int getVoxelLoc(Chunk* chunk, int x, int y, int z);
 
 	void addBlock(CHUNK_AABB& chunkAABB, unsigned int blockID);
 	void removeBlock(CHUNK_AABB& chunkAABB, AABB& voxelAABB);
@@ -33,7 +34,6 @@ private:
 
 	void setVoxelsByID(Chunk* chunk);
 	void setVoxelsNeighbors(Chunk* chunk);
-	int getVoxelLoc(Chunk* chunk, int x, int y, int z);
 };
 
 #endif // !CHUNK_MANAGER_H

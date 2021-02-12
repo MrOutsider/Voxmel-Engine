@@ -172,10 +172,10 @@ void Renderer::render()
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 
 		// Translate
-		/*if (models[i]->transform != glm::vec3(0.0f))
+		if (models[i]->collisionBox.position != glm::vec3(0.0f))
 		{
-			model = glm::translate(model, models[i]->transform);
-		}*/
+			model = glm::translate(model, models[i]->collisionBox.position);
+		}
 		// Rotate
 		if (models[i]->rotation.x != 0.0f)
 		{
@@ -217,9 +217,9 @@ void Renderer::render()
 	{
 		std::vector<float> points;
 
-		for (unsigned int i = 0; i < physicsManager->physicsRenderList.size(); i++)
+		for (unsigned int i = 0; i < physicsManager->AABB_RenderList.size(); i++)
 		{
-			drawBox(points, *physicsManager->physicsRenderList[i]);
+			drawBox(points, *physicsManager->AABB_RenderList[i]);
 		}
 
 		if (!points.empty())

@@ -74,20 +74,22 @@ int main()
 	unsigned int frames = 0, physicsUpdates = 0;
 
 	// TMP
-	AABB firstBox;
-	firstBox.ID = physicsManager.nextID;
-	physicsManager.nextID++;
-	firstBox.typeOfBody = firstBox.KINEMATIC;
-	firstBox.position.x = 16 + 8;
-	firstBox.position.y = 33;
-	firstBox.position.z = 16 + 8;
+	Entity monkey(0, "res/models/monk.obj", "res/textures/container2.png");
+	monkey.collisionBox.ID = physicsManager.assignID();
+	monkey.collisionBox.typeOfBody = monkey.collisionBox.KINEMATIC;
+	monkey.collisionBox.position.x = 16 + 8;
+	monkey.collisionBox.position.y = 33;
+	monkey.collisionBox.position.z = 16 + 8;
 
-	firstBox.xLength = 0.9f;
-	firstBox.zLength = 0.9f;
-	firstBox.yLength = 1.9f;
+	monkey.collisionBox.xLength = 0.9f;
+	monkey.collisionBox.zLength = 0.9f;
+	monkey.collisionBox.yLength = 1.9f;
 
-	physicsManager.dynamicList.push_back(&firstBox);
+	monkey.scale = glm::vec3(1.5f, 4.0f, 2.0f);
 
+	physicsManager.dynamicList.push_back(&monkey.collisionBox);
+	renderer.addEntity(monkey);
+	renderer.loadEntityBuffers(monkey);
 
 	// Main Loop
 	while (!glfwWindowShouldClose(window.get_window()))
@@ -123,27 +125,27 @@ int main()
 		// TMP
 		if (glfwGetKey(window.get_window(), GLFW_KEY_UP) == GLFW_PRESS)
 		{
-			firstBox.position.y += 5 * delta;
+			monkey.collisionBox.position.y += 5 * delta;
 		}
 		if (glfwGetKey(window.get_window(), GLFW_KEY_DOWN) == GLFW_PRESS)
 		{
-			firstBox.position.y -= 5 * delta;
+			monkey.collisionBox.position.y -= 5 * delta;
 		}
 		if (glfwGetKey(window.get_window(), GLFW_KEY_LEFT) == GLFW_PRESS)
 		{
-			firstBox.position.z -= 5 * delta;
+			monkey.collisionBox.position.z -= 5 * delta;
 		}
 		if (glfwGetKey(window.get_window(), GLFW_KEY_RIGHT) == GLFW_PRESS)
 		{
-			firstBox.position.z += 5 * delta;
+			monkey.collisionBox.position.z += 5 * delta;
 		}
 		if (glfwGetKey(window.get_window(), GLFW_KEY_COMMA) == GLFW_PRESS)
 		{
-			firstBox.position.x += 5 * delta;
+			monkey.collisionBox.position.x += 5 * delta;
 		}
 		if (glfwGetKey(window.get_window(), GLFW_KEY_PERIOD) == GLFW_PRESS)
 		{
-			firstBox.position.x -= 5 * delta;
+			monkey.collisionBox.position.x -= 5 * delta;
 		}
 
 		if (deltaTimePhysics >= 1.0)
