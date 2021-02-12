@@ -133,7 +133,7 @@ int main()
 
 		camera.update(delta);
 		cameraRay.position = camera.transform + camera.cameraFront * 2.0f;
-		cameraRay.Direction = glm::normalize(monkey.collisionBox.position - camera.transform);
+		cameraRay.Direction = glm::normalize(monkey.collisionBox.position - cameraRay.position);
 
 		ray1.position = monkey.collisionBox.position;
 
