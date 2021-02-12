@@ -93,13 +93,19 @@ int main()
 
 	Raycast ray1;
 	ray1.ID = physicsManager.assignID();
-	ray1.length = -2;
+	ray1.length = 2;
 	ray1.Direction = glm::vec3(1.0f, 0.0f, 0.0f);
 	physicsManager.addRaycast(ray1);
 
+	Raycast cRay;
+	cRay.ID = physicsManager.assignID();
+	cRay.length = 5;
+	physicsManager.addRaycast(cRay);
+
 	Raycast cameraRay;
 	cameraRay.ID = physicsManager.assignID();
-	cameraRay.length = 1;
+	cameraRay.visable = false;
+	cameraRay.length = 10;
 	physicsManager.addRaycast(cameraRay);
 
 	// Main Loop
@@ -132,8 +138,11 @@ int main()
 		}
 
 		camera.update(delta);
-		cameraRay.position = camera.transform + camera.cameraFront * 2.0f;
-		cameraRay.Direction = glm::normalize(monkey.collisionBox.position - cameraRay.position);
+		cameraRay.position = camera.transform;
+		cameraRay.Direction = camera.cameraFront;
+
+		cRay.position = camera.transform + camera.cameraFront * 2.0f;
+		cRay.Direction = glm::normalize(monkey.collisionBox.position - cRay.position);
 
 		ray1.position = monkey.collisionBox.position;
 

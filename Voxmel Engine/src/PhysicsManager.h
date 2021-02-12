@@ -11,6 +11,7 @@ struct Raycast
 	unsigned int ID = 0;
 
 	bool enabled = true;
+	bool visable = true;
 
 	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 Direction = glm::vec3(0.0f, 0.0f, 0.0f);

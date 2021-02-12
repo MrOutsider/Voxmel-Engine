@@ -106,7 +106,10 @@ void PhysicsManager::update(float delta)
 	{
 		if (raycastList[i]->enabled)
 		{
-			raycastRenderList.push_back(raycastList[i]);
+			if (raycastList[i]->visable)
+			{
+				raycastRenderList.push_back(raycastList[i]);
+			}
 			for (unsigned int n = 0; n < chunkBoxList.size(); n++)
 			{
 				if (chunkBoxList[n]->enabled)
