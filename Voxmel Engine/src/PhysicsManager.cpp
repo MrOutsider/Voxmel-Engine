@@ -121,7 +121,6 @@ void PhysicsManager::update(float delta)
 								if (isPointAABB(raycastList[i]->position.x, raycastList[i]->position.y, raycastList[i]->position.z, *chunkBoxList[n]->voxelBoxList[m]))
 								{
 									raycastList[i]->isIntersecting = 1.0f;
-									raycastList[i]->isInsideOf = chunkBoxList[n]->voxelBoxList[m]->ID;
 									raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->voxelBoxList[m]->ID);
 								}
 							}
