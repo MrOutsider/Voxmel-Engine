@@ -122,6 +122,7 @@ void PhysicsManager::update(float delta)
 								{
 									raycastList[i]->isIntersecting = 1.0f;
 									raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->voxelBoxList[m]->ID);
+									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
 								}
 							}
 						}
