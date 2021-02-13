@@ -48,23 +48,27 @@ void PhysicsManager::update(float delta)
 {
 	// Apply velocity and gravity
 
+	const float COLOR_GREEN	= 0.0f;
+	const float COLOR_RED	= 1.0f;
+	const float COLOR_BLUE	= 2.0f;
+
 	AABB_RenderList.clear();
 	raycastRenderList.clear();
 
 	for (unsigned int i = 0; i < dynamicList.size(); i++)
 	{
-		dynamicList[i]->isIntersecting = 2.0f;
+		dynamicList[i]->isIntersecting = COLOR_BLUE;
 		dynamicList[i]->listOfIntersecting.clear();
 	}
 	for (unsigned int i = 0; i < chunkBoxList.size(); i++)
 	{
-		chunkBoxList[i]->isIntersecting = 0.0f;
+		chunkBoxList[i]->isIntersecting = COLOR_GREEN;
 		chunkBoxList[i]->listOfIntersecting.clear();
 	}
 
 	for (unsigned int i = 0; i < raycastList.size(); i++)
 	{
-		raycastList[i]->isIntersecting = 2.0f;
+		raycastList[i]->isIntersecting = COLOR_BLUE;
 		raycastList[i]->listOfIntersecting.clear();
 	}
 
@@ -80,7 +84,7 @@ void PhysicsManager::update(float delta)
 				{
 					if (isAABB_AABB(*dynamicList[i], *chunkBoxList[n]))
 					{
-						chunkBoxList[n]->isIntersecting = 1.0f;
+						chunkBoxList[n]->isIntersecting = COLOR_RED;
 						dynamicList[i]->listOfIntersecting.push_back(chunkBoxList[n]->ID);
 						AABB_RenderList.push_back(chunkBoxList[n]);
 
@@ -90,7 +94,7 @@ void PhysicsManager::update(float delta)
 							{
 								if (isAABB_AABB(*dynamicList[i], *chunkBoxList[n]->voxelBoxList[m]))
 								{
-									dynamicList[i]->isIntersecting = 1.0f;
+									dynamicList[i]->isIntersecting = COLOR_RED;
 									dynamicList[i]->listOfIntersecting.push_back(chunkBoxList[n]->voxelBoxList[m]->ID);
 									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
 								}
@@ -119,7 +123,7 @@ void PhysicsManager::update(float delta)
 					rayResult = isRayAABB(*raycastList[i], *chunkBoxList[n]);
 					if (isPointAABB(raycastList[i]->position.x, raycastList[i]->position.y, raycastList[i]->position.z, *chunkBoxList[n]))
 					{
-						raycastList[i]->isIntersecting = 0.0f;
+						raycastList[i]->isIntersecting = COLOR_GREEN;
 						raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->ID);
 						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
 						{
@@ -128,7 +132,7 @@ void PhysicsManager::update(float delta)
 								rayResult = isRayAABB(*raycastList[i], *chunkBoxList[n]->voxelBoxList[m]);
 								if (rayResult != -1 && rayResult < raycastList[i]->length)
 								{
-									raycastList[i]->isIntersecting = 1.0f;
+									raycastList[i]->isIntersecting = COLOR_RED;
 									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
 									raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->voxelBoxList[m]->ID);
 
@@ -138,7 +142,7 @@ void PhysicsManager::update(float delta)
 					}
 					else if (rayResult != -1 && rayResult < raycastList[i]->length)
 					{
-						raycastList[i]->isIntersecting = 0.0f;
+						raycastList[i]->isIntersecting = COLOR_GREEN;
 						raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->ID);
 						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
 						{
@@ -147,7 +151,7 @@ void PhysicsManager::update(float delta)
 								rayResult = isRayAABB(*raycastList[i], *chunkBoxList[n]->voxelBoxList[m]);
 								if (rayResult != -1 && rayResult < raycastList[i]->length)
 								{
-									raycastList[i]->isIntersecting = 1.0f;
+									raycastList[i]->isIntersecting = COLOR_RED;
 									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
 									raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->voxelBoxList[m]->ID);
 
