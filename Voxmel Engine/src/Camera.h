@@ -16,7 +16,7 @@ public:
 
 	float pitch = 0.0f, yaw = 0.0f, roll = 0.0f;
 
-	glm::vec3 transform = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 cameraForward = glm::vec3(0.0f, 0.0f, -1.0f);

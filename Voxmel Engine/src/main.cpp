@@ -128,12 +128,12 @@ int main()
 
 		if (!cameraSet)
 		{
-			camera.transform = glm::vec3(-30.0f, 30.0f, -15.0f);
+			camera.position = glm::vec3(-30.0f, 30.0f, -15.0f);
 			cameraSet = true;
 		}
 
 		camera.update(delta);
-		cameraRay.position = camera.transform;
+		cameraRay.position = camera.position;
 		cameraRay.Direction = camera.cameraFront;
 
 		ray1.position = monkey.collisionBox.position;

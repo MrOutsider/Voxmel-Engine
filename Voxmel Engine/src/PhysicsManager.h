@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 
+#include <math.h>
 #include <algorithm>
 #include <vector>
 #include <iostream>
@@ -20,6 +21,9 @@ struct Raycast
 
 	float isIntersecting = 0.0f;
 	std::vector<unsigned int> listOfIntersecting;
+	unsigned int chunkID = 0;
+	unsigned int voxelID = 0;
+	unsigned int DynamicID = 0;
 };
 
 struct PhysicsObject

@@ -34,8 +34,6 @@ void ChunkManager::init()
 		{
 			loadedChunks[i]->chunkAABB.voxelBoxList.push_back(&loadedChunks[i]->chunkVoxels[n].aabb);
 		}
-
-		loadedChunks[i]->chunkAABB.ID = physicsManager->assignID();
 		physicsManager->chunkBoxList.push_back(&loadedChunks[i]->chunkAABB);
 	}
 }
@@ -45,6 +43,7 @@ void ChunkManager::generateChunk(int newX, int newY, int newZ)
 	Chunk* newChunk = new Chunk(newX, newY, newZ);
 	loadedChunks.push_back(newChunk);
 
+	loadedChunks.back()->chunkAABB.ID = physicsManager->assignID();
 	loadedChunks.back()->chunkAABB.typeOfContainer = loadedChunks.back()->chunkAABB.CHUNK;
 
 	loadedChunks.back()->chunkAABB.chunkX = newX;
@@ -63,7 +62,7 @@ void ChunkManager::generateChunk(int newX, int newY, int newZ)
 				loadedChunks.back()->chunkVoxels[i].y = y;
 				loadedChunks.back()->chunkVoxels[i].z = z;
 				loadedChunks.back()->chunkVoxels[i].blockID = 0;
-				loadedChunks.back()->chunkVoxels[i].aabb.voxelID = i;
+				loadedChunks.back()->chunkVoxels[i].aabb.voxelID = physicsManager->assignID();
 				loadedChunks.back()->chunkVoxels[i].aabb.typeOfContainer = loadedChunks.back()->chunkVoxels[i].aabb.VOXEL;
 				i++;
 			}

@@ -125,7 +125,7 @@ void Renderer::render()
 
 	glm::mat4 view = glm::mat4(1.0f);
 
-	view = glm::lookAt(camera->transform, camera->transform + camera->cameraFront, camera->cameraUp);
+	view = glm::lookAt(camera->position, camera->position + camera->cameraFront, camera->cameraUp);
 
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);

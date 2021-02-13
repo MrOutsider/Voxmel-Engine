@@ -75,7 +75,7 @@ void Camera::update(float delta)
 		newTransform -= cameraUp;
 	}
 
-	transform += newTransform * moveSpeed * delta;
+	position += newTransform * moveSpeed * delta;
 }
 
 void Camera::setDir(float _yaw)
