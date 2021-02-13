@@ -120,6 +120,7 @@ void PhysicsManager::update(float delta)
 					if (isPointAABB(raycastList[i]->position.x, raycastList[i]->position.y, raycastList[i]->position.z, *chunkBoxList[n]))
 					{
 						raycastList[i]->isIntersecting = 0.0f;
+						raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->ID);
 						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
 						{
 							if (chunkBoxList[n]->voxelBoxList[m]->enabled)
@@ -129,6 +130,7 @@ void PhysicsManager::update(float delta)
 								{
 									raycastList[i]->isIntersecting = 1.0f;
 									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
+									raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->voxelBoxList[m]->ID);
 
 								}
 							}
@@ -137,6 +139,7 @@ void PhysicsManager::update(float delta)
 					else if (rayResult != -1 && rayResult < raycastList[i]->length)
 					{
 						raycastList[i]->isIntersecting = 0.0f;
+						raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->ID);
 						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
 						{
 							if (chunkBoxList[n]->voxelBoxList[m]->enabled)
@@ -146,7 +149,30 @@ void PhysicsManager::update(float delta)
 								{
 									raycastList[i]->isIntersecting = 1.0f;
 									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
+									raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->voxelBoxList[m]->ID);
 
+								}
+							}
+						}
+					}
+				}
+			}
+			// Cull Raycast -> listOfIntersecting for closest
+			for (unsigned int n = 0; n < raycastList[i]->listOfIntersecting.size(); n++)
+			{
+				unsigned int chunkID;
+				unsigned int voxelID;
+				for (unsigned int m = 0; m < chunkBoxList.size(); m++)
+				{
+					if (chunkBoxList[m]->ID == raycastList[i]->listOfIntersecting[n])
+					{
+						for (unsigned int j = 0; j < chunkBoxList[m]->voxelBoxList.size(); j++)
+						{
+							for (unsigned int k = 0; k < raycastList[i]->listOfIntersecting.size(); k++)
+							{
+								if (chunkBoxList[m]->voxelBoxList[j]->ID == raycastList[i]->listOfIntersecting[k])
+								{
+									// Continued...
 								}
 							}
 						}
@@ -185,7 +211,7 @@ bool PhysicsManager::isAABB_AABB(AABB& a, AABB& b)
 	}
 }
 
-int PhysicsManager::isRayAABB(Raycast ray, AABB aabb)
+int PhysicsManager::isRayAABB(Raycast& ray, AABB& aabb)
 {
 	float t1 = ((aabb.position.x - aabb.xLength * 0.5f) - ray.position.x) / ray.Direction.x;
 	float t2 = ((aabb.position.x + aabb.xLength * 0.5f) - ray.position.x) / ray.Direction.x;
@@ -211,4 +237,9 @@ int PhysicsManager::isRayAABB(Raycast ray, AABB aabb)
 		return tmax;
 	}
 	return tmin;
+}
+
+float PhysicsManager::distBetweenPoints(glm::vec3& positionOne, glm::vec3& positionTwo)
+{
+	return 0.0f;
 }

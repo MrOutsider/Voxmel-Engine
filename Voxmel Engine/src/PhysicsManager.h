@@ -99,7 +99,9 @@ private:
 
 	bool isPointAABB(float x, float y, float z, AABB& box);
 	bool isAABB_AABB(AABB& a, AABB& b);
-	int isRayAABB(Raycast ray, AABB aabb);
+	int isRayAABB(Raycast& ray, AABB& aabb);
+
+	float distBetweenPoints(glm::vec3& positionOne, glm::vec3& positionTwo); // TODO : Implement :D
 };
 #endif // !PHYSICS_MANAGER
 
