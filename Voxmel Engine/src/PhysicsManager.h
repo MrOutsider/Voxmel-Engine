@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 
+#include <algorithm>
 #include <vector>
 #include <iostream>
 

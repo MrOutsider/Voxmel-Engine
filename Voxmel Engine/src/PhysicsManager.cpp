@@ -102,6 +102,8 @@ void PhysicsManager::update(float delta)
 		}
 	}
 
+	float rayResult = -1.0f;
+
 	for (unsigned int i = 0; i < raycastList.size(); i++)
 	{
 		if (raycastList[i]->enabled)
@@ -114,7 +116,42 @@ void PhysicsManager::update(float delta)
 			{
 				if (chunkBoxList[n]->enabled)
 				{
+					rayResult = isRayAABB(*raycastList[i], *chunkBoxList[n]);
 					if (isPointAABB(raycastList[i]->position.x, raycastList[i]->position.y, raycastList[i]->position.z, *chunkBoxList[n]))
+					{
+						raycastList[i]->isIntersecting = 0.0f;
+						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
+						{
+							if (chunkBoxList[n]->voxelBoxList[m]->enabled)
+							{
+								rayResult = isRayAABB(*raycastList[i], *chunkBoxList[n]->voxelBoxList[m]);
+								if (rayResult != -1 && rayResult < raycastList[i]->length)
+								{
+									raycastList[i]->isIntersecting = 1.0f;
+									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
+
+								}
+							}
+						}
+					}
+					else if (rayResult != -1 && rayResult < raycastList[i]->length)
+					{
+						raycastList[i]->isIntersecting = 0.0f;
+						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
+						{
+							if (chunkBoxList[n]->voxelBoxList[m]->enabled)
+							{
+								rayResult = isRayAABB(*raycastList[i], *chunkBoxList[n]->voxelBoxList[m]);
+								if (rayResult != -1 && rayResult < raycastList[i]->length)
+								{
+									raycastList[i]->isIntersecting = 1.0f;
+									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
+
+								}
+							}
+						}
+					}
+					/*else if (isPointAABB(raycastList[i]->position.x, raycastList[i]->position.y, raycastList[i]->position.z, *chunkBoxList[n]))
 					{
 						raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->ID);
 						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
@@ -129,7 +166,7 @@ void PhysicsManager::update(float delta)
 								}
 							}
 						}
-					}
+					}*/
 				}
 			}
 		}
@@ -166,5 +203,28 @@ bool PhysicsManager::isAABB_AABB(AABB& a, AABB& b)
 
 int PhysicsManager::isRayAABB(Raycast ray, AABB aabb)
 {
-	return -1;
+	float t1 = ((aabb.position.x - aabb.xLength * 0.5f) - ray.position.x) / ray.Direction.x;
+	float t2 = ((aabb.position.x + aabb.xLength * 0.5f) - ray.position.x) / ray.Direction.x;
+	float t3 = ((aabb.position.y - aabb.yLength * 0.5f) - ray.position.y) / ray.Direction.y;
+	float t4 = ((aabb.position.y + aabb.yLength * 0.5f) - ray.position.y) / ray.Direction.y;
+	float t5 = ((aabb.position.z - aabb.zLength * 0.5f) - ray.position.z) / ray.Direction.z;
+	float t6 = ((aabb.position.z + aabb.zLength * 0.5f) - ray.position.z) / ray.Direction.z;
+
+	float tmin = std::max(std::max(std::min(t1, t2), std::min(t3, t4)), std::min(t5, t6));
+	float tmax = std::min(std::min(std::max(t1, t2), std::max(t3, t4)), std::max(t5, t6));
+
+	// if tmax < 0, ray (line) is intersecting AABB, but whole AABB is behing us
+	if (tmax < 0) {
+		return -1;
+	}
+
+	// if tmin > tmax, ray doesn't intersect AABB
+	if (tmin > tmax) {
+		return -1;
+	}
+
+	if (tmin < 0.0f) {
+		return tmax;
+	}
+	return tmin;
 }

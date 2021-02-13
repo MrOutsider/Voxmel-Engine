@@ -86,6 +86,8 @@ void ChunkManager::generateChunk(int newX, int newY, int newZ)
 	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 9, 9, 8)].blockID = 0;
 	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 9, 9, 10)].blockID = 0;
 
+	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 0, 9, 9)].blockID = 2;
+
 	setVoxelsByID(loadedChunks.back());
 }
 
