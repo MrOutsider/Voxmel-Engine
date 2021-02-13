@@ -151,22 +151,6 @@ void PhysicsManager::update(float delta)
 							}
 						}
 					}
-					/*else if (isPointAABB(raycastList[i]->position.x, raycastList[i]->position.y, raycastList[i]->position.z, *chunkBoxList[n]))
-					{
-						raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->ID);
-						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
-						{
-							if (chunkBoxList[n]->voxelBoxList[m]->enabled)
-							{
-								if (isPointAABB(raycastList[i]->position.x, raycastList[i]->position.y, raycastList[i]->position.z, *chunkBoxList[n]->voxelBoxList[m]))
-								{
-									raycastList[i]->isIntersecting = 1.0f;
-									raycastList[i]->listOfIntersecting.push_back(chunkBoxList[n]->voxelBoxList[m]->ID);
-									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
-								}
-							}
-						}
-					}*/
 				}
 			}
 		}

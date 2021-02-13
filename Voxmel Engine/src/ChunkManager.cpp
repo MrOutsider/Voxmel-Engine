@@ -45,6 +45,8 @@ void ChunkManager::generateChunk(int newX, int newY, int newZ)
 	Chunk* newChunk = new Chunk(newX, newY, newZ);
 	loadedChunks.push_back(newChunk);
 
+	loadedChunks.back()->chunkAABB.typeOfContainer = loadedChunks.back()->chunkAABB.CHUNK;
+
 	loadedChunks.back()->chunkAABB.chunkX = newX;
 	loadedChunks.back()->chunkAABB.chunkY = newY;
 	loadedChunks.back()->chunkAABB.chunkZ = newZ;
@@ -62,6 +64,7 @@ void ChunkManager::generateChunk(int newX, int newY, int newZ)
 				loadedChunks.back()->chunkVoxels[i].z = z;
 				loadedChunks.back()->chunkVoxels[i].blockID = 0;
 				loadedChunks.back()->chunkVoxels[i].aabb.voxelID = i;
+				loadedChunks.back()->chunkVoxels[i].aabb.typeOfContainer = loadedChunks.back()->chunkVoxels[i].aabb.VOXEL;
 				i++;
 			}
 		}

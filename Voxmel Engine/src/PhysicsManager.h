@@ -42,6 +42,11 @@ struct PhysicsObject
 
 struct AABB : PhysicsObject
 {
+	const int VOXEL = 1;
+	const int CHUNK = 2;
+
+	int typeOfContainer = -1;
+
 	const int STATIC = 0;
 	const int RIGID = 1;
 	const int KINEMATIC = 2;
