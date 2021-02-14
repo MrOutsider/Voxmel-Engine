@@ -8,24 +8,6 @@
 #include <vector>
 #include <iostream>
 
-struct Raycast
-{
-	unsigned int ID = 0;
-
-	bool enabled = true;
-	bool visable = true;
-
-	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 Direction = glm::vec3(0.0f, 0.0f, 0.0f);
-	int length = 0;
-
-	float isIntersecting = 0.0f;
-	std::vector<unsigned int> listOfIntersecting;
-	unsigned int chunkID = 0;
-	unsigned int voxelID = 0;
-	unsigned int DynamicID = 0;
-};
-
 struct PhysicsObject
 {
 	unsigned int ID = 0;
@@ -72,6 +54,24 @@ struct CHUNK_AABB : AABB
 	int chunkZ = 0;
 
 	std::vector<AABB*> voxelBoxList;
+};
+
+struct Raycast
+{
+	unsigned int ID = 0;
+
+	bool enabled = true;
+	bool visable = true;
+
+	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 Direction = glm::vec3(0.0f, 0.0f, 0.0f);
+	int length = 0;
+
+	float isIntersecting = 0.0f;
+	std::vector<AABB*> listOfIntersecting;
+	CHUNK_AABB* closestChunk = nullptr;
+	AABB* closestVoxel = nullptr;
+	AABB* closestDynamic = nullptr;
 };
 
 class PhysicsManager

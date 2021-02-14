@@ -55,6 +55,12 @@ void PhysicsManager::update(float delta)
 	AABB_RenderList.clear();
 	raycastRenderList.clear();
 
+	struct TempChunk
+	{
+		CHUNK_AABB* chunk;
+		std::vector<AABB*> voxels;
+	};
+
 	for (unsigned int i = 0; i < dynamicList.size(); i++)
 	{
 		dynamicList[i]->isIntersecting = COLOR_BLUE;
@@ -107,6 +113,7 @@ void PhysicsManager::update(float delta)
 	}
 
 	float rayResult = -1.0f;
+	std::vector<TempChunk> rayChunks;
 
 	for (unsigned int i = 0; i < raycastList.size(); i++)
 	{
@@ -124,6 +131,8 @@ void PhysicsManager::update(float delta)
 					if (isPointAABB(raycastList[i]->position.x, raycastList[i]->position.y, raycastList[i]->position.z, *chunkBoxList[n]))
 					{
 						raycastList[i]->isIntersecting = COLOR_GREEN;
+						TempChunk newTempChunk;
+						newTempChunk.chunk = chunkBoxList[n];
 						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
 						{
 							if (chunkBoxList[n]->voxelBoxList[m]->enabled)
@@ -132,15 +141,19 @@ void PhysicsManager::update(float delta)
 								if (rayResult != -1 && rayResult < raycastList[i]->length)
 								{
 									raycastList[i]->isIntersecting = COLOR_RED;
-									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
+									newTempChunk.voxels.push_back(chunkBoxList[n]->voxelBoxList[m]);
+									//AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
 
 								}
 							}
 						}
+						rayChunks.push_back(newTempChunk);
 					}
 					else if (rayResult != -1 && rayResult < raycastList[i]->length)
 					{
 						raycastList[i]->isIntersecting = COLOR_GREEN;
+						TempChunk newTempChunk;
+						newTempChunk.chunk = chunkBoxList[n];
 						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
 						{
 							if (chunkBoxList[n]->voxelBoxList[m]->enabled)
@@ -149,11 +162,84 @@ void PhysicsManager::update(float delta)
 								if (rayResult != -1 && rayResult < raycastList[i]->length)
 								{
 									raycastList[i]->isIntersecting = COLOR_RED;
-									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
-
+									newTempChunk.voxels.push_back(chunkBoxList[n]->voxelBoxList[m]);
+									//AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
 								}
 							}
 						}
+						rayChunks.push_back(newTempChunk);
+					}
+				}
+			}
+
+			bool thereIsA_ChunkRight = false;
+			unsigned int chunkIndex = 0;
+			CHUNK_AABB* chunkToTest = nullptr;
+			float chunkToCamDist = 0.0f;
+			for (unsigned int n = 0; n < rayChunks.size(); n++)
+			{
+				if (rayChunks.size() < 2)
+				{
+					raycastList[i]->closestChunk = rayChunks[0].chunk;
+					thereIsA_ChunkRight = true;
+				}
+				else if (n == 0)
+				{
+					chunkToTest = rayChunks[0].chunk;
+					thereIsA_ChunkRight = true;
+					chunkToCamDist = distBetweenPoints(raycastList[i]->position, rayChunks[0].chunk->position);
+				}
+				else
+				{
+					float distToCompare = distBetweenPoints(raycastList[i]->position, rayChunks[n].chunk->position);
+					if (distToCompare < chunkToCamDist)
+					{
+						chunkToTest = rayChunks[n].chunk;
+						chunkToCamDist = distToCompare;
+						chunkIndex = n;
+						thereIsA_ChunkRight = true;
+					}
+				}
+			}
+
+			bool thereIsA_VoxelRight = false;
+			unsigned int voxelIndex = 0;
+			AABB* voxelToTest = nullptr;
+			float voxelToCamDist = 0.0f;
+			if (thereIsA_ChunkRight)
+			{
+				for (unsigned int n = 0; n < rayChunks[chunkIndex].voxels.size(); n++)
+				{
+					if (rayChunks[chunkIndex].voxels.size() < 2)
+					{
+						raycastList[i]->closestVoxel = rayChunks[chunkIndex].voxels[n];
+						thereIsA_VoxelRight = true;
+					}
+					else if (n == 0)
+					{
+						voxelToTest = rayChunks[chunkIndex].voxels[0];
+						thereIsA_VoxelRight = true;
+						voxelToCamDist = distBetweenPoints(raycastList[i]->position, rayChunks[chunkIndex].voxels[0]->position);
+					}
+					else
+					{
+						float distToCompare = distBetweenPoints(raycastList[i]->position, rayChunks[chunkIndex].voxels[n]->position);
+						if (distToCompare < voxelToCamDist)
+						{
+							voxelToTest = rayChunks[chunkIndex].voxels[n];
+							voxelToCamDist = distToCompare;
+							voxelIndex = n;
+							thereIsA_VoxelRight = true;
+						}
+					}
+				}
+				if (thereIsA_ChunkRight)
+				{
+					rayChunks[chunkIndex].chunk->isIntersecting = COLOR_RED;
+					AABB_RenderList.push_back(rayChunks[chunkIndex].chunk);
+					if (thereIsA_VoxelRight)
+					{
+						AABB_RenderList.push_back(rayChunks[chunkIndex].voxels[voxelIndex]);
 					}
 				}
 			}
