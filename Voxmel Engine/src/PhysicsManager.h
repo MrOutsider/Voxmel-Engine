@@ -68,7 +68,7 @@ struct Raycast
 	int length = 0;
 
 	float isIntersecting = 0.0f;
-	std::vector<AABB*> listOfIntersecting;
+	glm::vec3 collisionPosition = glm::vec3(0.0f);
 	CHUNK_AABB* closestChunk = nullptr;
 	AABB* closestVoxel = nullptr;
 	AABB* closestDynamic = nullptr;
