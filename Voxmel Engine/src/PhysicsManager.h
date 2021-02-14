@@ -16,8 +16,6 @@ struct PhysicsObject
 	bool resting = false;
 	float isIntersecting = 0.0f;
 
-	std::vector<unsigned int> listOfIntersecting;
-
 	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 
