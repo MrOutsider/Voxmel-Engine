@@ -239,7 +239,7 @@ void Renderer::render()
 			glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(3 * sizeof(float)));
 
 
-			glDisable(GL_DEPTH_TEST);
+			//glDisable(GL_DEPTH_TEST);
 			shaders[PHYSICS_SHADER].use();
 
 			model = glm::mat4(1.0f);

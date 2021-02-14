@@ -111,13 +111,12 @@ void PhysicsManager::update(float delta)
 		}
 	}
 
-	float rayResult = -1.0f;
-	std::vector<TempChunk> rayChunks;
-
 	for (unsigned int i = 0; i < raycastList.size(); i++)
 	{
 		if (raycastList[i]->enabled)
 		{
+			float rayResult = -1.0f;
+			std::vector<TempChunk> rayChunks;
 			if (raycastList[i]->visable)
 			{
 				raycastRenderList.push_back(raycastList[i]);
@@ -141,7 +140,7 @@ void PhysicsManager::update(float delta)
 								{
 									raycastList[i]->isIntersecting = COLOR_RED;
 									newTempChunk.voxels.push_back(chunkBoxList[n]->voxelBoxList[m]);
-									//AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
+									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
 
 								}
 							}
@@ -238,6 +237,7 @@ void PhysicsManager::update(float delta)
 					AABB_RenderList.push_back(rayChunks[chunkIndex].chunk);
 					if (thereIsA_VoxelRight)
 					{
+						rayChunks[chunkIndex].voxels[voxelIndex]->isIntersecting = COLOR_RED;
 						AABB_RenderList.push_back(rayChunks[chunkIndex].voxels[voxelIndex]);
 					}
 				}
