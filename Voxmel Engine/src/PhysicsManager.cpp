@@ -75,7 +75,6 @@ void PhysicsManager::update(float delta)
 	for (unsigned int i = 0; i < raycastList.size(); i++)
 	{
 		raycastList[i]->isIntersecting = COLOR_BLUE;
-		raycastList[i]->listOfIntersecting.clear();
 	}
 
 	for (unsigned int i = 0; i < dynamicList.size(); i++)
