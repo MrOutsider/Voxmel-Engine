@@ -43,15 +43,19 @@ int main()
 	WindowManager window(WINDOW_WIDTH, WINDOW_HEIGHT, winTitle);
 	window.captureMouse();
 
-	float* mouse_ptr = mousePos;
-	Camera camera(window.get_window(), mouse_ptr);
+	// InputManager(window.getWindow());
 
 	PhysicsManager physicsManager;
 
 	ChunkManager chunkManager(physicsManager);
 	chunkManager.init();
+
+	float* mouse_ptr = mousePos;
+	Camera camera(window.get_window(), mouse_ptr);
 	
 	// EntityManager(ChunkManager, PhysicsManager, Camera player)
+
+	// PlayerController(InputManager, EntityManager.player)
 
 	Renderer renderer(window.get_window(), &mouseScroll, chunkManager, physicsManager);
 	renderer.addCamera(camera);
@@ -103,6 +107,8 @@ int main()
 	cameraRay.length = 10;
 	physicsManager.addRaycast(cameraRay);
 
+	bool clicked = false;
+
 	// Main Loop
 	while (!glfwWindowShouldClose(window.get_window()))
 	{
@@ -126,9 +132,15 @@ int main()
 		// Input
 		processInput(window.get_window());
 
-		if (cameraRay.closestVoxel != nullptr && glfwGetMouseButton(window.get_window(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+		if (cameraRay.closestVoxel != nullptr && glfwGetMouseButton(window.get_window(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && clicked == false)
 		{
+			clicked = true;
 			chunkManager.removeBlock(cameraRay.closestVoxel);
+		}
+
+		if (glfwGetMouseButton(window.get_window(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE && clicked == true)
+		{
+			clicked = false;
 		}
 
 		if (!cameraSet)
