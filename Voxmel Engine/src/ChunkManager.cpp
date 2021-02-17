@@ -680,6 +680,28 @@ int ChunkManager::getVoxelLoc(Chunk* chunk, int x, int y, int z)
 	return i;
 }
 
+void ChunkManager::removeBlock(AABB* voxelAABB)
+{
+	int x = voxelAABB->position.x;
+	x = x % (loadedChunks[0]->chunkSize);
+
+	int y = voxelAABB->position.y;
+	y = y % (loadedChunks[0]->chunkSize);
+
+	int z = voxelAABB->position.z;
+	z = z % (loadedChunks[0]->chunkSize);
+
+	Chunk* tmpChunk = nullptr;
+	tmpChunk = findVoxelsChunk(voxelAABB);
+	if (tmpChunk != nullptr)
+	{
+		int voxelLoc = getVoxelLoc(tmpChunk, x, y, z);
+		tmpChunk->chunkVoxels[voxelLoc].blockID = 0;
+		setVoxelsByID(tmpChunk);
+		generateMesh(tmpChunk);
+	}
+}
+
 void ChunkManager::setVoxelsByID(Chunk* chunk)
 {
 	for (unsigned int i = 0; i < chunk->chunkSize * chunk->chunkSize * chunk->chunkSize; i++)
@@ -768,6 +790,21 @@ void ChunkManager::setVoxelsByID(Chunk* chunk)
 			chunk->chunkVoxels[i].aabb.yLength = chunk->voxelSizeHalf * 2;
 			chunk->chunkVoxels[i].aabb.zLength = chunk->voxelSizeHalf * 2;
 			break;
+		}
+	}
+}
+
+Chunk* ChunkManager::findVoxelsChunk(AABB* voxel)
+{
+	int x = (voxel->position.x + 1) / 16; // 16 <--- Chunk Size
+	int y = (voxel->position.y + 1) / 16; // 16 <--- Chunk Size
+	int z = (voxel->position.z + 1) / 16; // 16 <--- Chunk Size
+
+	for (unsigned int i = 0; i < loadedChunks.size(); i++)
+	{
+		if (loadedChunks[i]->x == x && loadedChunks[i]->y == y && loadedChunks[i]->z == z)
+		{
+			return loadedChunks[i];
 		}
 	}
 }

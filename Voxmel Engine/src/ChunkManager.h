@@ -20,8 +20,8 @@ public:
 	void init();
 	int getVoxelLoc(Chunk* chunk, int x, int y, int z);
 
-	void addBlock(CHUNK_AABB& chunkAABB, unsigned int blockID);
-	void removeBlock(CHUNK_AABB& chunkAABB, AABB& voxelAABB);
+	void addBlock(CHUNK_AABB* chunkAABB, unsigned int blockID);
+	void removeBlock(AABB* voxelAABB);
 
 	std::vector<Chunk*> loadedChunks;
 private:
@@ -34,6 +34,8 @@ private:
 
 	void setVoxelsByID(Chunk* chunk);
 	void setVoxelsNeighbors(Chunk* chunk);
+
+	Chunk* findVoxelsChunk(AABB* voxel);
 };
 
 #endif // !CHUNK_MANAGER_H

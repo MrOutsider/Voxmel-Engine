@@ -126,6 +126,11 @@ int main()
 		// Input
 		processInput(window.get_window());
 
+		if (cameraRay.closestVoxel != nullptr && glfwGetMouseButton(window.get_window(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+		{
+			chunkManager.removeBlock(cameraRay.closestVoxel);
+		}
+
 		if (!cameraSet)
 		{
 			camera.position = glm::vec3(-30.0f, 30.0f, -15.0f);
