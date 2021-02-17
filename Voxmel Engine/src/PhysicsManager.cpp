@@ -83,8 +83,10 @@ void PhysicsManager::update(float delta)
 	{
 		if (dynamicList[i]->enabled)
 		{
-			AABB_RenderList.push_back(dynamicList[i]);
-
+			if (dynamicList[i]->visable)
+			{
+				AABB_RenderList.push_back(dynamicList[i]);
+			}
 			for (unsigned int n = 0; n < chunkBoxList.size(); n++)
 			{
 				if (chunkBoxList[n]->enabled)
@@ -98,7 +100,7 @@ void PhysicsManager::update(float delta)
 						{
 							if (chunkBoxList[n]->voxelBoxList[m]->enabled)
 							{
-								if (isAABB_AABB(*dynamicList[i], *chunkBoxList[n]->voxelBoxList[m]))
+								if (isAABB_AABB(*dynamicList[i], *chunkBoxList[n]->voxelBoxList[m]) && chunkBoxList[n]->voxelBoxList[m]->visable)
 								{
 									dynamicList[i]->isIntersecting = COLOR_RED;
 									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
@@ -140,7 +142,10 @@ void PhysicsManager::update(float delta)
 								{
 									raycastList[i]->isIntersecting = COLOR_RED;
 									newTempChunk.voxels.push_back(chunkBoxList[n]->voxelBoxList[m]);
-									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
+									if (chunkBoxList[n]->voxelBoxList[m]->visable)
+									{
+										AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
+									}
 
 								}
 							}
@@ -161,7 +166,10 @@ void PhysicsManager::update(float delta)
 								{
 									raycastList[i]->isIntersecting = COLOR_RED;
 									newTempChunk.voxels.push_back(chunkBoxList[n]->voxelBoxList[m]);
-									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
+									if (chunkBoxList[n]->voxelBoxList[m]->visable)
+									{
+										AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
+									}
 								}
 							}
 						}

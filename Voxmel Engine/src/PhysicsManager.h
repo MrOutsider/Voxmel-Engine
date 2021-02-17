@@ -13,6 +13,7 @@ struct PhysicsObject
 	unsigned int ID = 0;
 
 	bool enabled = true;
+	bool visable = true;
 	bool resting = false;
 	float isIntersecting = 0.0f;
 
