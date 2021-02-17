@@ -87,7 +87,7 @@ int main()
 
 	monkey.scale = glm::vec3(1.5f, 4.0f, 2.0f);
 
-	physicsManager.dynamicList.push_back(&monkey.collisionBox);
+	physicsManager.addDynamic_AABB(monkey.collisionBox);
 	renderer.addEntity(monkey);
 	renderer.loadEntityBuffers(monkey);
 

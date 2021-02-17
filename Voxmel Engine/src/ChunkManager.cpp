@@ -34,7 +34,7 @@ void ChunkManager::init()
 		{
 			loadedChunks[i]->chunkAABB.voxelBoxList.push_back(&loadedChunks[i]->chunkVoxels[n].aabb);
 		}
-		physicsManager->chunkBoxList.push_back(&loadedChunks[i]->chunkAABB);
+		physicsManager->addChunk_AABB(loadedChunks[i]->chunkAABB);
 	}
 }
 

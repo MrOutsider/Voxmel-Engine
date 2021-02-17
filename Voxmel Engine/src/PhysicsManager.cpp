@@ -10,6 +10,23 @@ unsigned int PhysicsManager::assignID()
 	nextID++;
 }
 
+void PhysicsManager::addChunk_AABB(CHUNK_AABB& chunk)
+{
+	chunkBoxList.push_back(&chunk);
+}
+
+void PhysicsManager::removeDynamic_AABB(CHUNK_AABB& chunk)
+{
+	for (unsigned i = 0; i < chunkBoxList.size(); i++)
+	{
+		if (chunkBoxList[i]->ID == chunk.ID)
+		{
+			chunkBoxList.erase(chunkBoxList.begin() + i);
+			return;
+		}
+	}
+}
+
 void PhysicsManager::addDynamic_AABB(AABB& aabb)
 {
 	dynamicList.push_back(&aabb);
@@ -65,6 +82,10 @@ void PhysicsManager::update(float delta)
 	for (unsigned int i = 0; i < raycastList.size(); i++)
 	{
 		raycastList[i]->color = Colors.BLUE;
+		raycastList[i]->collisionPosition = glm::vec3(0.0f);
+		raycastList[i]->closestVoxel = nullptr;
+		raycastList[i]->closestVoxelsChunk = nullptr;
+		raycastList[i]->closestDynamic = nullptr;
 	}
 
 	// Test dynamic physics bodys against static bodys
@@ -126,7 +147,6 @@ void PhysicsManager::update(float delta)
 								{
 									raycastList[i]->color = Colors.RED;
 									rayVoxelsIntersected.push_back(chunkBoxList[n]->voxelBoxList[m]);
-									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
 								}
 							}
 						}
@@ -142,7 +162,6 @@ void PhysicsManager::update(float delta)
 								{
 									raycastList[i]->color = Colors.RED;
 									rayVoxelsIntersected.push_back(chunkBoxList[n]->voxelBoxList[m]);
-									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
 								}
 							}
 						}
@@ -175,6 +194,7 @@ void PhysicsManager::update(float delta)
 			{
 				raycastList[i]->closestVoxel = closestVoxelToRay;
 				raycastList[i]->closestVoxelsChunk = findVoxelsChunk(closestVoxelToRay);
+				raycastList[i]->collisionPosition = raycastList[i]->position + raycastList[i]->Direction * isRayAABB(raycastList[i], closestVoxelToRay);
 				closestVoxelToRay->color = Colors.RED;
 				AABB_RenderList.push_back(closestVoxelToRay);
 			}
@@ -210,7 +230,7 @@ bool PhysicsManager::isAABB_AABB(AABB* a, AABB* b)
 	}
 }
 
-int PhysicsManager::isRayAABB(Raycast* ray, AABB* aabb)
+float PhysicsManager::isRayAABB(Raycast* ray, AABB* aabb)
 {
 	float t1 = ((aabb->position.x - aabb->xLength * 0.5f) - ray->position.x) / ray->Direction.x;
 	float t2 = ((aabb->position.x + aabb->xLength * 0.5f) - ray->position.x) / ray->Direction.x;

@@ -86,10 +86,6 @@ class PhysicsManager
 {
 public:
 	Colors Colors;
-	std::vector<CHUNK_AABB*> chunkBoxList;
-
-	std::vector<AABB*> dynamicList;
-	std::vector<Raycast*> raycastList;
 
 	std::vector<AABB*> AABB_RenderList;
 	std::vector<Raycast*> raycastRenderList;
@@ -97,6 +93,9 @@ public:
 	PhysicsManager();
 
 	unsigned int assignID();
+
+	void addChunk_AABB(CHUNK_AABB& chunk);
+	void removeDynamic_AABB(CHUNK_AABB& chunk);
 
 	void addDynamic_AABB(AABB& aabb);
 	void removeDynamic_AABB(AABB& aabb);
@@ -110,9 +109,13 @@ private:
 
 	unsigned int nextID = 1;
 
+	std::vector<CHUNK_AABB*> chunkBoxList;
+	std::vector<AABB*> dynamicList;
+	std::vector<Raycast*> raycastList;
+
 	bool isPointAABB(float x, float y, float z, AABB* box);
 	bool isAABB_AABB(AABB* a, AABB* b);
-	int isRayAABB(Raycast* ray, AABB* aabb);
+	float isRayAABB(Raycast* ray, AABB* aabb);
 
 	float distBetweenPoints(glm::vec3& positionOne, glm::vec3& positionTwo);
 
