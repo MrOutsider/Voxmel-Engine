@@ -11,13 +11,17 @@ void main()
 
     if (Intersect == 0.0f)
     {
-        color = vec3(0.0f, 1.0f, 0.0f);
+        color = vec3(1.0f, 1.0f, 1.0f);
     }
     else if (Intersect == 1)
     {
         color = vec3(1.0f, 0.0f, 0.0f);
     }
     else if (Intersect == 2)
+    {
+        color = vec3(0.0f, 1.0f, 0.0f);
+    }
+    else if (Intersect == 3)
     {
         color = vec3(0.0f, 1.0f, 1.0f);
     }

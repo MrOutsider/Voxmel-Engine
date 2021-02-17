@@ -285,124 +285,124 @@ void Renderer::drawBox(std::vector<float>& listOfLines, AABB& box)
 		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		// X
 		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		// Y
 		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 
 		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
 		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
 		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.isIntersecting);
+		listOfLines.push_back(box.color);
 	}
 }
 
@@ -413,13 +413,13 @@ void Renderer::drawRay(std::vector<float>& listOfLines, Raycast& ray)
 		listOfLines.push_back(ray.position.x);
 		listOfLines.push_back(ray.position.y);
 		listOfLines.push_back(ray.position.z);
-		listOfLines.push_back(ray.isIntersecting);
+		listOfLines.push_back(ray.color);
 
 		glm::vec3 endPos = glm::vec3(ray.position + ray.Direction * (float)ray.length);
 
 		listOfLines.push_back(endPos.x);
 		listOfLines.push_back(endPos.y);
 		listOfLines.push_back(endPos.z);
-		listOfLines.push_back(ray.isIntersecting);
+		listOfLines.push_back(ray.color);
 	}
 }

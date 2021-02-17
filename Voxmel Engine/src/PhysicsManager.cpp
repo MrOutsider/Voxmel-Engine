@@ -48,10 +48,6 @@ void PhysicsManager::update(float delta)
 {
 	// Apply velocity and gravity
 
-	const float COLOR_GREEN	= 0.0f;
-	const float COLOR_RED	= 1.0f;
-	const float COLOR_BLUE	= 2.0f;
-
 	AABB_RenderList.clear();
 	raycastRenderList.clear();
 
@@ -63,20 +59,20 @@ void PhysicsManager::update(float delta)
 
 	for (unsigned int i = 0; i < dynamicList.size(); i++)
 	{
-		dynamicList[i]->isIntersecting = COLOR_BLUE;
+		dynamicList[i]->color = Colors.BLUE;
 	}
 	for (unsigned int i = 0; i < chunkBoxList.size(); i++)
 	{
-		chunkBoxList[i]->isIntersecting = COLOR_GREEN;
+		chunkBoxList[i]->color = Colors.GREEN;
 		for (unsigned int n = 0; n < chunkBoxList[i]->voxelBoxList.size(); n++)
 		{
-			chunkBoxList[i]->voxelBoxList[n]->isIntersecting = COLOR_GREEN;
+			chunkBoxList[i]->voxelBoxList[n]->color = Colors.GREEN;
 		}
 	}
 
 	for (unsigned int i = 0; i < raycastList.size(); i++)
 	{
-		raycastList[i]->isIntersecting = COLOR_BLUE;
+		raycastList[i]->color = Colors.BLUE;
 	}
 
 	for (unsigned int i = 0; i < dynamicList.size(); i++)
@@ -90,7 +86,7 @@ void PhysicsManager::update(float delta)
 				{
 					if (isAABB_AABB(*dynamicList[i], *chunkBoxList[n]))
 					{
-						chunkBoxList[n]->isIntersecting = COLOR_RED;
+						chunkBoxList[n]->color = Colors.RED;
 						AABB_RenderList.push_back(chunkBoxList[n]);
 
 						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
@@ -99,7 +95,7 @@ void PhysicsManager::update(float delta)
 							{
 								if (isAABB_AABB(*dynamicList[i], *chunkBoxList[n]->voxelBoxList[m]))
 								{
-									dynamicList[i]->isIntersecting = COLOR_RED;
+									dynamicList[i]->color = Colors.RED;
 									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
 								}
 							}
@@ -124,7 +120,7 @@ void PhysicsManager::update(float delta)
 					rayResult = isRayAABB(*raycastList[i], *chunkBoxList[n]);
 					if (isPointAABB(raycastList[i]->position.x, raycastList[i]->position.y, raycastList[i]->position.z, *chunkBoxList[n]))
 					{
-						raycastList[i]->isIntersecting = COLOR_GREEN;
+						raycastList[i]->color = Colors.GREEN;
 						TempChunk newTempChunk;
 						newTempChunk.chunk = chunkBoxList[n];
 						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
@@ -134,7 +130,7 @@ void PhysicsManager::update(float delta)
 								rayResult = isRayAABB(*raycastList[i], *chunkBoxList[n]->voxelBoxList[m]);
 								if (rayResult != -1 && rayResult < raycastList[i]->length)
 								{
-									raycastList[i]->isIntersecting = COLOR_RED;
+									raycastList[i]->color = Colors.RED;
 									newTempChunk.voxels.push_back(chunkBoxList[n]->voxelBoxList[m]);
 									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
 								}
@@ -144,7 +140,7 @@ void PhysicsManager::update(float delta)
 					}
 					else if (rayResult != -1 && rayResult < raycastList[i]->length)
 					{
-						raycastList[i]->isIntersecting = COLOR_GREEN;
+						raycastList[i]->color = Colors.GREEN;
 						TempChunk newTempChunk;
 						newTempChunk.chunk = chunkBoxList[n];
 						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
@@ -154,7 +150,7 @@ void PhysicsManager::update(float delta)
 								rayResult = isRayAABB(*raycastList[i], *chunkBoxList[n]->voxelBoxList[m]);
 								if (rayResult != -1 && rayResult < raycastList[i]->length)
 								{
-									raycastList[i]->isIntersecting = COLOR_RED;
+									raycastList[i]->color = Colors.RED;
 									newTempChunk.voxels.push_back(chunkBoxList[n]->voxelBoxList[m]);
 									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
 								}
@@ -228,11 +224,11 @@ void PhysicsManager::update(float delta)
 				}
 				if (thereIsA_ChunkRight)
 				{
-					rayChunks[chunkIndex].chunk->isIntersecting = COLOR_RED;
+					rayChunks[chunkIndex].chunk->color = Colors.RED;
 					AABB_RenderList.push_back(rayChunks[chunkIndex].chunk);
 					if (thereIsA_VoxelRight)
 					{
-						rayChunks[chunkIndex].voxels[voxelIndex]->isIntersecting = COLOR_RED;
+						rayChunks[chunkIndex].voxels[voxelIndex]->color = Colors.RED;
 						AABB_RenderList.push_back(rayChunks[chunkIndex].voxels[voxelIndex]);
 					}
 				}

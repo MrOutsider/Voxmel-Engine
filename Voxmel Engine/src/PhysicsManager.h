@@ -8,6 +8,13 @@
 #include <vector>
 #include <iostream>
 
+struct Colors
+{
+	const float RED		= 1.0f;
+	const float GREEN	= 2.0f;
+	const float BLUE	= 3.0f;
+};
+
 struct PhysicsObject
 {
 	unsigned int ID = 0;
@@ -15,7 +22,8 @@ struct PhysicsObject
 	bool enabled = true;
 	bool visable = true;
 	bool resting = false;
-	float isIntersecting = 0.0f;
+
+	float color = 0.0f;
 
 	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 velocity = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -66,7 +74,8 @@ struct Raycast
 	glm::vec3 Direction = glm::vec3(0.0f, 0.0f, 0.0f);
 	int length = 0;
 
-	float isIntersecting = 0.0f;
+	float color = 0.0f;
+
 	glm::vec3 collisionPosition = glm::vec3(0.0f);
 	CHUNK_AABB* closestChunk = nullptr;
 	AABB* closestVoxel = nullptr;
@@ -76,6 +85,7 @@ struct Raycast
 class PhysicsManager
 {
 public:
+	Colors Colors;
 	std::vector<CHUNK_AABB*> chunkBoxList;
 
 	std::vector<AABB*> dynamicList;
