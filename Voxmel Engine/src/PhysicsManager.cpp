@@ -161,7 +161,7 @@ void PhysicsManager::update(float delta)
 								{
 									raycastList[i]->isIntersecting = COLOR_RED;
 									newTempChunk.voxels.push_back(chunkBoxList[n]->voxelBoxList[m]);
-									//AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
+									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
 								}
 							}
 						}
