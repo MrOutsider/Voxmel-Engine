@@ -77,8 +77,8 @@ struct Raycast
 	float color = 0.0f;
 
 	glm::vec3 collisionPosition = glm::vec3(0.0f);
-	CHUNK_AABB* closestChunk = nullptr;
 	AABB* closestVoxel = nullptr;
+	CHUNK_AABB* closestVoxelsChunk = nullptr;
 	AABB* closestDynamic = nullptr;
 };
 
@@ -110,11 +110,13 @@ private:
 
 	unsigned int nextID = 1;
 
-	bool isPointAABB(float x, float y, float z, AABB& box);
-	bool isAABB_AABB(AABB& a, AABB& b);
-	int isRayAABB(Raycast& ray, AABB& aabb);
+	bool isPointAABB(float x, float y, float z, AABB* box);
+	bool isAABB_AABB(AABB* a, AABB* b);
+	int isRayAABB(Raycast* ray, AABB* aabb);
 
-	float distBetweenPoints(glm::vec3& positionOne, glm::vec3& positionTwo); // TODO : Implement :D
+	float distBetweenPoints(glm::vec3& positionOne, glm::vec3& positionTwo);
+
+	CHUNK_AABB* findVoxelsChunk(AABB* voxel);
 };
 #endif // !PHYSICS_MANAGER
 
