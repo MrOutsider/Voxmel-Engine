@@ -77,7 +77,6 @@ int main()
 	Entity monkey(0, "res/models/monk.obj", "res/textures/container2.png");
 	monkey.collisionBox.ID = physicsManager.assignID();
 	monkey.collisionBox.typeOfBody = monkey.collisionBox.KINEMATIC;
-	monkey.collisionBox.typeOfBody = monkey.collisionBox.visable = true;
 	monkey.collisionBox.position.x = 16 + 8;
 	monkey.collisionBox.position.y = 33;
 	monkey.collisionBox.position.z = 16 + 8;
