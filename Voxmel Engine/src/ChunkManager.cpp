@@ -1,8 +1,9 @@
 #include "ChunkManager.h"
 
-ChunkManager::ChunkManager(PhysicsManager& PM)
+ChunkManager::ChunkManager(PhysicsManager& physicsM, std::vector<Chunk*>& loadedChunksList)
 {
-	physicsManager = &PM;
+	physicsManager = &physicsM;
+	loadedChunks = &loadedChunksList;
 }
 
 ChunkManager::~ChunkManager()
@@ -23,47 +24,47 @@ void ChunkManager::init()
 		}
 	}
 
-	for (int i = 0; i < loadedChunks.size(); i++)
+	for (int i = 0; i < loadedChunks[0].size(); i++)
 	{
-		generateMesh(loadedChunks[i]);
+		generateMesh(loadedChunks[0][i]);
 	}
 
-	for (unsigned int i = 0; i < loadedChunks.size(); i++)
+	for (unsigned int i = 0; i < loadedChunks[0].size(); i++)
 	{
-		for (unsigned int n = 0; n < loadedChunks[i]->chunkSize * loadedChunks[i]->chunkSize * loadedChunks[i]->chunkSize; n++)
+		for (unsigned int n = 0; n < loadedChunks[0][i]->chunkSize * loadedChunks[0][i]->chunkSize * loadedChunks[0][i]->chunkSize; n++)
 		{
-			loadedChunks[i]->chunkAABB.voxelBoxList.push_back(&loadedChunks[i]->chunkVoxels[n].aabb);
+			loadedChunks[0][i]->chunkAABB.voxelBoxList.push_back(&loadedChunks[0][i]->chunkVoxels[n].aabb);
 		}
-		physicsManager->addChunk_AABB(loadedChunks[i]->chunkAABB);
+		physicsManager->addChunk_AABB(loadedChunks[0][i]->chunkAABB);
 	}
 }
 
 void ChunkManager::generateChunk(int newX, int newY, int newZ)
 {
 	Chunk* newChunk = new Chunk(newX, newY, newZ);
-	loadedChunks.push_back(newChunk);
+	loadedChunks[0].push_back(newChunk);
 
-	loadedChunks.back()->chunkAABB.ID = physicsManager->assignID();
-	loadedChunks.back()->chunkAABB.typeOfContainer = loadedChunks.back()->chunkAABB.CHUNK;
+	loadedChunks[0].back()->chunkAABB.ID = physicsManager->assignID();
+	loadedChunks[0].back()->chunkAABB.typeOfContainer = loadedChunks[0].back()->chunkAABB.CHUNK;
 
-	loadedChunks.back()->chunkAABB.chunkX = newX;
-	loadedChunks.back()->chunkAABB.chunkY = newY;
-	loadedChunks.back()->chunkAABB.chunkZ = newZ;
+	loadedChunks[0].back()->chunkAABB.chunkX = newX;
+	loadedChunks[0].back()->chunkAABB.chunkY = newY;
+	loadedChunks[0].back()->chunkAABB.chunkZ = newZ;
 
 	unsigned int i = 0;
 
-	for (int x = 0; x < loadedChunks.back()->chunkSize; x++)
+	for (int x = 0; x < loadedChunks[0].back()->chunkSize; x++)
 	{
-		for (int y = 0; y < loadedChunks.back()->chunkSize; y++)
+		for (int y = 0; y < loadedChunks[0].back()->chunkSize; y++)
 		{
-			for (int z = 0; z < loadedChunks.back()->chunkSize; z++)
+			for (int z = 0; z < loadedChunks[0].back()->chunkSize; z++)
 			{
-				loadedChunks.back()->chunkVoxels[i].x = x;
-				loadedChunks.back()->chunkVoxels[i].y = y;
-				loadedChunks.back()->chunkVoxels[i].z = z;
-				loadedChunks.back()->chunkVoxels[i].blockID = 0;
-				loadedChunks.back()->chunkVoxels[i].aabb.voxelID = physicsManager->assignID();
-				loadedChunks.back()->chunkVoxels[i].aabb.typeOfContainer = loadedChunks.back()->chunkVoxels[i].aabb.VOXEL;
+				loadedChunks[0].back()->chunkVoxels[i].x = x;
+				loadedChunks[0].back()->chunkVoxels[i].y = y;
+				loadedChunks[0].back()->chunkVoxels[i].z = z;
+				loadedChunks[0].back()->chunkVoxels[i].blockID = 0;
+				loadedChunks[0].back()->chunkVoxels[i].aabb.voxelID = physicsManager->assignID();
+				loadedChunks[0].back()->chunkVoxels[i].aabb.typeOfContainer = loadedChunks[0].back()->chunkVoxels[i].aabb.VOXEL;
 				i++;
 			}
 		}
@@ -75,23 +76,23 @@ void ChunkManager::generateChunk(int newX, int newY, int newZ)
 		{
 			for (int z = 0; z < 3; z++)
 			{
-				loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), x + loadedChunks.back()->chunkSize * 0.5f, y + loadedChunks.back()->chunkSize * 0.5f, z + loadedChunks.back()->chunkSize * 0.5f)].blockID = 1;
+				loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), x + loadedChunks[0].back()->chunkSize * 0.5f, y + loadedChunks[0].back()->chunkSize * 0.5f, z + loadedChunks[0].back()->chunkSize * 0.5f)].blockID = 1;
 			}
 		}
 	}
 
-	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 9, 8, 9)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 9, 9, 9)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 9, 10, 9)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 8, 9, 9)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 10, 9, 9)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 9, 9, 8)].blockID = 0;
-	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 9, 9, 10)].blockID = 0;
+	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 9, 8, 9)].blockID = 0;
+	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 9, 9, 9)].blockID = 0;
+	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 9, 10, 9)].blockID = 0;
+	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 8, 9, 9)].blockID = 0;
+	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 10, 9, 9)].blockID = 0;
+	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 9, 9, 8)].blockID = 0;
+	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 9, 9, 10)].blockID = 0;
 
-	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 0, 9, 9)].blockID = 2;
-	loadedChunks.back()->chunkVoxels[getVoxelLoc(loadedChunks.back(), 1, 9, 9)].blockID = 2;
+	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 0, 9, 9)].blockID = 2;
+	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 1, 9, 9)].blockID = 2;
 
-	setVoxelsByID(loadedChunks.back());
+	setVoxelsByID(loadedChunks[0].back());
 }
 
 void ChunkManager::generateMesh(Chunk* chunk)
@@ -421,31 +422,31 @@ void ChunkManager::setVoxelsNeighbors(Chunk* chunk)
 	Chunk* xPos = nullptr;
 	Chunk* xNeg = nullptr;
 
-	for (int i = 0; i < loadedChunks.size(); i++)
+	for (int i = 0; i < loadedChunks[0].size(); i++)
 	{
-		if (loadedChunks[i]->x == chunk->x && loadedChunks[i]->y == chunk->y && loadedChunks[i]->z == chunk->z + 1)
+		if (loadedChunks[0][i]->x == chunk->x && loadedChunks[0][i]->y == chunk->y && loadedChunks[0][i]->z == chunk->z + 1)
 		{
-			zPos = loadedChunks[i];
+			zPos = loadedChunks[0][i];
 		}
-		else if (loadedChunks[i]->x == chunk->x && loadedChunks[i]->y == chunk->y && loadedChunks[i]->z == chunk->z - 1)
+		else if (loadedChunks[0][i]->x == chunk->x && loadedChunks[0][i]->y == chunk->y && loadedChunks[0][i]->z == chunk->z - 1)
 		{
-			zNeg = loadedChunks[i];
+			zNeg = loadedChunks[0][i];
 		}
-		else if (loadedChunks[i]->x == chunk->x && loadedChunks[i]->y == chunk->y + 1 && loadedChunks[i]->z == chunk->z)
+		else if (loadedChunks[0][i]->x == chunk->x && loadedChunks[0][i]->y == chunk->y + 1 && loadedChunks[0][i]->z == chunk->z)
 		{
-			yPos = loadedChunks[i];
+			yPos = loadedChunks[0][i];
 		}
-		else if (loadedChunks[i]->x == chunk->x && loadedChunks[i]->y == chunk->y - 1 && loadedChunks[i]->z == chunk->z)
+		else if (loadedChunks[0][i]->x == chunk->x && loadedChunks[0][i]->y == chunk->y - 1 && loadedChunks[0][i]->z == chunk->z)
 		{
-			yNeg = loadedChunks[i];
+			yNeg = loadedChunks[0][i];
 		}
-		else if (loadedChunks[i]->x == chunk->x + 1 && loadedChunks[i]->y == chunk->y && loadedChunks[i]->z == chunk->z)
+		else if (loadedChunks[0][i]->x == chunk->x + 1 && loadedChunks[0][i]->y == chunk->y && loadedChunks[0][i]->z == chunk->z)
 		{
-			xPos = loadedChunks[i];
+			xPos = loadedChunks[0][i];
 		}
-		else if (loadedChunks[i]->x == chunk->x - 1 && loadedChunks[i]->y == chunk->y && loadedChunks[i]->z == chunk->z)
+		else if (loadedChunks[0][i]->x == chunk->x - 1 && loadedChunks[0][i]->y == chunk->y && loadedChunks[0][i]->z == chunk->z)
 		{
-			xNeg = loadedChunks[i];
+			xNeg = loadedChunks[0][i];
 		}
 	}
 
@@ -683,13 +684,13 @@ int ChunkManager::getVoxelLoc(Chunk* chunk, int x, int y, int z)
 void ChunkManager::removeBlock(AABB* voxelAABB)
 {
 	int x = voxelAABB->position.x;
-	x = x % (loadedChunks[0]->chunkSize);
+	x = x % (loadedChunks[0][0]->chunkSize);
 
 	int y = voxelAABB->position.y;
-	y = y % (loadedChunks[0]->chunkSize);
+	y = y % (loadedChunks[0][0]->chunkSize);
 
 	int z = voxelAABB->position.z;
-	z = z % (loadedChunks[0]->chunkSize);
+	z = z % (loadedChunks[0][0]->chunkSize);
 
 	Chunk* tmpChunk = nullptr;
 	tmpChunk = findVoxelsChunk(voxelAABB);
@@ -800,11 +801,11 @@ Chunk* ChunkManager::findVoxelsChunk(AABB* voxel)
 	int y = (voxel->position.y + 1) / 16; // 16 <--- Chunk Size
 	int z = (voxel->position.z + 1) / 16; // 16 <--- Chunk Size
 
-	for (unsigned int i = 0; i < loadedChunks.size(); i++)
+	for (unsigned int i = 0; i < loadedChunks[0].size(); i++)
 	{
-		if (loadedChunks[i]->x == x && loadedChunks[i]->y == y && loadedChunks[i]->z == z)
+		if (loadedChunks[0][i]->x == x && loadedChunks[0][i]->y == y && loadedChunks[0][i]->z == z)
 		{
-			return loadedChunks[i];
+			return loadedChunks[0][i];
 		}
 	}
 }

@@ -6,7 +6,6 @@
 #include <math.h>
 #include <algorithm>
 #include <vector>
-#include <iostream>
 
 struct Colors
 {
@@ -87,10 +86,7 @@ class PhysicsManager
 public:
 	Colors Colors;
 
-	std::vector<AABB*> AABB_RenderList;
-	std::vector<Raycast*> raycastRenderList;
-
-	PhysicsManager();
+	PhysicsManager(std::vector<AABB*>& dynamicB, std::vector<CHUNK_AABB*>& staticChunkB, std::vector<Raycast*>& rays, std::vector<AABB*>& aabbRenderL, std::vector<Raycast*>& raycastRenderL);
 
 	unsigned int assignID();
 
@@ -109,9 +105,12 @@ private:
 
 	unsigned int nextID = 1;
 
-	std::vector<CHUNK_AABB*> chunkBoxList;
-	std::vector<AABB*> dynamicList;
-	std::vector<Raycast*> raycastList;
+	std::vector<AABB*>*			dynamicList;
+	std::vector<CHUNK_AABB*>*	chunkBoxList;
+	std::vector<Raycast*>*		raycastList;
+
+	std::vector<AABB*>*			 AABB_RenderList;
+	std::vector<Raycast*>*		 raycastRenderList;
 
 	bool isPointAABB(float x, float y, float z, AABB* box);
 	bool isAABB_AABB(AABB* a, AABB* b);

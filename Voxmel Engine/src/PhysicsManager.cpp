@@ -1,7 +1,13 @@
 #include "PhysicsManager.h"
 
-PhysicsManager::PhysicsManager()
+PhysicsManager::PhysicsManager(std::vector<AABB*>& dynamicB, std::vector<CHUNK_AABB*>& staticChunkB, std::vector<Raycast*>& rays, std::vector<AABB*>& aabbRenderL, std::vector<Raycast*>& raycastRenderL)
 {
+	dynamicList = &dynamicB;
+	chunkBoxList = &staticChunkB;
+	raycastList = &rays;
+
+	AABB_RenderList = &aabbRenderL;
+	raycastRenderList = &raycastRenderL;
 }
 
 unsigned int PhysicsManager::assignID()
@@ -12,16 +18,16 @@ unsigned int PhysicsManager::assignID()
 
 void PhysicsManager::addChunk_AABB(CHUNK_AABB& chunk)
 {
-	chunkBoxList.push_back(&chunk);
+	chunkBoxList[0].push_back(&chunk);
 }
 
 void PhysicsManager::removeDynamic_AABB(CHUNK_AABB& chunk)
 {
-	for (unsigned i = 0; i < chunkBoxList.size(); i++)
+	for (unsigned i = 0; i < chunkBoxList[0].size(); i++)
 	{
-		if (chunkBoxList[i]->ID == chunk.ID)
+		if (chunkBoxList[0][i]->ID == chunk.ID)
 		{
-			chunkBoxList.erase(chunkBoxList.begin() + i);
+			chunkBoxList[0].erase(chunkBoxList[0].begin() + i);
 			return;
 		}
 	}
@@ -29,16 +35,16 @@ void PhysicsManager::removeDynamic_AABB(CHUNK_AABB& chunk)
 
 void PhysicsManager::addDynamic_AABB(AABB& aabb)
 {
-	dynamicList.push_back(&aabb);
+	dynamicList[0].push_back(&aabb);
 }
 
 void PhysicsManager::removeDynamic_AABB(AABB& aabb)
 {
-	for (unsigned i = 0; i < dynamicList.size(); i++)
+	for (unsigned i = 0; i < dynamicList[0].size(); i++)
 	{
-		if (dynamicList[i]->ID == aabb.ID)
+		if (dynamicList[0][i]->ID == aabb.ID)
 		{
-			dynamicList.erase(dynamicList.begin() + i);
+			dynamicList[0].erase(dynamicList[0].begin() + i);
 			return;
 		}
 	}
@@ -46,16 +52,16 @@ void PhysicsManager::removeDynamic_AABB(AABB& aabb)
 
 void PhysicsManager::addRaycast(Raycast& ray)
 {
-	raycastList.push_back(&ray);
+	raycastList[0].push_back(&ray);
 }
 
 void PhysicsManager::removeRaycast(Raycast& ray)
 {
-	for (unsigned i = 0; i < raycastList.size(); i++)
+	for (unsigned i = 0; i < raycastList[0].size(); i++)
 	{
-		if (raycastList[i]->ID == ray.ID)
+		if (raycastList[0][i]->ID == ray.ID)
 		{
-			raycastList.erase(raycastList.begin() + i);
+			raycastList[0].erase(raycastList[0].begin() + i);
 			return;
 		}
 	}
@@ -64,53 +70,53 @@ void PhysicsManager::removeRaycast(Raycast& ray)
 void PhysicsManager::update(float delta)
 {
 	// Clear all list for rendering & reset colors
-	AABB_RenderList.clear();
-	raycastRenderList.clear();
+	AABB_RenderList[0].clear();
+	raycastRenderList[0].clear();
 
-	for (unsigned int i = 0; i < dynamicList.size(); i++)
+	for (unsigned int i = 0; i < dynamicList[0].size(); i++)
 	{
-		dynamicList[i]->color = Colors.BLUE;
+		dynamicList[0][i]->color = Colors.BLUE;
 	}
-	for (unsigned int i = 0; i < chunkBoxList.size(); i++)
+	for (unsigned int i = 0; i < chunkBoxList[0].size(); i++)
 	{
-		chunkBoxList[i]->color = Colors.GREEN;
-		for (unsigned int n = 0; n < chunkBoxList[i]->voxelBoxList.size(); n++)
+		chunkBoxList[0][i]->color = Colors.GREEN;
+		for (unsigned int n = 0; n < chunkBoxList[0][i]->voxelBoxList.size(); n++)
 		{
-			chunkBoxList[i]->voxelBoxList[n]->color = Colors.GREEN;
+			chunkBoxList[0][i]->voxelBoxList[n]->color = Colors.GREEN;
 		}
 	}
-	for (unsigned int i = 0; i < raycastList.size(); i++)
+	for (unsigned int i = 0; i < raycastList[0].size(); i++)
 	{
-		raycastList[i]->color = Colors.BLUE;
-		raycastList[i]->collisionPosition = glm::vec3(0.0f);
-		raycastList[i]->closestVoxel = nullptr;
-		raycastList[i]->closestVoxelsChunk = nullptr;
-		raycastList[i]->closestDynamic = nullptr;
+		raycastList[0][i]->color = Colors.BLUE;
+		raycastList[0][i]->collisionPosition = glm::vec3(0.0f);
+		raycastList[0][i]->closestVoxel = nullptr;
+		raycastList[0][i]->closestVoxelsChunk = nullptr;
+		raycastList[0][i]->closestDynamic = nullptr;
 	}
 
 	// Test dynamic physics bodys against static bodys
-	for (unsigned int i = 0; i < dynamicList.size(); i++)
+	for (unsigned int i = 0; i < dynamicList[0].size(); i++)
 	{
-		if (dynamicList[i]->enabled)
+		if (dynamicList[0][i]->enabled)
 		{
-			AABB_RenderList.push_back(dynamicList[i]);
-			for (unsigned int n = 0; n < chunkBoxList.size(); n++)
+			AABB_RenderList[0].push_back(dynamicList[0][i]);
+			for (unsigned int n = 0; n < chunkBoxList[0].size(); n++)
 			{
-				if (chunkBoxList[n]->enabled)
+				if (chunkBoxList[0][n]->enabled)
 				{
-					if (isAABB_AABB(dynamicList[i], chunkBoxList[n]))
+					if (isAABB_AABB(dynamicList[0][i], chunkBoxList[0][n]))
 					{
-						chunkBoxList[n]->color = Colors.RED;
-						AABB_RenderList.push_back(chunkBoxList[n]);
+						chunkBoxList[0][n]->color = Colors.RED;
+						AABB_RenderList[0].push_back(chunkBoxList[0][n]);
 
-						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
+						for (unsigned int m = 0; m < chunkBoxList[0][n]->voxelBoxList.size(); m++)
 						{
-							if (chunkBoxList[n]->voxelBoxList[m]->enabled)
+							if (chunkBoxList[0][n]->voxelBoxList[m]->enabled)
 							{
-								if (isAABB_AABB(dynamicList[i], chunkBoxList[n]->voxelBoxList[m]))
+								if (isAABB_AABB(dynamicList[0][i], chunkBoxList[0][n]->voxelBoxList[m]))
 								{
-									dynamicList[i]->color = Colors.RED;
-									AABB_RenderList.push_back(chunkBoxList[n]->voxelBoxList[m]);
+									dynamicList[0][i]->color = Colors.RED;
+									AABB_RenderList[0].push_back(chunkBoxList[0][n]->voxelBoxList[m]);
 								}
 							}
 						}
@@ -122,46 +128,46 @@ void PhysicsManager::update(float delta)
 
 	// Check raycast then cull for closest
 	// TODO : Add dynamic to raycast detection
-	for (unsigned int i = 0; i < raycastList.size(); i++)
+	for (unsigned int i = 0; i < raycastList[0].size(); i++)
 	{
-		if (raycastList[i]->enabled)
+		if (raycastList[0][i]->enabled)
 		{
 			float rayResult = -1.0f;
 			std::vector<AABB*> rayVoxelsIntersected;
 
-			raycastRenderList.push_back(raycastList[i]);
+			raycastRenderList[0].push_back(raycastList[0][i]);
 
-			for (unsigned int n = 0; n < chunkBoxList.size(); n++)
+			for (unsigned int n = 0; n < chunkBoxList[0].size(); n++)
 			{
-				if (chunkBoxList[n]->enabled)
+				if (chunkBoxList[0][n]->enabled)
 				{
-					rayResult = isRayAABB(raycastList[i], chunkBoxList[n]);
-					if (isPointAABB(raycastList[i]->position.x, raycastList[i]->position.y, raycastList[i]->position.z, chunkBoxList[n]))
+					rayResult = isRayAABB(raycastList[0][i], chunkBoxList[0][n]);
+					if (isPointAABB(raycastList[0][i]->position.x, raycastList[0][i]->position.y, raycastList[0][i]->position.z, chunkBoxList[0][n]))
 					{
-						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
+						for (unsigned int m = 0; m < chunkBoxList[0][n]->voxelBoxList.size(); m++)
 						{
-							if (chunkBoxList[n]->voxelBoxList[m]->enabled)
+							if (chunkBoxList[0][n]->voxelBoxList[m]->enabled)
 							{
-								rayResult = isRayAABB(raycastList[i], chunkBoxList[n]->voxelBoxList[m]);
-								if (rayResult != -1 && rayResult < raycastList[i]->length)
+								rayResult = isRayAABB(raycastList[0][i], chunkBoxList[0][n]->voxelBoxList[m]);
+								if (rayResult != -1 && rayResult < raycastList[0][i]->length)
 								{
-									raycastList[i]->color = Colors.RED;
-									rayVoxelsIntersected.push_back(chunkBoxList[n]->voxelBoxList[m]);
+									raycastList[0][i]->color = Colors.RED;
+									rayVoxelsIntersected.push_back(chunkBoxList[0][n]->voxelBoxList[m]);
 								}
 							}
 						}
 					}
-					else if (rayResult != -1 && rayResult < raycastList[i]->length)
+					else if (rayResult != -1 && rayResult < raycastList[0][i]->length)
 					{
-						for (unsigned int m = 0; m < chunkBoxList[n]->voxelBoxList.size(); m++)
+						for (unsigned int m = 0; m < chunkBoxList[0][n]->voxelBoxList.size(); m++)
 						{
-							if (chunkBoxList[n]->voxelBoxList[m]->enabled)
+							if (chunkBoxList[0][n]->voxelBoxList[m]->enabled)
 							{
-								rayResult = isRayAABB(raycastList[i], chunkBoxList[n]->voxelBoxList[m]);
-								if (rayResult != -1 && rayResult < raycastList[i]->length)
+								rayResult = isRayAABB(raycastList[0][i], chunkBoxList[0][n]->voxelBoxList[m]);
+								if (rayResult != -1 && rayResult < raycastList[0][i]->length)
 								{
-									raycastList[i]->color = Colors.RED;
-									rayVoxelsIntersected.push_back(chunkBoxList[n]->voxelBoxList[m]);
+									raycastList[0][i]->color = Colors.RED;
+									rayVoxelsIntersected.push_back(chunkBoxList[0][n]->voxelBoxList[m]);
 								}
 							}
 						}
@@ -177,11 +183,11 @@ void PhysicsManager::update(float delta)
 				if (n == 0)
 				{
 					closestVoxelToRay = rayVoxelsIntersected[0];
-					voxelDistToRay = distBetweenPoints(closestVoxelToRay->position, raycastList[i]->position);
+					voxelDistToRay = distBetweenPoints(closestVoxelToRay->position, raycastList[0][i]->position);
 				}
 				else
 				{
-					float distToCompare = distBetweenPoints(rayVoxelsIntersected[n]->position, raycastList[i]->position);
+					float distToCompare = distBetweenPoints(rayVoxelsIntersected[n]->position, raycastList[0][i]->position);
 					if (distToCompare < voxelDistToRay)
 					{
 						closestVoxelToRay = rayVoxelsIntersected[n];
@@ -192,11 +198,11 @@ void PhysicsManager::update(float delta)
 
 			if (closestVoxelToRay != nullptr)
 			{
-				raycastList[i]->closestVoxel = closestVoxelToRay;
-				raycastList[i]->closestVoxelsChunk = findVoxelsChunk(closestVoxelToRay);
-				raycastList[i]->collisionPosition = raycastList[i]->position + raycastList[i]->Direction * isRayAABB(raycastList[i], closestVoxelToRay);
+				raycastList[0][i]->closestVoxel = closestVoxelToRay;
+				raycastList[0][i]->closestVoxelsChunk = findVoxelsChunk(closestVoxelToRay);
+				raycastList[0][i]->collisionPosition = raycastList[0][i]->position + raycastList[0][i]->Direction * isRayAABB(raycastList[0][i], closestVoxelToRay);
 				closestVoxelToRay->color = Colors.RED;
-				AABB_RenderList.push_back(closestVoxelToRay);
+				AABB_RenderList[0].push_back(closestVoxelToRay);
 			}
 		}
 	}
@@ -269,11 +275,11 @@ CHUNK_AABB* PhysicsManager::findVoxelsChunk(AABB* voxel)
 	int y = (voxel->position.y + 1) / 16; // 16 <--- Chunk Size
 	int z = (voxel->position.z + 1) / 16; // 16 <--- Chunk Size
 
-	for (unsigned int i = 0; i < chunkBoxList.size(); i++)
+	for (unsigned int i = 0; i < chunkBoxList[0].size(); i++)
 	{
-		if (chunkBoxList[i]->chunkX == x && chunkBoxList[i]->chunkY == y && chunkBoxList[i]->chunkZ == z)
+		if (chunkBoxList[0][i]->chunkX == x && chunkBoxList[0][i]->chunkY == y && chunkBoxList[0][i]->chunkZ == z)
 		{
-			return chunkBoxList[i];
+			return chunkBoxList[0][i];
 		}
 	}
 }

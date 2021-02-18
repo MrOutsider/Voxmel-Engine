@@ -9,12 +9,10 @@
 
 #include <vector>
 
-#include <iostream>
-
 class ChunkManager
 {
 public:
-	ChunkManager(PhysicsManager& PM);
+	ChunkManager(PhysicsManager& physicsM, std::vector<Chunk*>& loadedChunksList);
 	~ChunkManager();
 
 	void init();
@@ -22,10 +20,11 @@ public:
 
 	void addBlock(CHUNK_AABB* chunkAABB, unsigned int blockID);
 	void removeBlock(AABB* voxelAABB);
-
-	std::vector<Chunk*> loadedChunks;
 private:
 	PhysicsManager* physicsManager;
+
+	std::vector<Chunk*>* loadedChunks;
+
 	bool pInit = false;
 
 	void generateChunk(int newX, int newY, int newZ);

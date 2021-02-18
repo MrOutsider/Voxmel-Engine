@@ -1,13 +1,14 @@
 #include "RenderManager.h"
 
-RenderManager::RenderManager(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager, PhysicsManager& newPhysicsManager)
+RenderManager::RenderManager(GLFWwindow* win, float* mouseScroll, std::vector<Chunk*>& loadedChunks, std::vector<AABB*>& aabbList, std::vector<Raycast*>& raycastList)
 {
 	window = win;
 	mouseS = mouseScroll;
-	CM = &ChunkManager;
-	init();
+	chunksToRender = &loadedChunks;
+	aabbRenderList = &aabbList;
+	raycastRenderList = &raycastList;
 
-	physicsManager = &newPhysicsManager;
+	init();
 }
 
 void RenderManager::addCamera(Camera& cam)
@@ -141,15 +142,15 @@ void RenderManager::render()
 	glm::mat4 model = glm::mat4(1.0f);
 
 	// Rendering Voxels
-	for (unsigned int i = 0; i < CM->loadedChunks.size(); i++)
+	for (unsigned int i = 0; i < chunksToRender[0].size(); i++)
 	{
 		shaders[VOXEL_SHADER].use();
 
 		// Translate the chunk to a vec3 pos * sizeOf Chunk rows
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(CM->loadedChunks[i]->x * CM->loadedChunks[i]->chunkSize * CM->loadedChunks[i]->voxelSizeHalf * 2, 0.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(0.0f, CM->loadedChunks[i]->y * CM->loadedChunks[i]->chunkSize * CM->loadedChunks[i]->voxelSizeHalf * 2, 0.0f));
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, CM->loadedChunks[i]->z * CM->loadedChunks[i]->chunkSize * CM->loadedChunks[i]->voxelSizeHalf * 2));
+		model = glm::translate(model, glm::vec3(chunksToRender[0][i]->x * chunksToRender[0][i]->chunkSize * chunksToRender[0][i]->voxelSizeHalf * 2, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, chunksToRender[0][i]->y * chunksToRender[0][i]->chunkSize * chunksToRender[0][i]->voxelSizeHalf * 2, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, chunksToRender[0][i]->z * chunksToRender[0][i]->chunkSize * chunksToRender[0][i]->voxelSizeHalf * 2));
 		
 		glm::mat4 MVP = projection * view * model;
 
@@ -159,8 +160,8 @@ void RenderManager::render()
 		glBindTexture(GL_TEXTURE_2D, chunkAlbedo);
 		shaders[VOXEL_SHADER].setInt("albedo", 0);
 
-		glBindVertexArray(CM->loadedChunks[i]->VAO);
-		glDrawArrays(GL_TRIANGLES, 0, CM->loadedChunks[i]->verticiesAmount);
+		glBindVertexArray(chunksToRender[0][i]->VAO);
+		glDrawArrays(GL_TRIANGLES, 0, chunksToRender[0][i]->verticiesAmount);
 		glBindVertexArray(0);
 		drawCalls++;
 	}
@@ -217,14 +218,14 @@ void RenderManager::render()
 	{
 		std::vector<float> listOfLines;
 
-		for (unsigned int i = 0; i < physicsManager->AABB_RenderList.size(); i++)
+		for (unsigned int i = 0; i < aabbRenderList[0].size(); i++)
 		{
-			drawBox(listOfLines, *physicsManager->AABB_RenderList[i]);
+			drawBox(listOfLines, aabbRenderList[0][i]);
 		}
 
-		for (unsigned int i = 0; i < physicsManager->raycastRenderList.size(); i++)
+		for (unsigned int i = 0; i < raycastRenderList[0].size(); i++)
 		{
-			drawRay(listOfLines, *physicsManager->raycastRenderList[i]);
+			drawRay(listOfLines, raycastRenderList[0][i]);
 		}
 
 		if (!listOfLines.empty())
@@ -278,148 +279,149 @@ void RenderManager::destroy()
 	models.clear();
 }
 
-void RenderManager::drawBox(std::vector<float>& listOfLines, AABB& box)
+void RenderManager::drawBox(std::vector<float>& listOfLines, AABB* box)
 {
-	if (box.visable)
+	if (box->visable)
 	{
-		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		// Z
+		listOfLines.push_back(box->position.x - box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y - box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z + box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x + box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y - box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z + box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x - box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y + box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z + box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);	
 
-		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x + box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y + box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z + box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x - box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y - box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z - box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x + box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y - box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z - box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x - box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y + box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z - box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x + box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y + box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z - box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
 		// X
-		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x + box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y - box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z - box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x + box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y - box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z + box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x + box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y + box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z - box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x + box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y + box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z + box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x - box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y - box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z - box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x - box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y - box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z + box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x - box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y + box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z - box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x - box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y + box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z + box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
 		// Y
-		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x - box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y + box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z - box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x - box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y - box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z - box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x + box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y + box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z - box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z - box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x + box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y - box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z - box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x - box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y + box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z + box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x - box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x - box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y - box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z + box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y + box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x + box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y + box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z + box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 
-		listOfLines.push_back(box.position.x + box.xLength * 0.5f + box.xOffset);
-		listOfLines.push_back(box.position.y - box.yLength * 0.5f + box.yOffset);
-		listOfLines.push_back(box.position.z + box.zLength * 0.5f + box.zOffset);
-		listOfLines.push_back(box.color);
+		listOfLines.push_back(box->position.x + box->xLength * 0.5f + box->xOffset);
+		listOfLines.push_back(box->position.y - box->yLength * 0.5f + box->yOffset);
+		listOfLines.push_back(box->position.z + box->zLength * 0.5f + box->zOffset);
+		listOfLines.push_back(box->color);
 	}
 }
 
-void RenderManager::drawRay(std::vector<float>& listOfLines, Raycast& ray)
+void RenderManager::drawRay(std::vector<float>& listOfLines, Raycast* ray)
 {
-	if (ray.visable)
+	if (ray->visable)
 	{
-		listOfLines.push_back(ray.position.x);
-		listOfLines.push_back(ray.position.y);
-		listOfLines.push_back(ray.position.z);
-		listOfLines.push_back(ray.color);
+		listOfLines.push_back(ray->position.x);
+		listOfLines.push_back(ray->position.y);
+		listOfLines.push_back(ray->position.z);
+		listOfLines.push_back(ray->color);
 
-		glm::vec3 endPos = glm::vec3(ray.position + ray.Direction * (float)ray.length);
+		glm::vec3 endPos = glm::vec3(ray->position + ray->Direction * (float)ray->length);
 
 		listOfLines.push_back(endPos.x);
 		listOfLines.push_back(endPos.y);
 		listOfLines.push_back(endPos.z);
-		listOfLines.push_back(ray.color);
+		listOfLines.push_back(ray->color);
 	}
 }

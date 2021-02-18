@@ -24,7 +24,7 @@ class RenderManager
 public:
 	unsigned int drawCalls = 0;
 
-	RenderManager(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager, PhysicsManager& newPhysicsManager);
+	RenderManager(GLFWwindow* win, float* mouseScroll, std::vector<Chunk*>& loadedChunks, std::vector<AABB*>& aabbList, std::vector<Raycast*>& raycastList);
 
 	void addCamera(Camera& cam);
 
@@ -54,10 +54,11 @@ private:
 
 	std::vector<Entity*> models; // Temp untill EntityManager has own list
 
-	ChunkManager* CM;
+	std::vector<Chunk*>* chunksToRender;
 	GLuint chunkAlbedo;
 
-	PhysicsManager* physicsManager;
+	std::vector<AABB*>* aabbRenderList;
+	std::vector<Raycast*>* raycastRenderList;
 
 	void init();
 	void compileShaders();
@@ -69,8 +70,8 @@ private:
 	bool renderPhysics = true;
 	GLuint PhysicsVAO;
 	GLuint PhysicsVBO;
-	void drawBox(std::vector<float>& listOfLines, AABB& box);
-	void drawRay(std::vector<float>& listOfLines, Raycast& ray);
+	void drawBox(std::vector<float>& listOfLines, AABB* box);
+	void drawRay(std::vector<float>& listOfLines, Raycast* ray);
 	//------------------------------------------------------------------
 };
 
