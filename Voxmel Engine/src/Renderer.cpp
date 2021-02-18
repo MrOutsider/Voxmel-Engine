@@ -1,13 +1,13 @@
 #include "Renderer.h"
 
-Renderer::Renderer(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager, /*TMP*/ PhysicsManager& pm)
+Renderer::Renderer(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager, PhysicsManager& newPhysicsManager)
 {
 	window = win;
 	mouseS = mouseScroll;
 	CM = &ChunkManager;
 	init();
 
-	physicsManager = &pm;
+	physicsManager = &newPhysicsManager;
 }
 
 void Renderer::addCamera(Camera& cam)

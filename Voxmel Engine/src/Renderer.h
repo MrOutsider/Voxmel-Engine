@@ -24,7 +24,7 @@ class Renderer
 public:
 	unsigned int drawCalls = 0;
 
-	Renderer(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager, /*TMP*/ PhysicsManager& pm);
+	Renderer(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager, PhysicsManager& newPhysicsManager);
 
 	void addCamera(Camera& cam);
 
@@ -52,7 +52,7 @@ private:
 	const float FOV = 45.0f;
 	float fov = FOV;
 
-	std::vector<Entity*> models;
+	std::vector<Entity*> models; // Temp untill EntityManager has own list
 
 	ChunkManager* CM;
 	GLuint chunkAlbedo;
