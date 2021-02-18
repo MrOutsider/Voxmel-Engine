@@ -38,8 +38,22 @@ float mousePos[4] = {
 
 float mouseScroll = 0.0f;
 
+// Global Variables
+struct GLOBAL_VARIABLES
+{
+	WindowManager* window = nullptr;
+	// InputManager
+	Renderer* renderManager = nullptr;
+	PhysicsManager* physicsManager = nullptr;
+	// UI_Manager
+	// EntityManager
+	ChunkManager* chunkManager = nullptr;
+};
+
 int main()
 {
+	GLOBAL_VARIABLES VoxMel_Vars;
+
 	WindowManager window(WINDOW_WIDTH, WINDOW_HEIGHT, winTitle);
 	window.captureMouse();
 
