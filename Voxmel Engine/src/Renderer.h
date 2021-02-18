@@ -64,14 +64,14 @@ private:
 	void loadModel(Entity& entity);
 	void loadTexture(const char* textureName, GLuint& target);
 
-	//---------------------------------
+	//------------------------------------------------------------------
 	// DEBUG
 	bool renderPhysics = true;
 	GLuint PhysicsVAO;
 	GLuint PhysicsVBO;
 	void drawBox(std::vector<float>& listOfLines, AABB& box);
 	void drawRay(std::vector<float>& listOfLines, Raycast& ray);
-	//---------------------------------
+	//------------------------------------------------------------------
 };
 
 #endif // !RENDERER_H

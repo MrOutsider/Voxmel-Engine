@@ -43,21 +43,25 @@ int main()
 	WindowManager window(WINDOW_WIDTH, WINDOW_HEIGHT, winTitle);
 	window.captureMouse();
 
-	// InputManager(window.getWindow());
+	// InputManager(WindowManager);
 
 	PhysicsManager physicsManager;
 
 	ChunkManager chunkManager(physicsManager);
 	chunkManager.init();
 
+	//------------------------------------------------------
+	// Temp while no InputManager
 	float* mouse_ptr = mousePos;
 	Camera camera(window.get_window(), mouse_ptr);
+	//------------------------------------------------------
 	
-	// EntityManager(ChunkManager, PhysicsManager, Camera player)
+	// EntityManager(InputManager, ChunkManager, PhysicsManager)
 
-	// PlayerController(InputManager, EntityManager.player)
+	// UI_Manager()
 
-	Renderer renderer(window.get_window(), &mouseScroll, chunkManager, physicsManager);
+	// V set to WindowManager not just window*
+	Renderer renderer(window.get_window(), &mouseScroll, chunkManager, physicsManager); // EntityManager, UI_Manager
 	renderer.addCamera(camera);
 	bool cameraSet = false;
 
