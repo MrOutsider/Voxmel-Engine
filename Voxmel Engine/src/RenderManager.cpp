@@ -1,6 +1,6 @@
-#include "Renderer.h"
+#include "RenderManager.h"
 
-Renderer::Renderer(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager, PhysicsManager& newPhysicsManager)
+RenderManager::RenderManager(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager, PhysicsManager& newPhysicsManager)
 {
 	window = win;
 	mouseS = mouseScroll;
@@ -10,17 +10,17 @@ Renderer::Renderer(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManag
 	physicsManager = &newPhysicsManager;
 }
 
-void Renderer::addCamera(Camera& cam)
+void RenderManager::addCamera(Camera& cam)
 {
 	camera = &cam;
 }
 
-void Renderer::addEntity(Entity& entity)
+void RenderManager::addEntity(Entity& entity)
 {
 	models.push_back(&entity);
 }
 
-void Renderer::removeEntity(Entity& entity)
+void RenderManager::removeEntity(Entity& entity)
 {
 	for (unsigned int i = 0; i < models.size(); i++)
 	{
@@ -31,13 +31,13 @@ void Renderer::removeEntity(Entity& entity)
 	}
 }
 
-void Renderer::loadEntityBuffers(Entity& entity)
+void RenderManager::loadEntityBuffers(Entity& entity)
 {
 	loadModel(entity);
 	loadTexture(entity.albedoPath, entity.albedo);
 }
 
-void Renderer::eraseEntityBuffers(Entity& entity)
+void RenderManager::eraseEntityBuffers(Entity& entity)
 {
 	glDeleteVertexArrays(1, &entity.VAO);
 	glDeleteVertexArrays(1, &entity.VBO);
@@ -46,7 +46,7 @@ void Renderer::eraseEntityBuffers(Entity& entity)
 	entity.indices.clear();
 }
 
-void Renderer::init()
+void RenderManager::init()
 {
 	compileShaders();
 	loadTexture("res/textures/block_atlas.png", chunkAlbedo);
@@ -55,7 +55,7 @@ void Renderer::init()
 	glGenBuffers(1, &PhysicsVBO);
 }
 
-void Renderer::compileShaders()
+void RenderManager::compileShaders()
 {
 	// 0
 	Shader physicsShader;
@@ -73,14 +73,14 @@ void Renderer::compileShaders()
 	shaders.back().create("res/shaders/entity.vs", "res/shaders/entity.fs");
 }
 
-void Renderer::loadModel(Entity& entity)
+void RenderManager::loadModel(Entity& entity)
 {
 	MeshLoader meshData;
 	meshData.loadMesh(entity.modelPath);
 	meshData.OpenGLBufferLoading(entity.VAO, entity.VBO, entity.EBO, entity.indices);
 }
 
-void Renderer::loadTexture(const char* textureName, GLuint& texture)
+void RenderManager::loadTexture(const char* textureName, GLuint& texture)
 {
 	// Texture load and binding
 	glGenTextures(1, &texture);
@@ -109,7 +109,7 @@ void Renderer::loadTexture(const char* textureName, GLuint& texture)
 	stbi_image_free(textureData);
 }
 
-void Renderer::render()
+void RenderManager::render()
 {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
@@ -256,7 +256,7 @@ void Renderer::render()
 	glfwSwapBuffers(window);
 }
 
-void Renderer::destroy()
+void RenderManager::destroy()
 {
 	for (unsigned int i = 0; i < shaders.size(); i++)
 	{
@@ -278,7 +278,7 @@ void Renderer::destroy()
 	models.clear();
 }
 
-void Renderer::drawBox(std::vector<float>& listOfLines, AABB& box)
+void RenderManager::drawBox(std::vector<float>& listOfLines, AABB& box)
 {
 	if (box.visable)
 	{
@@ -406,7 +406,7 @@ void Renderer::drawBox(std::vector<float>& listOfLines, AABB& box)
 	}
 }
 
-void Renderer::drawRay(std::vector<float>& listOfLines, Raycast& ray)
+void RenderManager::drawRay(std::vector<float>& listOfLines, Raycast& ray)
 {
 	if (ray.visable)
 	{

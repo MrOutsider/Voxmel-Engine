@@ -2,9 +2,9 @@
 #include <GLFW/glfw3.h>
 
 #include "WindowManager.h"
-#include "ChunkManager.h"
+#include "RenderManager.h"
 #include "PhysicsManager.h"
-#include "Renderer.h"
+#include "ChunkManager.h"
 
 #include "Camera.h"
 #include "Entity.h"
@@ -43,7 +43,7 @@ struct GLOBAL_VARIABLES
 {
 	WindowManager* window = nullptr;
 	// InputManager
-	Renderer* renderManager = nullptr;
+	RenderManager* renderManager = nullptr;
 	PhysicsManager* physicsManager = nullptr;
 	// UI_Manager
 	// EntityManager
@@ -75,7 +75,7 @@ int main()
 	// UI_Manager()
 
 	// V set to WindowManager not just window*
-	Renderer renderer(window.get_window(), &mouseScroll, chunkManager, physicsManager); // EntityManager, UI_Manager
+	RenderManager renderer(window.get_window(), &mouseScroll, chunkManager, physicsManager); // EntityManager, UI_Manager
 	renderer.addCamera(camera);
 	bool cameraSet = false;
 

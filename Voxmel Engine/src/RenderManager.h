@@ -1,5 +1,5 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#ifndef RENDER_MANAGER_H
+#define RENDER_MANAGER_H
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -19,12 +19,12 @@
 #include <string>
 #include <vector>
 
-class Renderer
+class RenderManager
 {
 public:
 	unsigned int drawCalls = 0;
 
-	Renderer(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager, PhysicsManager& newPhysicsManager);
+	RenderManager(GLFWwindow* win, float* mouseScroll, ChunkManager& ChunkManager, PhysicsManager& newPhysicsManager);
 
 	void addCamera(Camera& cam);
 
@@ -74,5 +74,5 @@ private:
 	//------------------------------------------------------------------
 };
 
-#endif // !RENDERER_H
+#endif // !RENDER_MANAGER_H
 
