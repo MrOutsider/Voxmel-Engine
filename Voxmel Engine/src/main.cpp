@@ -64,7 +64,7 @@ int main()
 	Camera camera(windowManager.get_window(), mouse_ptr);
 	//------------------------------------------------------
 
-	RenderManager renderer(windowManager.get_window(), &mouseScroll /*FOV will be on cam on player*/, globalList.loadedChunks, globalList.aabbRenderList, globalList.raycastRenderList);
+	RenderManager renderer(windowManager.get_window(), globalList.loadedChunks, globalList.aabbRenderList, globalList.raycastRenderList);
 	renderer.addCamera(camera);
 	bool cameraSet = false;
 

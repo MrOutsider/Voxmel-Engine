@@ -24,7 +24,7 @@ class RenderManager
 public:
 	unsigned int drawCalls = 0;
 
-	RenderManager(GLFWwindow* win, float* mouseScroll, std::vector<Chunk*>& loadedChunks, std::vector<AABB*>& aabbList, std::vector<Raycast*>& raycastList);
+	RenderManager(GLFWwindow* win, std::vector<Chunk*>& loadedChunks, std::vector<AABB*>& aabbList, std::vector<Raycast*>& raycastList);
 
 	void addCamera(Camera& cam);
 
@@ -47,10 +47,6 @@ private:
 
 	GLFWwindow* window;
 	Camera* camera;
-	float* mouseS;
-
-	const float FOV = 45.0f;
-	float fov = FOV;
 
 	std::vector<Entity*> models; // Temp untill EntityManager has own list
 

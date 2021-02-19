@@ -1,9 +1,8 @@
 #include "RenderManager.h"
 
-RenderManager::RenderManager(GLFWwindow* win, float* mouseScroll, std::vector<Chunk*>& loadedChunks, std::vector<AABB*>& aabbList, std::vector<Raycast*>& raycastList)
+RenderManager::RenderManager(GLFWwindow* win, std::vector<Chunk*>& loadedChunks, std::vector<AABB*>& aabbList, std::vector<Raycast*>& raycastList)
 {
 	window = win;
-	mouseS = mouseScroll;
 	chunksToRender = &loadedChunks;
 	aabbRenderList = &aabbList;
 	raycastRenderList = &raycastList;
@@ -132,12 +131,7 @@ void RenderManager::render()
 	glfwGetWindowSize(window, &width, &height);
 
 	glm::mat4 projection = glm::mat4(1.0f);
-	fov -= *mouseS;
-	if (fov < 20.0f)
-		fov = 20.0f;
-	if (fov > 45.0f)
-		fov = 45.0f;
-	projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.01f, 1000.0f);
+	projection = glm::perspective(glm::radians(camera->fov), (float)width / (float)height, 0.01f, 1000.0f);
 
 	glm::mat4 model = glm::mat4(1.0f);
 

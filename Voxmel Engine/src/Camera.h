@@ -22,6 +22,8 @@ public:
 	glm::vec3 cameraForward = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 cameraSide = glm::vec3(1.0f, 0.0f, 0.0f);
 
+	float fov = 45.0f;
+
 	Camera(GLFWwindow* win, float* mousePos);
 
 	void update(float delta);
