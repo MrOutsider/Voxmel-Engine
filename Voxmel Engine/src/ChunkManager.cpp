@@ -13,11 +13,11 @@ ChunkManager::~ChunkManager()
 void ChunkManager::init()
 {
 
-	for (int x = 0; x < 3; x++)
+	for (int x = 0; x < 16; x++)
 	{
 		for (int y = 0; y < 2; y++)
 		{
-			for (int z = 0; z < 3; z++)
+			for (int z = 0; z < 16; z++)
 			{
 				generateChunk(x, y, z);
 			}
@@ -65,33 +65,23 @@ void ChunkManager::generateChunk(int newX, int newY, int newZ)
 				loadedChunks[0].back()->chunkVoxels[i].blockID = 0;
 				loadedChunks[0].back()->chunkVoxels[i].aabb.voxelID = physicsManager->assignID();
 				loadedChunks[0].back()->chunkVoxels[i].aabb.typeOfContainer = loadedChunks[0].back()->chunkVoxels[i].aabb.VOXEL;
+				loadedChunks[0].back()->chunkVoxels[i].aabb.position.x = loadedChunks[0].back()->chunkVoxels[i].x + loadedChunks[0].back()->x * loadedChunks[0].back()->chunkSize;
+				loadedChunks[0].back()->chunkVoxels[i].aabb.position.y = loadedChunks[0].back()->chunkVoxels[i].y + loadedChunks[0].back()->y * loadedChunks[0].back()->chunkSize;
+				loadedChunks[0].back()->chunkVoxels[i].aabb.position.z = loadedChunks[0].back()->chunkVoxels[i].z + loadedChunks[0].back()->z * loadedChunks[0].back()->chunkSize;
+
+				if (loadedChunks[0].back()->chunkVoxels[i].aabb.position.y == 0.0f)
+				{
+					loadedChunks[0].back()->chunkVoxels[i].blockID = 1;
+				}
+				else if (loadedChunks[0].back()->chunkVoxels[i].aabb.position.y == 15.0f)
+				{
+					loadedChunks[0].back()->chunkVoxels[i].blockID = 1;
+				}
+
 				i++;
 			}
 		}
 	}
-
-	for (int x = 0; x < 3; x++)
-	{
-		for (int y = 0; y < 3; y++)
-		{
-			for (int z = 0; z < 3; z++)
-			{
-				loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), x + loadedChunks[0].back()->chunkSize * 0.5f, y + loadedChunks[0].back()->chunkSize * 0.5f, z + loadedChunks[0].back()->chunkSize * 0.5f)].blockID = 1;
-			}
-		}
-	}
-
-	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 9, 8, 9)].blockID = 0;
-	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 9, 9, 9)].blockID = 0;
-	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 9, 10, 9)].blockID = 0;
-	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 8, 9, 9)].blockID = 0;
-	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 10, 9, 9)].blockID = 0;
-	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 9, 9, 8)].blockID = 0;
-	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 9, 9, 10)].blockID = 0;
-
-	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 0, 9, 9)].blockID = 2;
-	loadedChunks[0].back()->chunkVoxels[getVoxelLoc(loadedChunks[0].back(), 1, 9, 9)].blockID = 2;
-
 	setVoxelsByID(loadedChunks[0].back());
 }
 
