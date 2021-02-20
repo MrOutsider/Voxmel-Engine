@@ -115,7 +115,7 @@ int main()
 
 	Raycast cameraRay;
 	cameraRay.ID = physicsManager.assignID();
-	cameraRay.visable = true;
+	cameraRay.visable = false;
 	cameraRay.length = 10;
 	physicsManager.addRaycast(cameraRay);
 

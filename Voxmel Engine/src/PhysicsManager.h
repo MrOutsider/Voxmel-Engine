@@ -91,7 +91,7 @@ public:
 	unsigned int assignID();
 
 	void addChunk_AABB(CHUNK_AABB& chunk);
-	void removeDynamic_AABB(CHUNK_AABB& chunk);
+	void removeChunk_AABB(CHUNK_AABB& chunk);
 
 	void addDynamic_AABB(AABB& aabb);
 	void removeDynamic_AABB(AABB& aabb);

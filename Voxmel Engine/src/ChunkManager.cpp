@@ -35,7 +35,12 @@ void ChunkManager::init()
 		{
 			loadedChunks[0][i]->chunkAABB.voxelBoxList.push_back(&loadedChunks[0][i]->chunkVoxels[n].aabb);
 		}
-		physicsManager->addChunk_AABB(loadedChunks[0][i]->chunkAABB);
+		//physicsManager->addChunk_AABB(loadedChunks[0][i]->chunkAABB);
+
+		if (loadedChunks[0][i]->x < 3 && loadedChunks[0][i]->z < 3)
+		{
+			physicsManager->addChunk_AABB(loadedChunks[0][i]->chunkAABB);
+		}
 	}
 }
 

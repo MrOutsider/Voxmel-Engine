@@ -21,7 +21,7 @@ void PhysicsManager::addChunk_AABB(CHUNK_AABB& chunk)
 	chunkBoxList[0].push_back(&chunk);
 }
 
-void PhysicsManager::removeDynamic_AABB(CHUNK_AABB& chunk)
+void PhysicsManager::removeChunk_AABB(CHUNK_AABB& chunk)
 {
 	for (unsigned i = 0; i < chunkBoxList[0].size(); i++)
 	{
@@ -93,6 +93,15 @@ void PhysicsManager::update(float delta)
 		raycastList[0][i]->closestVoxelsChunk = nullptr;
 		raycastList[0][i]->closestDynamic = nullptr;
 	}
+
+	//-------------------------------------------------------------------------
+	// Temp
+	for (unsigned int i = 0; i < chunkBoxList[0].size(); i++)
+	{
+		chunkBoxList[0][i]->color = Colors.BLUE;
+		AABB_RenderList->push_back(chunkBoxList[0][i]);
+	}
+	//-------------------------------------------------------------------------
 
 	// Test dynamic physics bodys against static bodys
 	for (unsigned int i = 0; i < dynamicList[0].size(); i++)
