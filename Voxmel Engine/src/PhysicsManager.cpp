@@ -203,6 +203,8 @@ void PhysicsManager::update(float delta)
 				raycastList[0][i]->collisionPosition = raycastList[0][i]->position + raycastList[0][i]->Direction * isRayAABB(raycastList[0][i], closestVoxelToRay);
 				closestVoxelToRay->color = Colors.RED;
 				AABB_RenderList[0].push_back(closestVoxelToRay);
+				raycastList[0][i]->closestVoxelsChunk->color = Colors.GREEN;
+				AABB_RenderList[0].push_back(raycastList[0][i]->closestVoxelsChunk);
 			}
 		}
 	}
@@ -271,9 +273,9 @@ float PhysicsManager::distBetweenPoints(glm::vec3& positionOne, glm::vec3& posit
 
 CHUNK_AABB* PhysicsManager::findVoxelsChunk(AABB* voxel)
 {
-	int x = (voxel->position.x + 1) / 16; // 16 <--- Chunk Size
-	int y = (voxel->position.y + 1) / 16; // 16 <--- Chunk Size
-	int z = (voxel->position.z + 1) / 16; // 16 <--- Chunk Size
+	int x = (voxel->position.x) / 16; // 16 <--- Chunk Size
+	int y = (voxel->position.y) / 16; // 16 <--- Chunk Size
+	int z = (voxel->position.z) / 16; // 16 <--- Chunk Size
 
 	for (unsigned int i = 0; i < chunkBoxList[0].size(); i++)
 	{

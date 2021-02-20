@@ -673,19 +673,15 @@ int ChunkManager::getVoxelLoc(Chunk* chunk, int x, int y, int z)
 
 void ChunkManager::removeBlock(AABB* voxelAABB)
 {
-	int x, y, z;
-
-	x = voxelAABB->position.x;
-	x = x % (loadedChunks[0][0]->chunkSize);
-
-	y = voxelAABB->position.y;
-	y = y % (loadedChunks[0][0]->chunkSize);
-
-	z = voxelAABB->position.z;
-	z = z % (loadedChunks[0][0]->chunkSize);
-
 	Chunk* tmpChunk = nullptr;
 	tmpChunk = findVoxelsChunk(voxelAABB);
+
+	int x = voxelAABB->position.x - (tmpChunk->x * tmpChunk->chunkSize);
+
+	int y = voxelAABB->position.y - (tmpChunk->y * tmpChunk->chunkSize);
+
+	int z = voxelAABB->position.z - (tmpChunk->z * tmpChunk->chunkSize);
+
 	if (tmpChunk != nullptr)
 	{
 		int voxelLoc = getVoxelLoc(tmpChunk, x, y, z);
@@ -789,9 +785,9 @@ void ChunkManager::setVoxelsByID(Chunk* chunk)
 
 Chunk* ChunkManager::findVoxelsChunk(AABB* voxel)
 {
-	int x = (voxel->position.x + 1) / 16; // 16 <--- Chunk Size
-	int y = (voxel->position.y + 1) / 16; // 16 <--- Chunk Size
-	int z = (voxel->position.z + 1) / 16; // 16 <--- Chunk Size
+	int x = (voxel->position.x) / 16; // 16 <--- Chunk Size
+	int y = (voxel->position.y) / 16; // 16 <--- Chunk Size
+	int z = (voxel->position.z) / 16; // 16 <--- Chunk Size
 
 	for (unsigned int i = 0; i < loadedChunks[0].size(); i++)
 	{

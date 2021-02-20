@@ -9,6 +9,8 @@
 
 #include <vector>
 
+#include <iostream>
+
 class ChunkManager
 {
 public:
