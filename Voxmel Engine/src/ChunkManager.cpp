@@ -1,9 +1,9 @@
 #include "ChunkManager.h"
 
-ChunkManager::ChunkManager(PhysicsManager& physicsM, std::vector<Chunk*>& loadedChunksList)
+ChunkManager::ChunkManager(PhysicsManager& physicsM, std::vector<Chunk*>* loadedChunksList)
 {
 	physicsManager = &physicsM;
-	loadedChunks = &loadedChunksList;
+	loadedChunks = loadedChunksList;
 }
 
 ChunkManager::~ChunkManager()
@@ -31,11 +31,24 @@ void ChunkManager::init()
 
 	for (unsigned int i = 0; i < loadedChunks[0].size(); i++)
 	{
+		unsigned int voxelsToCheck = 0;
+
 		for (unsigned int n = 0; n < loadedChunks[0][i]->chunkSize * loadedChunks[0][i]->chunkSize * loadedChunks[0][i]->chunkSize; n++)
 		{
 			loadedChunks[0][i]->chunkAABB.voxelBoxList.push_back(&loadedChunks[0][i]->chunkVoxels[n].aabb);
+			if (loadedChunks[0][i]->chunkAABB.voxelBoxList[n]->enabled == false)
+			{
+				voxelsToCheck++;
+			}
 		}
-		physicsManager->addChunk_AABB(loadedChunks[0][i]->chunkAABB);
+		if (voxelsToCheck != loadedChunks[0][i]->chunkSize * loadedChunks[0][i]->chunkSize * loadedChunks[0][i]->chunkSize)
+		{
+			physicsManager->addChunk_AABB(loadedChunks[0][i]->chunkAABB);
+		}
+		else
+		{
+			loadedChunks[0][i]->chunkAABB.enabled = false;
+		}
 	}
 }
 
@@ -70,10 +83,6 @@ void ChunkManager::generateChunk(int newX, int newY, int newZ)
 				loadedChunks[0].back()->chunkVoxels[i].aabb.position.z = loadedChunks[0].back()->chunkVoxels[i].z + loadedChunks[0].back()->z * loadedChunks[0].back()->chunkSize;
 
 				if (loadedChunks[0].back()->chunkVoxels[i].aabb.position.y == 0.0f)
-				{
-					loadedChunks[0].back()->chunkVoxels[i].blockID = 1;
-				}
-				else if (loadedChunks[0].back()->chunkVoxels[i].aabb.position.y == 15.0f)
 				{
 					loadedChunks[0].back()->chunkVoxels[i].blockID = 1;
 				}

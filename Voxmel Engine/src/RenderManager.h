@@ -24,7 +24,7 @@ class RenderManager
 public:
 	unsigned int drawCalls = 0;
 
-	RenderManager(GLFWwindow* win, std::vector<Chunk*>& loadedChunks, std::vector<AABB*>& aabbList, std::vector<Raycast*>& raycastList);
+	RenderManager(GLFWwindow* win, std::vector<Chunk*>* loadedChunks, std::vector<AABB*>* aabbList, std::vector<Raycast*>* raycastList);
 
 	void addCamera(Camera& cam);
 
@@ -39,9 +39,19 @@ public:
 	void render();
 	void destroy();
 private:
-	const int PHYSICS_SHADER = 0;
-	const int VOXEL_SHADER = 1;
-	const int ENTITY_SHADER = 2;
+	const int SCREEN_SHADER = 0;
+	const int PHYSICS_SHADER = 1;
+	const int VOXEL_SHADER = 2;
+	const int ENTITY_SHADER = 3;
+
+	GLuint framebuffer;
+	GLuint framebufferWidth = 1920;
+	GLuint framebufferHeight = 1080;
+	GLuint texColorBuffer;
+	GLuint rbo;
+
+	GLuint quadVAO;
+	GLuint quadVBO;
 
 	std::vector<Shader> shaders;
 

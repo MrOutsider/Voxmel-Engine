@@ -86,7 +86,7 @@ class PhysicsManager
 public:
 	Colors Colors;
 
-	PhysicsManager(std::vector<AABB*>& dynamicB, std::vector<CHUNK_AABB*>& staticChunkB, std::vector<Raycast*>& rays, std::vector<AABB*>& aabbRenderL, std::vector<Raycast*>& raycastRenderL);
+	PhysicsManager(std::vector<AABB*>* dynamicB, std::vector<CHUNK_AABB*>* staticChunkB, std::vector<Raycast*>* rays, std::vector<AABB*>* aabbRenderL, std::vector<Raycast*>* raycastRenderL);
 
 	unsigned int assignID();
 

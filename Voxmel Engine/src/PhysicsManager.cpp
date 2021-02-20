@@ -1,13 +1,13 @@
 #include "PhysicsManager.h"
 
-PhysicsManager::PhysicsManager(std::vector<AABB*>& dynamicB, std::vector<CHUNK_AABB*>& staticChunkB, std::vector<Raycast*>& rays, std::vector<AABB*>& aabbRenderL, std::vector<Raycast*>& raycastRenderL)
+PhysicsManager::PhysicsManager(std::vector<AABB*>* dynamicB, std::vector<CHUNK_AABB*>* staticChunkB, std::vector<Raycast*>* rays, std::vector<AABB*>* aabbRenderL, std::vector<Raycast*>* raycastRenderL)
 {
-	dynamicList = &dynamicB;
-	chunkBoxList = &staticChunkB;
-	raycastList = &rays;
+	dynamicList = dynamicB;
+	chunkBoxList = staticChunkB;
+	raycastList = rays;
 
-	AABB_RenderList = &aabbRenderL;
-	raycastRenderList = &raycastRenderL;
+	AABB_RenderList = aabbRenderL;
+	raycastRenderList = raycastRenderL;
 }
 
 unsigned int PhysicsManager::assignID()
@@ -94,15 +94,6 @@ void PhysicsManager::update(float delta)
 		raycastList[0][i]->closestDynamic = nullptr;
 	}
 
-	//-------------------------------------------------------------------------
-	// Temp
-	for (unsigned int i = 0; i < chunkBoxList[0].size(); i++)
-	{
-		chunkBoxList[0][i]->color = Colors.BLUE;
-		AABB_RenderList->push_back(chunkBoxList[0][i]);
-	}
-	//-------------------------------------------------------------------------
-
 	// Test dynamic physics bodys against static bodys
 	for (unsigned int i = 0; i < dynamicList[0].size(); i++)
 	{
@@ -162,6 +153,7 @@ void PhysicsManager::update(float delta)
 								{
 									raycastList[0][i]->color = Colors.RED;
 									rayVoxelsIntersected.push_back(chunkBoxList[0][n]->voxelBoxList[m]);
+									break;
 								}
 							}
 						}
