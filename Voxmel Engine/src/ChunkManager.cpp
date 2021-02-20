@@ -673,13 +673,15 @@ int ChunkManager::getVoxelLoc(Chunk* chunk, int x, int y, int z)
 
 void ChunkManager::removeBlock(AABB* voxelAABB)
 {
-	int x = voxelAABB->position.x;
+	int x, y, z;
+
+	x = voxelAABB->position.x;
 	x = x % (loadedChunks[0][0]->chunkSize);
 
-	int y = voxelAABB->position.y;
+	y = voxelAABB->position.y;
 	y = y % (loadedChunks[0][0]->chunkSize);
 
-	int z = voxelAABB->position.z;
+	z = voxelAABB->position.z;
 	z = z % (loadedChunks[0][0]->chunkSize);
 
 	Chunk* tmpChunk = nullptr;
