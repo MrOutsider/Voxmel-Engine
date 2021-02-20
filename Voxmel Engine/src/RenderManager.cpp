@@ -317,6 +317,7 @@ void RenderManager::render()
 	}
 
 	glViewport(0, 0, windowWidth, windowHeight);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
