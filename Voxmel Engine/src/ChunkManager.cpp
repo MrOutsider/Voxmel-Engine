@@ -13,11 +13,11 @@ ChunkManager::~ChunkManager()
 void ChunkManager::init()
 {
 
-	for (int x = 0; x < 16; x++)
+	for (int x = 0; x < 3; x++)
 	{
 		for (int y = 0; y < 2; y++)
 		{
-			for (int z = 0; z < 16; z++)
+			for (int z = 0; z < 3; z++)
 			{
 				generateChunk(x, y, z);
 			}
@@ -35,12 +35,7 @@ void ChunkManager::init()
 		{
 			loadedChunks[0][i]->chunkAABB.voxelBoxList.push_back(&loadedChunks[0][i]->chunkVoxels[n].aabb);
 		}
-		//physicsManager->addChunk_AABB(loadedChunks[0][i]->chunkAABB);
-
-		if (loadedChunks[0][i]->x < 3 && loadedChunks[0][i]->z < 3)
-		{
-			physicsManager->addChunk_AABB(loadedChunks[0][i]->chunkAABB);
-		}
+		physicsManager->addChunk_AABB(loadedChunks[0][i]->chunkAABB);
 	}
 }
 
@@ -687,12 +682,95 @@ void ChunkManager::removeBlock(AABB* voxelAABB)
 
 	int z = voxelAABB->position.z - (tmpChunk->z * tmpChunk->chunkSize);
 
+	//std::cout << "X: " << x << " | " << "Y: " << y << " | " << "Z: " << z << std::endl;
+
 	if (tmpChunk != nullptr)
 	{
 		int voxelLoc = getVoxelLoc(tmpChunk, x, y, z);
 		tmpChunk->chunkVoxels[voxelLoc].blockID = 0;
 		setVoxelsByID(tmpChunk);
 		generateMesh(tmpChunk);
+
+		if (x == 15)
+		{
+			Chunk* sidechunk = nullptr;
+			for (unsigned int i = 0; i < loadedChunks[0].size(); i++)
+			{
+				if (tmpChunk->x + 1 == loadedChunks[0][i]->x && tmpChunk->y == loadedChunks[0][i]->y && tmpChunk->z == loadedChunks[0][i]->z)
+				{
+					sidechunk = loadedChunks[0][i];
+					generateMesh(sidechunk);
+					break;
+				}
+			}
+		}
+		else if (x == 0)
+		{
+			Chunk* sidechunk = nullptr;
+			for (unsigned int i = 0; i < loadedChunks[0].size(); i++)
+			{
+				if (tmpChunk->x - 1 == loadedChunks[0][i]->x && tmpChunk->y == loadedChunks[0][i]->y && tmpChunk->z == loadedChunks[0][i]->z)
+				{
+					sidechunk = loadedChunks[0][i];
+					generateMesh(sidechunk);
+					break;
+				}
+			}
+		}
+
+		if (y == 15)
+		{
+			Chunk* sidechunk = nullptr;
+			for (unsigned int i = 0; i < loadedChunks[0].size(); i++)
+			{
+				if (tmpChunk->x == loadedChunks[0][i]->x && tmpChunk->y + 1 == loadedChunks[0][i]->y && tmpChunk->z == loadedChunks[0][i]->z)
+				{
+					sidechunk = loadedChunks[0][i];
+					generateMesh(sidechunk);
+					break;
+				}
+			}
+		}
+		else if (y == 0)
+		{
+			Chunk* sidechunk = nullptr;
+			for (unsigned int i = 0; i < loadedChunks[0].size(); i++)
+			{
+				if (tmpChunk->x == loadedChunks[0][i]->x && tmpChunk->y - 1 == loadedChunks[0][i]->y && tmpChunk->z == loadedChunks[0][i]->z)
+				{
+					sidechunk = loadedChunks[0][i];
+					generateMesh(sidechunk);
+					break;
+				}
+			}
+		}
+
+		if (z == 15)
+		{
+			Chunk* sidechunk = nullptr;
+			for (unsigned int i = 0; i < loadedChunks[0].size(); i++)
+			{
+				if (tmpChunk->x == loadedChunks[0][i]->x && tmpChunk->y == loadedChunks[0][i]->y && tmpChunk->z + 1 == loadedChunks[0][i]->z)
+				{
+					sidechunk = loadedChunks[0][i];
+					generateMesh(sidechunk);
+					break;
+				}
+			}
+		}
+		else if (z == 0)
+		{
+			Chunk* sidechunk = nullptr;
+			for (unsigned int i = 0; i < loadedChunks[0].size(); i++)
+			{
+				if (tmpChunk->x == loadedChunks[0][i]->x && tmpChunk->y == loadedChunks[0][i]->y && tmpChunk->z - 1 == loadedChunks[0][i]->z)
+				{
+					sidechunk = loadedChunks[0][i];
+					generateMesh(sidechunk);
+					break;
+				}
+			}
+		}
 	}
 }
 
