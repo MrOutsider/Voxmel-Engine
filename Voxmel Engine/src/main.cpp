@@ -64,13 +64,13 @@ int main()
 	Camera camera(windowManager.get_window(), mouse_ptr);
 	//------------------------------------------------------
 
-	RenderManager renderer(windowManager.get_window(), globalList.loadedChunks, globalList.aabbRenderList, globalList.raycastRenderList);
+	RenderManager renderer(windowManager.get_window(), &globalList.loadedChunks, &globalList.aabbRenderList, &globalList.raycastRenderList);
 	renderer.addCamera(camera);
 	bool cameraSet = false;
 
-	PhysicsManager physicsManager(globalList.dynamicBodies, globalList.staticChunkBodies, globalList.raycasts, globalList.aabbRenderList, globalList.raycastRenderList);
+	PhysicsManager physicsManager(&globalList.dynamicBodies, &globalList.staticChunkBodies, &globalList.raycasts, &globalList.aabbRenderList, &globalList.raycastRenderList);
 
-	ChunkManager chunkManager(physicsManager, globalList.loadedChunks);
+	ChunkManager chunkManager(physicsManager, &globalList.loadedChunks);
 	chunkManager.init();
 
 	glfwMaximizeWindow(windowManager.get_window());
@@ -115,7 +115,7 @@ int main()
 
 	Raycast cameraRay;
 	cameraRay.ID = physicsManager.assignID();
-	cameraRay.visable = true;
+	cameraRay.visable = false;
 	cameraRay.length = 10;
 	physicsManager.addRaycast(cameraRay);
 
@@ -206,11 +206,6 @@ int main()
 			deltaTimeRender--;
 			frames++;
 
-			int w, h;
-			glfwGetWindowSize(windowManager.get_window(), &w, &h);
-
-			glViewport(0, 0, w, h);
-
 			renderer.render();
 
 			glfwPollEvents();
@@ -247,7 +242,7 @@ void processInput(GLFWwindow* window)
 // GLFW : Whenever the window size changed (by OS or user resize) this callback function executes
 void framebuffer_size_callback(GLFWwindow* win, int width, int height)
 {
-	glViewport(0, 0, width, height);
+	//glViewport(0, 0, width, height);
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)

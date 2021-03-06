@@ -1,11 +1,11 @@
 #include "RenderManager.h"
 
-RenderManager::RenderManager(GLFWwindow* win, std::vector<Chunk*>& loadedChunks, std::vector<AABB*>& aabbList, std::vector<Raycast*>& raycastList)
+RenderManager::RenderManager(GLFWwindow* win, std::vector<Chunk*>* loadedChunks, std::vector<AABB*>* aabbList, std::vector<Raycast*>* raycastList)
 {
 	window = win;
-	chunksToRender = &loadedChunks;
-	aabbRenderList = &aabbList;
-	raycastRenderList = &raycastList;
+	chunksToRender = loadedChunks;
+	aabbRenderList = aabbList;
+	raycastRenderList = raycastList;
 
 	init();
 }
@@ -53,21 +53,81 @@ void RenderManager::init()
 
 	glGenVertexArrays(1, &PhysicsVAO);
 	glGenBuffers(1, &PhysicsVBO);
+
+	//-------------------------------------
+
+	glGenFramebuffers(1, &framebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+	// generate texture
+	glGenTextures(1, &texColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, framebufferWidth, framebufferHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// attach it to currently bound framebuffer object
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, framebufferWidth, framebufferHeight);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+	}
+
+	float quadMesh [] = {
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+
+		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		 1.0f,  1.0f, 0.0f, 1.0f, 1.0f
+	};
+
+	glGenVertexArrays(1, &quadVAO);
+	glGenBuffers(1, &quadVBO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadMesh), quadMesh, GL_DYNAMIC_DRAW);
+
+	glBindVertexArray(quadVAO);
+	// Vertex Positions
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+
+	//UVs
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+	glBindVertexArray(0);
 }
 
 void RenderManager::compileShaders()
 {
 	// 0
+	Shader screenShader;
+	shaders.push_back(screenShader);
+	shaders.back().create("res/shaders/framebuffer.vs", "res/shaders/framebuffer.fs");
+
+	// 1
 	Shader physicsShader;
 	shaders.push_back(physicsShader);
 	shaders.back().create("res/shaders/physics.vs", "res/shaders/physics.fs");
 
-	// 1
+	// 2
 	Shader voxelShader;
 	shaders.push_back(voxelShader);
 	shaders.back().create("res/shaders/voxel.vs", "res/shaders/voxel.fs");
 
-	// 2
+	// 3
 	Shader entityShader;
 	shaders.push_back(entityShader);
 	shaders.back().create("res/shaders/entity.vs", "res/shaders/entity.fs");
@@ -89,7 +149,7 @@ void RenderManager::loadTexture(const char* textureName, GLuint& texture)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	//Mipmap
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	int textureWidth, textureHeight, texture_nrChannels;
@@ -100,7 +160,8 @@ void RenderManager::loadTexture(const char* textureName, GLuint& texture)
 	if (textureData)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
-		//glGenerateMipmap(GL_TEXTURE_2D);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, 4);
 	}
 	else
 	{
@@ -111,6 +172,13 @@ void RenderManager::loadTexture(const char* textureName, GLuint& texture)
 
 void RenderManager::render()
 {
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(window, &windowWidth, &windowHeight);
+
+	glViewport(0, 0, framebufferWidth, framebufferHeight);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	//glDisable(GL_CULL_FACE);//TMP
@@ -247,7 +315,23 @@ void RenderManager::render()
 			drawCalls++;
 		}
 	}
-		
+
+	glViewport(0, 0, windowWidth, windowHeight);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glDisable(GL_DEPTH_TEST);
+	shaders[SCREEN_SHADER].use();
+	glBindVertexArray(quadVAO);
+	glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
+	glEnable(GL_DEPTH_TEST);
+	drawCalls++;
+
 	glfwSwapBuffers(window);
 }
 

@@ -9,10 +9,12 @@
 
 #include <vector>
 
+#include <iostream>
+
 class ChunkManager
 {
 public:
-	ChunkManager(PhysicsManager& physicsM, std::vector<Chunk*>& loadedChunksList);
+	ChunkManager(PhysicsManager& physicsM, std::vector<Chunk*>* loadedChunksList);
 	~ChunkManager();
 
 	void init();

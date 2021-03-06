@@ -1,13 +1,13 @@
 #include "PhysicsManager.h"
 
-PhysicsManager::PhysicsManager(std::vector<AABB*>& dynamicB, std::vector<CHUNK_AABB*>& staticChunkB, std::vector<Raycast*>& rays, std::vector<AABB*>& aabbRenderL, std::vector<Raycast*>& raycastRenderL)
+PhysicsManager::PhysicsManager(std::vector<AABB*>* dynamicB, std::vector<CHUNK_AABB*>* staticChunkB, std::vector<Raycast*>* rays, std::vector<AABB*>* aabbRenderL, std::vector<Raycast*>* raycastRenderL)
 {
-	dynamicList = &dynamicB;
-	chunkBoxList = &staticChunkB;
-	raycastList = &rays;
+	dynamicList = dynamicB;
+	chunkBoxList = staticChunkB;
+	raycastList = rays;
 
-	AABB_RenderList = &aabbRenderL;
-	raycastRenderList = &raycastRenderL;
+	AABB_RenderList = aabbRenderL;
+	raycastRenderList = raycastRenderL;
 }
 
 unsigned int PhysicsManager::assignID()
@@ -21,7 +21,7 @@ void PhysicsManager::addChunk_AABB(CHUNK_AABB& chunk)
 	chunkBoxList[0].push_back(&chunk);
 }
 
-void PhysicsManager::removeDynamic_AABB(CHUNK_AABB& chunk)
+void PhysicsManager::removeChunk_AABB(CHUNK_AABB& chunk)
 {
 	for (unsigned i = 0; i < chunkBoxList[0].size(); i++)
 	{
@@ -153,6 +153,7 @@ void PhysicsManager::update(float delta)
 								{
 									raycastList[0][i]->color = Colors.RED;
 									rayVoxelsIntersected.push_back(chunkBoxList[0][n]->voxelBoxList[m]);
+									break;
 								}
 							}
 						}
@@ -203,6 +204,8 @@ void PhysicsManager::update(float delta)
 				raycastList[0][i]->collisionPosition = raycastList[0][i]->position + raycastList[0][i]->Direction * isRayAABB(raycastList[0][i], closestVoxelToRay);
 				closestVoxelToRay->color = Colors.RED;
 				AABB_RenderList[0].push_back(closestVoxelToRay);
+				raycastList[0][i]->closestVoxelsChunk->color = Colors.GREEN;
+				AABB_RenderList[0].push_back(raycastList[0][i]->closestVoxelsChunk);
 			}
 		}
 	}
@@ -271,9 +274,9 @@ float PhysicsManager::distBetweenPoints(glm::vec3& positionOne, glm::vec3& posit
 
 CHUNK_AABB* PhysicsManager::findVoxelsChunk(AABB* voxel)
 {
-	int x = (voxel->position.x + 1) / 16; // 16 <--- Chunk Size
-	int y = (voxel->position.y + 1) / 16; // 16 <--- Chunk Size
-	int z = (voxel->position.z + 1) / 16; // 16 <--- Chunk Size
+	int x = (voxel->position.x) / 16; // 16 <--- Chunk Size
+	int y = (voxel->position.y) / 16; // 16 <--- Chunk Size
+	int z = (voxel->position.z) / 16; // 16 <--- Chunk Size
 
 	for (unsigned int i = 0; i < chunkBoxList[0].size(); i++)
 	{
