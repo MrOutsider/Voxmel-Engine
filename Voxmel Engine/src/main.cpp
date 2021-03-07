@@ -141,6 +141,43 @@ int main()
 			physicsUpdates = 0, frames = 0;
 		}
 
+		// TMP
+		glm::vec3 dir = glm::vec3(0.0f);
+		if (glfwGetKey(windowManager.get_window(), GLFW_KEY_UP) == GLFW_PRESS)
+		{
+			dir.y += 2.0f;
+		}
+		if (glfwGetKey(windowManager.get_window(), GLFW_KEY_DOWN) == GLFW_PRESS)
+		{
+			dir.y -= 1.0f;
+		}
+		if (glfwGetKey(windowManager.get_window(), GLFW_KEY_LEFT) == GLFW_PRESS)
+		{
+			dir.z -= 1.0f;
+		}
+		if (glfwGetKey(windowManager.get_window(), GLFW_KEY_RIGHT) == GLFW_PRESS)
+		{
+			dir.z += 1.0f;
+		}
+		if (glfwGetKey(windowManager.get_window(), GLFW_KEY_COMMA) == GLFW_PRESS)
+		{
+			dir.x += 1.0f;
+		}
+		if (glfwGetKey(windowManager.get_window(), GLFW_KEY_PERIOD) == GLFW_PRESS)
+		{
+			dir.x -= 1.0f;
+		}
+
+		monkey.collisionBox.velocity += dir * 5.0f * delta;
+
+		if (deltaTimePhysics >= 1.0)
+		{
+			deltaTimePhysics--;
+			physicsUpdates++;
+
+			physicsManager.update();
+		}
+
 		// Input
 		processInput(windowManager.get_window());
 
@@ -166,40 +203,6 @@ int main()
 		cameraRay.Direction = camera.cameraFront;
 
 		ray1.position = monkey.collisionBox.position;
-
-		// TMP
-		if (glfwGetKey(windowManager.get_window(), GLFW_KEY_UP) == GLFW_PRESS)
-		{
-			monkey.collisionBox.position.y += 5 * delta;
-		}
-		if (glfwGetKey(windowManager.get_window(), GLFW_KEY_DOWN) == GLFW_PRESS)
-		{
-			monkey.collisionBox.position.y -= 5 * delta;
-		}
-		if (glfwGetKey(windowManager.get_window(), GLFW_KEY_LEFT) == GLFW_PRESS)
-		{
-			monkey.collisionBox.position.z -= 5 * delta;
-		}
-		if (glfwGetKey(windowManager.get_window(), GLFW_KEY_RIGHT) == GLFW_PRESS)
-		{
-			monkey.collisionBox.position.z += 5 * delta;
-		}
-		if (glfwGetKey(windowManager.get_window(), GLFW_KEY_COMMA) == GLFW_PRESS)
-		{
-			monkey.collisionBox.position.x += 5 * delta;
-		}
-		if (glfwGetKey(windowManager.get_window(), GLFW_KEY_PERIOD) == GLFW_PRESS)
-		{
-			monkey.collisionBox.position.x -= 5 * delta;
-		}
-
-		if (deltaTimePhysics >= 1.0)
-		{
-			deltaTimePhysics--;
-			physicsUpdates++;
-
-			physicsManager.update(delta);
-		}
 
 		if (deltaTimeRender >= 1.0)
 		{

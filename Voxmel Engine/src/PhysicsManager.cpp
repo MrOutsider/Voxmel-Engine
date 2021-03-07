@@ -67,7 +67,7 @@ void PhysicsManager::removeRaycast(Raycast& ray)
 	}
 }
 
-void PhysicsManager::update(float delta)
+void PhysicsManager::update()
 {
 	// Clear all list for rendering & reset colors
 	AABB_RenderList[0].clear();
@@ -92,38 +92,6 @@ void PhysicsManager::update(float delta)
 		raycastList[0][i]->closestVoxel = nullptr;
 		raycastList[0][i]->closestVoxelsChunk = nullptr;
 		raycastList[0][i]->closestDynamic = nullptr;
-	}
-
-	// Test dynamic physics bodys against static bodys
-	for (unsigned int i = 0; i < dynamicList[0].size(); i++)
-	{
-		if (dynamicList[0][i]->enabled)
-		{
-			AABB_RenderList[0].push_back(dynamicList[0][i]);
-			for (unsigned int n = 0; n < chunkBoxList[0].size(); n++)
-			{
-				if (chunkBoxList[0][n]->enabled)
-				{
-					if (isAABB_AABB(dynamicList[0][i], chunkBoxList[0][n]))
-					{
-						chunkBoxList[0][n]->color = Colors.RED;
-						AABB_RenderList[0].push_back(chunkBoxList[0][n]);
-
-						for (unsigned int m = 0; m < chunkBoxList[0][n]->voxelBoxList.size(); m++)
-						{
-							if (chunkBoxList[0][n]->voxelBoxList[m]->enabled)
-							{
-								if (isAABB_AABB(dynamicList[0][i], chunkBoxList[0][n]->voxelBoxList[m]))
-								{
-									dynamicList[0][i]->color = Colors.RED;
-									AABB_RenderList[0].push_back(chunkBoxList[0][n]->voxelBoxList[m]);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	// Check raycast then cull for closest
@@ -206,6 +174,58 @@ void PhysicsManager::update(float delta)
 				AABB_RenderList[0].push_back(closestVoxelToRay);
 				raycastList[0][i]->closestVoxelsChunk->color = Colors.GREEN;
 				AABB_RenderList[0].push_back(raycastList[0][i]->closestVoxelsChunk);
+			}
+		}
+	}
+
+	// Test dynamic physics bodys against static bodys
+	for (unsigned int i = 0; i < dynamicList[0].size(); i++)
+	{
+		if (dynamicList[0][i]->enabled)
+		{
+			AABB_RenderList[0].push_back(dynamicList[0][i]);
+
+			dynamicList[0][i]->velocity.y += -9.7f * 0.01f;
+
+			if (dynamicList[0][i]->velocity.y > 5.0f)
+			{
+				dynamicList[0][i]->velocity.y = 5.0f;
+			}
+			else if (dynamicList[0][i]->velocity.y < -5.0f)
+			{
+				dynamicList[0][i]->velocity.y = -5.0f;
+			}
+
+			dynamicList[0][i]->position += dynamicList[0][i]->velocity;
+			dynamicList[0][i]->velocity = dynamicList[0][i]->velocity * 0.9f;
+
+			for (unsigned int n = 0; n < chunkBoxList[0].size(); n++)
+			{
+				if (chunkBoxList[0][n]->enabled)
+				{
+					if (isAABB_AABB(dynamicList[0][i], chunkBoxList[0][n]))
+					{
+						chunkBoxList[0][n]->color = Colors.RED;
+						AABB_RenderList[0].push_back(chunkBoxList[0][n]);
+
+						for (unsigned int m = 0; m < chunkBoxList[0][n]->voxelBoxList.size(); m++)
+						{
+							if (chunkBoxList[0][n]->voxelBoxList[m]->enabled)
+							{
+								if (isAABB_AABB(dynamicList[0][i], chunkBoxList[0][n]->voxelBoxList[m]))
+								{
+									dynamicList[0][i]->color = Colors.RED;
+									AABB_RenderList[0].push_back(chunkBoxList[0][n]->voxelBoxList[m]);
+
+									while (isAABB_AABB(dynamicList[0][i], chunkBoxList[0][n]->voxelBoxList[m]))
+									{
+										dynamicList[0][i]->position.y += 0.001f;
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}

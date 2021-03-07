@@ -99,7 +99,7 @@ public:
 	void addRaycast(Raycast& ray);
 	void removeRaycast(Raycast& ray);
 
-	void update(float delta);
+	void update();
 private:
 	const float GRAVITY = 9.7f;
 
